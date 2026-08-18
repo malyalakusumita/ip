@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 public class yapBot {
     public static void main(String[] args) {
         String banner = """
@@ -9,7 +11,18 @@ public class yapBot {
         System.out.print(banner);
         System.out.println("Hello! I'm yapBot.");
         System.out.println("What can I do for you?");
-        System.out.println("Bye. Hope to see you again soon!");
 
+        Scanner scanner = new Scanner(System.in);
+
+        while (true) {
+            String command = scanner.nextLine();
+
+            if (command.equals("bye")) {
+                System.out.println("Bye. Hope to see you again soon!");
+                break;
+            }
+
+            System.out.println(command);
+        }
     }
 }
