@@ -14,6 +14,7 @@ public class yapBot {
 
         Scanner scanner = new Scanner(System.in);
         String[] tasks = new String[100];
+        boolean[] isDone = new boolean[100];
         int taskCount = 0;
 
         while (true) {
@@ -23,9 +24,16 @@ public class yapBot {
                 System.out.println("Bye. Hope to see you again soon!");
                 break;
             } else if (command.equals("list")) {
+                System.out.println("Here are the tasks in your list:");
                 for (int i = 0; i < taskCount; i++) {
-                    System.out.println((i + 1) + ". " + tasks[i]);
+                    String status = isDone[i] ? "[X]" : "[ ]";
+                    System.out.println((i + 1) + "." + status + " " + tasks[i]);
                 }
+            } else if (command.startsWith("mark ")) {
+                int taskIndex = Integer.parseInt(command.substring(5)) - 1;
+                isDone[taskIndex] = true;
+                System.out.println("Nice! I've marked this task as done:");
+                System.out.println("  [X] " + tasks[taskIndex]);
             } else {
                 tasks[taskCount] = command;
                 taskCount++;
