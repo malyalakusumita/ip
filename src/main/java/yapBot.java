@@ -43,9 +43,18 @@ public class yapBot {
                 tasks[taskCount] = task;
                 taskCount++;
                 printAddTaskResponse(task, taskCount);
-            } else if (command.startsWith("deadline ")) {
-                String details = command.substring(9);
-                String[] parts = details.split(" /by ");
+            } else if (command.startsWith("deadline")) {
+                checkSpaceIsFull(taskCount);
+                String details = command.length() > 8 ? command.substring(8).trim() : "";
+                if (details.isEmpty()) {
+                    throw new yapBotException("The description of a deadline cannot be empty. "
+                            + "Usage: deadline <description> /by <date>");
+                }
+                String[] parts = details.split(" /by ", 2);
+                if (parts.length < 2 || parts[0].trim().isEmpty() || parts[1].trim().isEmpty()) {
+                    throw new yapBotException("A deadline needs both a description and a '/by' date. "
+                            + "Usage: deadline <description> /by <date>");
+                }
                 Task task = new Deadline(parts[0].trim(), parts[1].trim());
                 tasks[taskCount] = task;
                 taskCount++;
