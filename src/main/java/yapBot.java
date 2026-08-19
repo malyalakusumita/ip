@@ -29,17 +29,28 @@ public class yapBot {
                     for (int i = 0; i < taskCount; i++) {
                         System.out.println((i + 1) + "." + tasks[i]);
                     }
-                } else if (command.startsWith("mark ")) {
+                } else if (command.startsWith("mark")) {
                     int taskIndex = parseTaskIndex(command, "mark", taskCount);
                     tasks[taskIndex].markAsDone();
                     System.out.println("Nice! I've marked this task as done:");
                     System.out.println("  " + tasks[taskIndex]);
-                } else if (command.startsWith("unmark ")) {
+                } else if (command.startsWith("unmark")) {
                     int taskIndex = parseTaskIndex(command, "unmark", taskCount);
                     tasks[taskIndex].markAsNotDone();
                     System.out.println("I've marked this task as not done yet:");
                     System.out.println("  " + tasks[taskIndex]);
-                } else if (command.startsWith("todo ")) {
+                } else if (command.startsWith("delete")) {
+                    int taskIndex = parseTaskIndex(command, "delete", taskCount);
+                    Task removedTask = tasks[taskIndex];
+                    for (int i = taskIndex; i < taskCount - 1; i++) {
+                        tasks[i] = tasks[i + 1];
+                    }
+                    tasks[taskCount - 1] = null;
+                    taskCount--;
+                    System.out.println("I have removed this task:");
+                    System.out.println("  " + removedTask);
+                    System.out.println("Now you have " + taskCount + " tasks in the list.");
+                } else if (command.startsWith("todo")) {
                     checkSpaceIsFull(taskCount);
                     String description = command.substring(4).trim();
                     if (description.isEmpty()) {
@@ -50,7 +61,7 @@ public class yapBot {
                     tasks[taskCount] = task;
                     taskCount++;
                     printAddTaskResponse(task, taskCount);
-                } else if (command.startsWith("deadline ")) {
+                } else if (command.startsWith("deadline")) {
                     checkSpaceIsFull(taskCount);
                     String details = command.length() > 8 ? command.substring(8).trim() : "";
                     if (details.isEmpty()) {
@@ -86,10 +97,10 @@ public class yapBot {
                     printAddTaskResponse(task, taskCount);
                 } else if (command.isBlank()) {
                     throw new yapBotException("You didn't type anything. Try 'todo', 'deadline', "
-                            + "'event', 'list', 'mark', 'unmark' or 'bye'.");
+                            + "'event', 'list', 'mark', 'unmark', 'delete' or 'bye'.");
                 } else {
                     throw new yapBotException("I'm sorry, but I don't know what that means. "
-                            + "Try 'todo', 'deadline', 'event', 'list', 'mark', 'unmark' or 'bye'.");
+                            + "Try 'todo', 'deadline', 'event', 'list', 'mark', 'unmark', 'delete' or 'bye'.");
                 }
             } catch (yapBotException e) {
                 System.out.println(e.getMessage());
