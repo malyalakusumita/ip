@@ -33,3 +33,20 @@ Ensure that Java 25 is used when running the application or build tasks. On macO
 Use lightweight tags unless the user requests an annotated tag.
 When proposing or creating a commit message, include enough detail to explain the rationale for the change.
 Do not commit or push unless explicitly asked.
+
+## Custom Skills
+
+### `test-ui`
+Executes interactive console testing against defined test cases in `test/ui-test-plan.md`.
+
+* **Inputs**: Reads test cases from `test/ui-test-plan.md`.
+* **Execution**:
+  1. Parse the test cases (aim, inputs, expected output).
+  2. Run the application main class (`yapBot`).
+  3. Pass the defined inputs to standard input (`stdin`).
+  4. Compare the actual standard output (`stdout`) with the expected output.
+* **Pass Condition**: If all tests pass, output the full console transcript.
+* **Fail Condition**: If any test fails, immediately terminate the session and print:
+  * Name/Aim of the failed test case
+  * Expected Output
+  * Actual Output
