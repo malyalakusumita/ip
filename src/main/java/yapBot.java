@@ -1,6 +1,16 @@
 import java.util.Scanner;
 
+/**
+ * Entry point for yapBot, a command-line task-tracking chatbot.
+ */
 public class yapBot {
+
+    /**
+     * Runs the yapBot command loop, reading commands from standard input
+     * until the user issues the "bye" command.
+     *
+     * @param args command-line arguments (not used).
+     */
     public static void main(String[] args) {
         String banner = """
                 __   __  ___   ____  ____   ___ _____
@@ -14,7 +24,7 @@ public class yapBot {
 
         Scanner scanner = new Scanner(System.in);
         Task[] tasks = new Task[100];
-        int taskCount = 0;
+        int taskCount = Storage.load(tasks);
 
         while (true) {
             String command = scanner.nextLine();
@@ -32,11 +42,13 @@ public class yapBot {
                 } else if (command.startsWith("mark")) {
                     int taskIndex = parseTaskIndex(command, "mark", taskCount);
                     tasks[taskIndex].markAsDone();
+                    Storage.save(tasks, taskCount);
                     System.out.println("Nice! I've marked this task as done:");
                     System.out.println("  " + tasks[taskIndex]);
                 } else if (command.startsWith("unmark")) {
                     int taskIndex = parseTaskIndex(command, "unmark", taskCount);
                     tasks[taskIndex].markAsNotDone();
+                    Storage.save(tasks, taskCount);
                     System.out.println("I've marked this task as not done yet:");
                     System.out.println("  " + tasks[taskIndex]);
                 } else if (command.startsWith("delete")) {
@@ -47,6 +59,7 @@ public class yapBot {
                     }
                     tasks[taskCount - 1] = null;
                     taskCount--;
+                    Storage.save(tasks, taskCount);
                     System.out.println("I have removed this task:");
                     System.out.println("  " + removedTask);
                     System.out.println("Now you have " + taskCount + " tasks in the list.");
@@ -57,9 +70,10 @@ public class yapBot {
                         throw new yapBotException("The description of a todo cannot be empty. "
                                 + "Usage: todo <description>");
                     }
-                    Task task = new Todo(description);
+                    Task task = new Todo(checkNoDelimiter(description, "description of a todo"));
                     tasks[taskCount] = task;
                     taskCount++;
+                    Storage.save(tasks, taskCount);
                     printAddTaskResponse(task, taskCount);
                 } else if (command.startsWith("deadline")) {
                     checkSpaceIsFull(taskCount);
@@ -73,9 +87,13 @@ public class yapBot {
                         throw new yapBotException("A deadline needs both a description and a '/by' date. "
                                 + "Usage: deadline <description> /by <date>");
                     }
-                    Task task = new Deadline(parts[0].trim(), parts[1].trim());
+                    String deadlineDescription = checkNoDelimiter(
+                            parts[0].trim(), "description of a deadline");
+                    String by = checkNoDelimiter(parts[1].trim(), "'/by' date of a deadline");
+                    Task task = new Deadline(deadlineDescription, by);
                     tasks[taskCount] = task;
                     taskCount++;
+                    Storage.save(tasks, taskCount);
                     printAddTaskResponse(task, taskCount);
                 } else if (command.startsWith("event")) {
                     checkSpaceIsFull(taskCount);
@@ -87,20 +105,28 @@ public class yapBot {
                     String[] parts = details.split(" /from | /to ");
                     if (parts.length < 3 || parts[0].trim().isEmpty()
                             || parts[1].trim().isEmpty() || parts[2].trim().isEmpty()) {
-                        throw new yapBotException("An event needs a description, a '/from' time and a '/to' time. "
-                                + "Usage: event <description> /from <start> /to <end>");
+                        throw new yapBotException(
+                                "An event needs a description, a '/from' time and a '/to' time. "
+                                        + "Usage: event <description> /from <start> /to <end>");
 
                     }
-                    Task task = new Event(parts[0].trim(), parts[1].trim(), parts[2].trim());
+                    String eventDescription = checkNoDelimiter(
+                            parts[0].trim(), "description of an event");
+                    String from = checkNoDelimiter(parts[1].trim(), "'/from' time of an event");
+                    String to = checkNoDelimiter(parts[2].trim(), "'/to' time of an event");
+                    Task task = new Event(eventDescription, from, to);
                     tasks[taskCount] = task;
                     taskCount++;
+                    Storage.save(tasks, taskCount);
                     printAddTaskResponse(task, taskCount);
                 } else if (command.isBlank()) {
                     throw new yapBotException("You didn't type anything. Try 'todo', 'deadline', "
                             + "'event', 'list', 'mark', 'unmark', 'delete' or 'bye'.");
                 } else {
-                    throw new yapBotException("I'm sorry, but I don't know what that means. "
-                            + "Try 'todo', 'deadline', 'event', 'list', 'mark', 'unmark', 'delete' or 'bye'.");
+                    throw new yapBotException(
+                            "I'm sorry, but I don't know what that means. "
+                                    + "Try 'todo', 'deadline', 'event', 'list', 'mark', "
+                                    + "'unmark', 'delete' or 'bye'.");
                 }
             } catch (yapBotException e) {
                 System.out.println(e.getMessage());
@@ -111,7 +137,7 @@ public class yapBot {
         }
     }
 
-// Parses the task number out of a "mark"/"unmark" command and validates it against the current task list.
+    // Parses the task number out of a "mark"/"unmark" command and validates it against the current task list.
     private static int parseTaskIndex(String command, String keyword, int taskCount) throws yapBotException {
         String argument = command.length() > keyword.length()
                 ? command.substring(keyword.length()).trim()
@@ -142,6 +168,23 @@ public class yapBot {
         if (taskCount >= 100) {
             throw new yapBotException("Sorry, your task list is full (max 100 tasks).");
         }
+    }
+
+    /**
+     * Rejects a task field that contains the '|' character, since it is the
+     * delimiter used by the save file format and would corrupt it if saved.
+     *
+     * @param value     the field value to check.
+     * @param fieldName a human-readable name for the field, used in the error message.
+     * @return {@code value} unchanged, if it passed the check.
+     * @throws yapBotException if {@code value} contains '|'.
+     */
+    private static String checkNoDelimiter(String value, String fieldName) throws yapBotException {
+        if (value.contains("|")) {
+            throw new yapBotException("The " + fieldName + " cannot contain the '|' character, "
+                    + "as it is reserved for the save file format.");
+        }
+        return value;
     }
 
     // Helper method to print the response when a new task is added

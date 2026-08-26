@@ -387,6 +387,224 @@ Here are the tasks in your list:
 Bye. Hope to see you again soon!
 ~~~
 
+## Test case: Tasks are saved to disk after each change
+- Aim: Verify that every task-list mutation (add, mark, unmark, delete) writes
+  the current task list to `./data/yapBot.txt` in the pipe-delimited format,
+  and that the console output is unaffected by this write.
+- Note: this test case cannot be captured purely by the stdout diff that the
+  other cases in this file use, since `Storage.save()` produces no output on
+  success. It needs a filesystem check in addition to (or instead of) a
+  stdout diff. If `runtest.sh`/`runtest.bat` only compares `ACTUAL.TXT`
+  against `EXPECTED.TXT`, this case should be run and checked manually until
+  the runner script is extended to also diff a saved-file fixture.
+- Also note: every *other* test case in this file (below and above) assumes
+  a clean start, i.e. no pre-existing `./data/yapBot.txt`. Since loading is
+  now implemented, any leftover save file from a previous manual run will
+  change what these tests print. Delete `./data/yapBot.txt` before running
+  any of the other cases, or run them in a working directory where it does
+  not yet exist.
+
+### Input
+~~~text
+todo read book
+deadline return book /by June 6th
+event project meeting /from Aug 6th 2pm /to 4pm
+mark 1
+delete 2
+bye
+~~~
+
+### Expected console output
+~~~text
+__   __  ___   ____  ____   ___ _____
+\ \ / / / _ \ |  _ \| __ ) / _ \_   _|
+ \ V / | |_| || |_) |  _ \| |_| || |
+  |_|   \___/ |____/|___/ \___/ |_|
+Hello! I'm yapBot.
+What can I do for you?
+Got it. I've added this task:
+  [T][ ] read book
+Now you have 1 tasks in the list.
+Got it. I've added this task:
+  [D][ ] return book (by: June 6th)
+Now you have 2 tasks in the list.
+Got it. I've added this task:
+  [E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
+Now you have 3 tasks in the list.
+Nice! I've marked this task as done:
+  [T][X] read book
+I have removed this task:
+  [D][ ] return book (by: June 6th)
+Now you have 2 tasks in the list.
+Bye. Hope to see you again soon!
+~~~
+
+### Expected contents of `./data/yapBot.txt` after the run
+~~~text
+T | 1 | read book
+E | 0 | project meeting | Aug 6th 2pm | 4pm
+~~~
+
+### Manual verification steps
+1. Delete any existing `./data/yapBot.txt` before running, so the test starts clean.
+2. Run the program with the input above (e.g. pipe it in, or type it interactively).
+3. Confirm the console output matches the block above.
+4. Open `./data/yapBot.txt` and confirm its contents match the block above exactly
+   (two lines, in this order, reflecting the mark and the delete).
+
+## Test case: Load previously saved tasks on startup
+- Aim: Verify that when `./data/yapBot.txt` already contains saved tasks,
+  the chatbot loads them into the list on startup — including each task's
+  type, description, extra fields (by / from / to), and done status.
+- Setup: before running the input below, create `./data/yapBot.txt` with
+  exactly the following contents (this simulates a save file left over
+  from a previous session):
+~~~text
+T | 1 | read book
+D | 0 | return book | June 6th
+E | 0 | project meeting | Aug 6th 2pm | 4pm
+~~~
+
+### Input
+~~~text
+list
+bye
+~~~
+
+### Expected console output
+~~~text
+__   __  ___   ____  ____   ___ _____
+\ \ / / / _ \ |  _ \| __ ) / _ \_   _|
+ \ V / | |_| || |_) |  _ \| |_| || |
+  |_|   \___/ |____/|___/ \___/ |_|
+Hello! I'm yapBot.
+What can I do for you?
+Here are the tasks in your list:
+1.[T][X] read book
+2.[D][ ] return book (by: June 6th)
+3.[E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
+Bye. Hope to see you again soon!
+~~~
+
+### Manual verification steps
+1. Manually create `./data/yapBot.txt` with the three lines shown above
+   (do not run the program to generate it, so this test is independent of
+   the save test case above).
+2. Run the program with `list` then `bye` as input.
+3. Confirm the printed task list shows task 1 as done (`[X]`) and tasks 2–3
+   as not done (`[ ]`), with the correct type icons and extra fields.
+4. This test case also cannot be captured purely by the stdout diff runner
+   without a setup step, since it depends on a pre-existing file on disk
+   rather than on program input alone.
+
+## Test case: Starting fresh with no save file
+- Aim: Verify that when `./data/yapBot.txt` does not exist (e.g. first run
+  ever, or a fresh checkout), the chatbot starts with an empty task list
+  instead of crashing or printing an error.
+
+### Setup
+- Ensure `./data/yapBot.txt` does not exist before running (delete it if present).
+
+### Input
+~~~text
+list
+bye
+~~~
+
+### Expected console output
+~~~text
+__   __  ___   ____  ____   ___ _____
+\ \ / / / _ \ |  _ \| __ ) / _ \_   _|
+ \ V / | |_| || |_) |  _ \| |_| || |
+  |_|   \___/ |____/|___/ \___/ |_|
+Hello! I'm yapBot.
+What can I do for you?
+Here are the tasks in your list:
+Bye. Hope to see you again soon!
+~~~
+
+## Test case: Task fields cannot contain '|'
+- Aim: Verify that a task field containing the '|' character is rejected at
+  input time, since it is the save-file delimiter, instead of being silently
+  accepted and corrupting the save file on the next write.
+
+### Input
+~~~text
+todo read | book
+deadline return book /by June | 6th
+event x /from a | b /to c
+list
+bye
+~~~
+
+### Expected output
+~~~text
+__   __  ___   ____  ____   ___ _____
+\ \ / / / _ \ |  _ \| __ ) / _ \_   _|
+ \ V / | |_| || |_) |  _ \| |_| || |
+  |_|   \___/ |____/|___/ \___/ |_|
+Hello! I'm yapBot.
+What can I do for you?
+The description of a todo cannot contain the '|' character, as it is reserved for the save file format.
+The '/by' date of a deadline cannot contain the '|' character, as it is reserved for the save file format.
+The '/from' time of an event cannot contain the '|' character, as it is reserved for the save file format.
+Here are the tasks in your list:
+Bye. Hope to see you again soon!
+~~~
+
+## Test case: Corrupted save-file lines are skipped, not crashed on
+- Aim: Verify that a save file containing bad lines (wrong field count,
+  invalid status, unknown type, blank required field) loads whatever valid
+  tasks it can, skips the rest with a warning, and does not crash the
+  program on startup.
+- Setup: before running, create `./data/yapBot.txt` with exactly the
+  following contents:
+~~~text
+T | 1 | read book
+X | 0 | unknown type
+T | 2 | bad status value
+D | 0 | missing by field
+T | 0 |
+E | 0 | ok event | Aug 6th 2pm | 4pm
+~~~
+
+### Input
+~~~text
+list
+bye
+~~~
+
+### Expected console output
+~~~text
+__   __  ___   ____  ____   ___ _____
+\ \ / / / _ \ |  _ \| __ ) / _ \_   _|
+ \ V / | |_| || |_) |  _ \| |_| || |
+  |_|   \___/ |____/|___/ \___/ |_|
+Hello! I'm yapBot.
+What can I do for you?
+Here are the tasks in your list:
+1.[T][X] read book
+2.[E][ ] ok event (from: Aug 6th 2pm to: 4pm)
+Bye. Hope to see you again soon!
+~~~
+- Note: the exact wording of the "Warning: skipping..." lines that also get
+  printed during load is not asserted here, since it is diagnostic text
+  aimed at the developer rather than a stable interface. What matters is
+  that only the two well-formed lines are loaded (in order, with the
+  correct type/description/status/extra fields), and the program does not
+  crash. Diff the ACTUAL output against EXPECTED with this in mind.
+
+## Test case: Save file with more tasks than the array can hold
+- Aim: Verify that a save file with more entries than the task array's
+  capacity (100) loads only the first 100 and warns about the rest, rather
+  than crashing with an out-of-bounds error.
+- Setup: generate a `./data/yapBot.txt` with 105 valid `T | 0 | task N`
+  lines (e.g. via a small script), then run `list` followed by `bye`.
+- Expected: exactly 100 tasks are listed (numbered 1 to 100, matching the
+  first 100 lines of the file in order); the program does not crash; a
+  warning about the remaining 5 tasks is printed to the console (exact
+  wording not asserted, per the note above).
+
 ## Test case: delete with invalid input
 - Aim: Verify delete on an empty list, with no number, and with a non-numeric or out-of-range number, is rejected without crashing, and a later valid delete still works.
 
