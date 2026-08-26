@@ -1,17 +1,22 @@
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 /**
  * Represents a task that has a deadline by which it must be completed.
  */
 public class Deadline extends Task {
 
-    protected String by;
+    private static final DateTimeFormatter DISPLAY_FORMAT = DateTimeFormatter.ofPattern("MMM dd yyyy");
+
+    protected LocalDate by;
 
     /**
-     * Creates a deadline task with the given description and due date/time.
+     * Creates a deadline task with the given description and due date.
      *
      * @param description the task description.
-     * @param by the date/time by which the task should be completed.
+     * @param by the date by which the task should be completed.
      */
-    public Deadline(String description, String by) {
+    public Deadline(String description, LocalDate by) {
         super(description);
         this.by = by;
     }
@@ -27,7 +32,9 @@ public class Deadline extends Task {
     }
 
     /**
-     * Returns this deadline task serialized for the save file, including the due date/time.
+     * Returns this deadline task serialized for the save file. The date is
+     * written in ISO format (e.g. "2019-10-15"), which {@link LocalDate}
+     * parses directly on load without needing a custom pattern.
      *
      * @return the file-format representation of this task.
      */
@@ -38,6 +45,6 @@ public class Deadline extends Task {
 
     @Override
     public String toString() {
-        return "[D]" + super.toString() + " (by: " + by + ")";
+        return "[D]" + super.toString() + " (by: " + by.format(DISPLAY_FORMAT) + ")";
     }
 }
