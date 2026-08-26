@@ -397,6 +397,12 @@ Bye. Hope to see you again soon!
   stdout diff. If `runtest.sh`/`runtest.bat` only compares `ACTUAL.TXT`
   against `EXPECTED.TXT`, this case should be run and checked manually until
   the runner script is extended to also diff a saved-file fixture.
+- Also note: every *other* test case in this file (below and above) assumes
+  a clean start, i.e. no pre-existing `./data/yapBot.txt`. Since loading is
+  now implemented, any leftover save file from a previous manual run will
+  change what these tests print. Delete `./data/yapBot.txt` before running
+  any of the other cases, or run them in a working directory where it does
+  not yet exist.
 
 ### Input
 ~~~text
@@ -445,6 +451,77 @@ E | 0 | project meeting | Aug 6th 2pm | 4pm
 3. Confirm the console output matches the block above.
 4. Open `./data/yapBot.txt` and confirm its contents match the block above exactly
    (two lines, in this order, reflecting the mark and the delete).
+
+## Test case: Load previously saved tasks on startup
+- Aim: Verify that when `./data/yapBot.txt` already contains saved tasks,
+  the chatbot loads them into the list on startup — including each task's
+  type, description, extra fields (by / from / to), and done status.
+- Setup: before running the input below, create `./data/yapBot.txt` with
+  exactly the following contents (this simulates a save file left over
+  from a previous session):
+~~~text
+T | 1 | read book
+D | 0 | return book | June 6th
+E | 0 | project meeting | Aug 6th 2pm | 4pm
+~~~
+
+### Input
+~~~text
+list
+bye
+~~~
+
+### Expected console output
+~~~text
+__   __  ___   ____  ____   ___ _____
+\ \ / / / _ \ |  _ \| __ ) / _ \_   _|
+ \ V / | |_| || |_) |  _ \| |_| || |
+  |_|   \___/ |____/|___/ \___/ |_|
+Hello! I'm yapBot.
+What can I do for you?
+Here are the tasks in your list:
+1.[T][X] read book
+2.[D][ ] return book (by: June 6th)
+3.[E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
+Bye. Hope to see you again soon!
+~~~
+
+### Manual verification steps
+1. Manually create `./data/yapBot.txt` with the three lines shown above
+   (do not run the program to generate it, so this test is independent of
+   the save test case above).
+2. Run the program with `list` then `bye` as input.
+3. Confirm the printed task list shows task 1 as done (`[X]`) and tasks 2–3
+   as not done (`[ ]`), with the correct type icons and extra fields.
+4. This test case also cannot be captured purely by the stdout diff runner
+   without a setup step, since it depends on a pre-existing file on disk
+   rather than on program input alone.
+
+## Test case: Starting fresh with no save file
+- Aim: Verify that when `./data/yapBot.txt` does not exist (e.g. first run
+  ever, or a fresh checkout), the chatbot starts with an empty task list
+  instead of crashing or printing an error.
+
+### Setup
+- Ensure `./data/yapBot.txt` does not exist before running (delete it if present).
+
+### Input
+~~~text
+list
+bye
+~~~
+
+### Expected console output
+~~~text
+__   __  ___   ____  ____   ___ _____
+\ \ / / / _ \ |  _ \| __ ) / _ \_   _|
+ \ V / | |_| || |_) |  _ \| |_| || |
+  |_|   \___/ |____/|___/ \___/ |_|
+Hello! I'm yapBot.
+What can I do for you?
+Here are the tasks in your list:
+Bye. Hope to see you again soon!
+~~~
 
 ## Test case: delete with invalid input
 - Aim: Verify delete on an empty list, with no number, and with a non-numeric or out-of-range number, is rejected without crashing, and a later valid delete still works.

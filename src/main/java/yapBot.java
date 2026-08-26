@@ -1,6 +1,16 @@
 import java.util.Scanner;
 
+/**
+ * Entry point for yapBot, a command-line task-tracking chatbot.
+ */
 public class yapBot {
+
+    /**
+     * Runs the yapBot command loop, reading commands from standard input
+     * until the user issues the "bye" command.
+     *
+     * @param args command-line arguments (not used).
+     */
     public static void main(String[] args) {
         String banner = """
                 __   __  ___   ____  ____   ___ _____
@@ -14,7 +24,7 @@ public class yapBot {
 
         Scanner scanner = new Scanner(System.in);
         Task[] tasks = new Task[100];
-        int taskCount = 0;
+        int taskCount = Storage.load(tasks);
 
         while (true) {
             String command = scanner.nextLine();
@@ -32,11 +42,13 @@ public class yapBot {
                 } else if (command.startsWith("mark")) {
                     int taskIndex = parseTaskIndex(command, "mark", taskCount);
                     tasks[taskIndex].markAsDone();
+                    Storage.save(tasks, taskCount);
                     System.out.println("Nice! I've marked this task as done:");
                     System.out.println("  " + tasks[taskIndex]);
                 } else if (command.startsWith("unmark")) {
                     int taskIndex = parseTaskIndex(command, "unmark", taskCount);
                     tasks[taskIndex].markAsNotDone();
+                    Storage.save(tasks, taskCount);
                     System.out.println("I've marked this task as not done yet:");
                     System.out.println("  " + tasks[taskIndex]);
                 } else if (command.startsWith("delete")) {
@@ -47,6 +59,7 @@ public class yapBot {
                     }
                     tasks[taskCount - 1] = null;
                     taskCount--;
+                    Storage.save(tasks, taskCount);
                     System.out.println("I have removed this task:");
                     System.out.println("  " + removedTask);
                     System.out.println("Now you have " + taskCount + " tasks in the list.");
@@ -60,6 +73,7 @@ public class yapBot {
                     Task task = new Todo(description);
                     tasks[taskCount] = task;
                     taskCount++;
+                    Storage.save(tasks, taskCount);
                     printAddTaskResponse(task, taskCount);
                 } else if (command.startsWith("deadline")) {
                     checkSpaceIsFull(taskCount);
@@ -76,6 +90,7 @@ public class yapBot {
                     Task task = new Deadline(parts[0].trim(), parts[1].trim());
                     tasks[taskCount] = task;
                     taskCount++;
+                    Storage.save(tasks, taskCount);
                     printAddTaskResponse(task, taskCount);
                 } else if (command.startsWith("event")) {
                     checkSpaceIsFull(taskCount);
@@ -87,20 +102,24 @@ public class yapBot {
                     String[] parts = details.split(" /from | /to ");
                     if (parts.length < 3 || parts[0].trim().isEmpty()
                             || parts[1].trim().isEmpty() || parts[2].trim().isEmpty()) {
-                        throw new yapBotException("An event needs a description, a '/from' time and a '/to' time. "
-                                + "Usage: event <description> /from <start> /to <end>");
+                        throw new yapBotException(
+                                "An event needs a description, a '/from' time and a '/to' time. "
+                                        + "Usage: event <description> /from <start> /to <end>");
 
                     }
                     Task task = new Event(parts[0].trim(), parts[1].trim(), parts[2].trim());
                     tasks[taskCount] = task;
                     taskCount++;
+                    Storage.save(tasks, taskCount);
                     printAddTaskResponse(task, taskCount);
                 } else if (command.isBlank()) {
                     throw new yapBotException("You didn't type anything. Try 'todo', 'deadline', "
                             + "'event', 'list', 'mark', 'unmark', 'delete' or 'bye'.");
                 } else {
-                    throw new yapBotException("I'm sorry, but I don't know what that means. "
-                            + "Try 'todo', 'deadline', 'event', 'list', 'mark', 'unmark', 'delete' or 'bye'.");
+                    throw new yapBotException(
+                            "I'm sorry, but I don't know what that means. "
+                                    + "Try 'todo', 'deadline', 'event', 'list', 'mark', "
+                                    + "'unmark', 'delete' or 'bye'.");
                 }
             } catch (yapBotException e) {
                 System.out.println(e.getMessage());
@@ -111,7 +130,7 @@ public class yapBot {
         }
     }
 
-// Parses the task number out of a "mark"/"unmark" command and validates it against the current task list.
+    // Parses the task number out of a "mark"/"unmark" command and validates it against the current task list.
     private static int parseTaskIndex(String command, String keyword, int taskCount) throws yapBotException {
         String argument = command.length() > keyword.length()
                 ? command.substring(keyword.length()).trim()
@@ -137,14 +156,14 @@ public class yapBot {
         return taskIndex;
     }
 
-    //checks if space before adding into task list
+    // Checks if space before adding into task list.
     private static void checkSpaceIsFull(int taskCount) throws yapBotException {
         if (taskCount >= 100) {
             throw new yapBotException("Sorry, your task list is full (max 100 tasks).");
         }
     }
 
-    // Helper method to print the response when a new task is added
+    // Helper method to print the response when a new task is added.
     private static void printAddTaskResponse(Task task, int count) {
         System.out.println("Got it. I've added this task:");
         System.out.println("  " + task);
