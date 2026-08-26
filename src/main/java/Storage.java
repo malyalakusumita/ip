@@ -11,7 +11,8 @@ import java.util.List;
  */
 public class Storage {
 
-    private static final String FILE_PATH = "./data/yapBot.txt";
+    private static final String DATA_DIRECTORY_NAME = "data";
+    private static final String DATA_FILE_NAME = "yapBot.txt";
     private static final String FIELD_SEPARATOR_REGEX = " \\| ";
 
     private static final String TYPE_TODO = "T";
@@ -20,6 +21,18 @@ public class Storage {
 
     private static final String STATUS_DONE = "1";
     private static final String STATUS_NOT_DONE = "0";
+
+    /**
+     * Builds the save-file path in an OS-independent way: the directory and
+     * file name are supplied as separate arguments so the {@link Path} API
+     * inserts the correct separator for whatever OS the program is run on,
+     * rather than a hardcoded {@code "/"} or {@code "\\"} baked into a string.
+     *
+     * @return the (relative) path to the save file.
+     */
+    private static Path getTargetPath() {
+        return Paths.get(DATA_DIRECTORY_NAME, DATA_FILE_NAME);
+    }
 
     /**
      * Writes the given tasks to the save file, creating the parent directory
@@ -32,7 +45,7 @@ public class Storage {
      * @param taskCount the number of active tasks in the array.
      */
     public static void save(Task[] tasks, int taskCount) {
-        Path targetPath = Paths.get(FILE_PATH);
+        Path targetPath = getTargetPath();
         Path parentDir = targetPath.toAbsolutePath().getParent();
         Path tempPath = null;
 
@@ -42,7 +55,7 @@ public class Storage {
             }
             if (Files.isDirectory(targetPath)) {
                 System.out.println("Warning: could not save tasks, "
-                        + FILE_PATH + " is a directory, not a file.");
+                        + targetPath + " is a directory, not a file.");
                 return;
             }
 
@@ -122,13 +135,13 @@ public class Storage {
      * @return the number of tasks successfully loaded.
      */
     public static int load(Task[] tasks) {
-        Path path = Paths.get(FILE_PATH);
+        Path path = getTargetPath();
         if (!Files.exists(path)) {
             return 0;
         }
         if (Files.isDirectory(path)) {
             System.out.println("Warning: could not load tasks, "
-                    + FILE_PATH + " is a directory, not a file.");
+                    + path + " is a directory, not a file.");
             return 0;
         }
 
