@@ -4,6 +4,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 /**
@@ -242,9 +244,15 @@ public class Storage {
                 if (parts.length != 4) {
                     throw new yapBotException("deadline line must have exactly 4 fields");
                 }
-                String by = parts[3].trim();
-                if (by.isEmpty()) {
+                String byRaw = parts[3].trim();
+                if (byRaw.isEmpty()) {
                     throw new yapBotException("deadline 'by' field is empty");
+                }
+                LocalDate by;
+                try {
+                    by = LocalDate.parse(byRaw);
+                } catch (DateTimeParseException e) {
+                    throw new yapBotException("deadline 'by' field is not a valid date: '" + byRaw + "'");
                 }
                 return new Deadline(description, by);
             case TYPE_EVENT:

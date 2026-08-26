@@ -1,3 +1,5 @@
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
 /**
@@ -19,7 +21,7 @@ public class yapBot {
                   |_|   \\___/ |____/|___/ \\___/ |_|
                 """;
         System.out.print(banner);
-        System.out.println("Hello! I'm yapBot.");
+        System.out.println("Hello! I'm YAPBOT.");
         System.out.println("What can I do for you?");
 
         Scanner scanner = new Scanner(System.in);
@@ -89,7 +91,8 @@ public class yapBot {
                     }
                     String deadlineDescription = checkNoDelimiter(
                             parts[0].trim(), "description of a deadline");
-                    String by = checkNoDelimiter(parts[1].trim(), "'/by' date of a deadline");
+                    String byInput = checkNoDelimiter(parts[1].trim(), "'/by' date of a deadline");
+                    LocalDate by = parseDeadlineDate(byInput);
                     Task task = new Deadline(deadlineDescription, by);
                     tasks[taskCount] = task;
                     taskCount++;
@@ -185,6 +188,22 @@ public class yapBot {
                     + "as it is reserved for the save file format.");
         }
         return value;
+    }
+
+    /**
+     * Parses a deadline's '/by' input as a date in {@code yyyy-mm-dd} format.
+     *
+     * @param value the raw '/by' text entered by the user.
+     * @return the parsed date.
+     * @throws yapBotException if {@code value} is not a valid {@code yyyy-mm-dd} date.
+     */
+    private static LocalDate parseDeadlineDate(String value) throws yapBotException {
+        try {
+            return LocalDate.parse(value);
+        } catch (DateTimeParseException e) {
+            throw new yapBotException("Please enter the deadline date in yyyy-mm-dd format, "
+                    + "e.g. 2019-10-15.");
+        }
     }
 
     // Helper method to print the response when a new task is added

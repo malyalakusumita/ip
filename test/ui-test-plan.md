@@ -19,7 +19,7 @@ __   __  ___   ____  ____   ___ _____
 \ \ / / / _ \ |  _ \| __ ) / _ \_   _|
  \ V / | |_| || |_) |  _ \| |_| || |
   |_|   \___/ |____/|___/ \___/ |_|
-Hello! I'm yapBot.
+Hello! I'm YAPBOT.
 What can I do for you?
 Got it. I've added this task:
   [T][ ] read book
@@ -50,7 +50,7 @@ __   __  ___   ____  ____   ___ _____
 \ \ / / / _ \ |  _ \| __ ) / _ \_   _|
  \ V / | |_| || |_) |  _ \| |_| || |
   |_|   \___/ |____/|___/ \___/ |_|
-Hello! I'm yapBot.
+Hello! I'm YAPBOT.
 What can I do for you?
 Got it. I've added this task:
   [T][ ] read book
@@ -79,7 +79,7 @@ __   __  ___   ____  ____   ___ _____
 \ \ / / / _ \ |  _ \| __ ) / _ \_   _|
  \ V / | |_| || |_) |  _ \| |_| || |
   |_|   \___/ |____/|___/ \___/ |_|
-Hello! I'm yapBot.
+Hello! I'm YAPBOT.
 What can I do for you?
 Got it. I've added this task:
   [T][ ] read book
@@ -116,7 +116,7 @@ __   __  ___   ____  ____   ___ _____
 \ \ / / / _ \ |  _ \| __ ) / _ \_   _|
  \ V / | |_| || |_) |  _ \| |_| || |
   |_|   \___/ |____/|___/ \___/ |_|
-Hello! I'm yapBot.
+Hello! I'm YAPBOT.
 What can I do for you?
 Your task list is empty, so there's nothing to mark.
 Your task list is empty, so there's nothing to unmark.
@@ -140,7 +140,7 @@ Bye. Hope to see you again soon!
 ### Input
 ~~~text
 todo borrow book
-deadline return book /by Sunday
+deadline return book /by 2019-10-15
 event project meeting /from Mon 2pm /to 4pm
 list
 bye
@@ -152,20 +152,20 @@ __   __  ___   ____  ____   ___ _____
 \ \ / / / _ \ |  _ \| __ ) / _ \_   _|
  \ V / | |_| || |_) |  _ \| |_| || |
   |_|   \___/ |____/|___/ \___/ |_|
-Hello! I'm yapBot.
+Hello! I'm YAPBOT.
 What can I do for you?
 Got it. I've added this task:
   [T][ ] borrow book
 Now you have 1 tasks in the list.
 Got it. I've added this task:
-  [D][ ] return book (by: Sunday)
+  [D][ ] return book (by: Oct 15 2019)
 Now you have 2 tasks in the list.
 Got it. I've added this task:
   [E][ ] project meeting (from: Mon 2pm to: 4pm)
 Now you have 3 tasks in the list.
 Here are the tasks in your list:
 1.[T][ ] borrow book
-2.[D][ ] return book (by: Sunday)
+2.[D][ ] return book (by: Oct 15 2019)
 3.[E][ ] project meeting (from: Mon 2pm to: 4pm)
 Bye. Hope to see you again soon!
 ~~~
@@ -202,7 +202,7 @@ __   __  ___   ____  ____   ___ _____
 \ \ / / / _ \ |  _ \| __ ) / _ \_   _|
  \ V / | |_| || |_) |  _ \| |_| || |
   |_|   \___/ |____/|___/ \___/ |_|
-Hello! I'm yapBot.
+Hello! I'm YAPBOT.
 What can I do for you?
 The description of a todo cannot be empty. Usage: todo <description>
 The description of a todo cannot be empty. Usage: todo <description>
@@ -234,7 +234,7 @@ __   __  ___   ____  ____   ___ _____
 \ \ / / / _ \ |  _ \| __ ) / _ \_   _|
  \ V / | |_| || |_) |  _ \| |_| || |
   |_|   \___/ |____/|___/ \___/ |_|
-Hello! I'm yapBot.
+Hello! I'm YAPBOT.
 What can I do for you?
 A deadline needs both a description and a '/by' date. Usage: deadline <description> /by <date>
 A deadline needs both a description and a '/by' date. Usage: deadline <description> /by <date>
@@ -262,7 +262,7 @@ __   __  ___   ____  ____   ___ _____
 \ \ / / / _ \ |  _ \| __ ) / _ \_   _|
  \ V / | |_| || |_) |  _ \| |_| || |
   |_|   \___/ |____/|___/ \___/ |_|
-Hello! I'm yapBot.
+Hello! I'm YAPBOT.
 What can I do for you?
 Got it. I've added this task:
   [T][ ] read book
@@ -297,7 +297,7 @@ __   __  ___   ____  ____   ___ _____
 \ \ / / / _ \ |  _ \| __ ) / _ \_   _|
  \ V / | |_| || |_) |  _ \| |_| || |
   |_|   \___/ |____/|___/ \___/ |_|
-Hello! I'm yapBot.
+Hello! I'm YAPBOT.
 What can I do for you?
 Got it. I've added this task:
   [T][ ] task A
@@ -329,7 +329,7 @@ Bye. Hope to see you again soon!
 ~~~text
 todo read book
 mark 1
-deadline return book /by June 6th
+deadline return book /by 2019-06-06
 mark 2
 event project meeting /from Aug 6th 2pm /to 4pm
 todo join sports club
@@ -347,7 +347,7 @@ __   __  ___   ____  ____   ___ _____
 \ \ / / / _ \ |  _ \| __ ) / _ \_   _|
  \ V / | |_| || |_) |  _ \| |_| || |
   |_|   \___/ |____/|___/ \___/ |_|
-Hello! I'm yapBot.
+Hello! I'm YAPBOT.
 What can I do for you?
 Got it. I've added this task:
   [T][ ] read book
@@ -355,10 +355,10 @@ Now you have 1 tasks in the list.
 Nice! I've marked this task as done:
   [T][X] read book
 Got it. I've added this task:
-  [D][ ] return book (by: June 6th)
+  [D][ ] return book (by: Jun 06 2019)
 Now you have 2 tasks in the list.
 Nice! I've marked this task as done:
-  [D][X] return book (by: June 6th)
+  [D][X] return book (by: Jun 06 2019)
 Got it. I've added this task:
   [E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
 Now you have 3 tasks in the list.
@@ -372,7 +372,7 @@ Got it. I've added this task:
 Now you have 5 tasks in the list.
 Here are the tasks in your list:
 1.[T][X] read book
-2.[D][X] return book (by: June 6th)
+2.[D][X] return book (by: Jun 06 2019)
 3.[E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
 4.[T][X] join sports club
 5.[T][ ] borrow book
@@ -381,7 +381,7 @@ I have removed this task:
 Now you have 4 tasks in the list.
 Here are the tasks in your list:
 1.[T][X] read book
-2.[D][X] return book (by: June 6th)
+2.[D][X] return book (by: Jun 06 2019)
 3.[T][X] join sports club
 4.[T][ ] borrow book
 Bye. Hope to see you again soon!
@@ -407,7 +407,7 @@ Bye. Hope to see you again soon!
 ### Input
 ~~~text
 todo read book
-deadline return book /by June 6th
+deadline return book /by 2019-06-06
 event project meeting /from Aug 6th 2pm /to 4pm
 mark 1
 delete 2
@@ -420,13 +420,13 @@ __   __  ___   ____  ____   ___ _____
 \ \ / / / _ \ |  _ \| __ ) / _ \_   _|
  \ V / | |_| || |_) |  _ \| |_| || |
   |_|   \___/ |____/|___/ \___/ |_|
-Hello! I'm yapBot.
+Hello! I'm YAPBOT.
 What can I do for you?
 Got it. I've added this task:
   [T][ ] read book
 Now you have 1 tasks in the list.
 Got it. I've added this task:
-  [D][ ] return book (by: June 6th)
+  [D][ ] return book (by: Jun 06 2019)
 Now you have 2 tasks in the list.
 Got it. I've added this task:
   [E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
@@ -434,7 +434,7 @@ Now you have 3 tasks in the list.
 Nice! I've marked this task as done:
   [T][X] read book
 I have removed this task:
-  [D][ ] return book (by: June 6th)
+  [D][ ] return book (by: Jun 06 2019)
 Now you have 2 tasks in the list.
 Bye. Hope to see you again soon!
 ~~~
@@ -461,7 +461,7 @@ E | 0 | project meeting | Aug 6th 2pm | 4pm
   from a previous session):
 ~~~text
 T | 1 | read book
-D | 0 | return book | June 6th
+D | 0 | return book | 2019-06-06
 E | 0 | project meeting | Aug 6th 2pm | 4pm
 ~~~
 
@@ -477,11 +477,11 @@ __   __  ___   ____  ____   ___ _____
 \ \ / / / _ \ |  _ \| __ ) / _ \_   _|
  \ V / | |_| || |_) |  _ \| |_| || |
   |_|   \___/ |____/|___/ \___/ |_|
-Hello! I'm yapBot.
+Hello! I'm YAPBOT.
 What can I do for you?
 Here are the tasks in your list:
 1.[T][X] read book
-2.[D][ ] return book (by: June 6th)
+2.[D][ ] return book (by: Jun 06 2019)
 3.[E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
 Bye. Hope to see you again soon!
 ~~~
@@ -517,7 +517,7 @@ __   __  ___   ____  ____   ___ _____
 \ \ / / / _ \ |  _ \| __ ) / _ \_   _|
  \ V / | |_| || |_) |  _ \| |_| || |
   |_|   \___/ |____/|___/ \___/ |_|
-Hello! I'm yapBot.
+Hello! I'm YAPBOT.
 What can I do for you?
 Here are the tasks in your list:
 Bye. Hope to see you again soon!
@@ -543,7 +543,7 @@ __   __  ___   ____  ____   ___ _____
 \ \ / / / _ \ |  _ \| __ ) / _ \_   _|
  \ V / | |_| || |_) |  _ \| |_| || |
   |_|   \___/ |____/|___/ \___/ |_|
-Hello! I'm yapBot.
+Hello! I'm YAPBOT.
 What can I do for you?
 The description of a todo cannot contain the '|' character, as it is reserved for the save file format.
 The '/by' date of a deadline cannot contain the '|' character, as it is reserved for the save file format.
@@ -580,7 +580,7 @@ __   __  ___   ____  ____   ___ _____
 \ \ / / / _ \ |  _ \| __ ) / _ \_   _|
  \ V / | |_| || |_) |  _ \| |_| || |
   |_|   \___/ |____/|___/ \___/ |_|
-Hello! I'm yapBot.
+Hello! I'm YAPBOT.
 What can I do for you?
 Here are the tasks in your list:
 1.[T][X] read book
@@ -625,7 +625,7 @@ __   __  ___   ____  ____   ___ _____
 \ \ / / / _ \ |  _ \| __ ) / _ \_   _|
  \ V / | |_| || |_) |  _ \| |_| || |
   |_|   \___/ |____/|___/ \___/ |_|
-Hello! I'm yapBot.
+Hello! I'm YAPBOT.
 What can I do for you?
 Please specify a task number, e.g. 'delete 2'.
 'abc' is not a valid task number.
@@ -639,3 +639,61 @@ Now you have 0 tasks in the list.
 Here are the tasks in your list:
 Bye. Hope to see you again soon!
 ~~~
+
+## Test case: Deadline date is parsed and reformatted for display
+- Aim: Verify that a deadline's '/by' date, entered in yyyy-mm-dd format,
+  is stored as a real date and displayed in "MMM dd yyyy" format,
+  including a case where the day has no leading zero in the input.
+
+### Input
+~~~text
+deadline pay bills /by 2019-01-05
+list
+bye
+~~~
+
+### Expected output
+~~~text
+__   __  ___   ____  ____   ___ _____
+\ \ / / / _ \ |  _ \| __ ) / _ \_   _|
+ \ V / | |_| || |_) |  _ \| |_| || |
+  |_|   \___/ |____/|___/ \___/ |_|
+Hello! I'm YAPBOT.
+What can I do for you?
+Got it. I've added this task:
+  [D][ ] pay bills (by: Jan 05 2019)
+Now you have 1 tasks in the list.
+Here are the tasks in your list:
+1.[D][ ] pay bills (by: Jan 05 2019)
+Bye. Hope to see you again soon!
+~~~
+
+## Test case: Invalid deadline date format is rejected
+- Aim: Verify that a deadline date not in yyyy-mm-dd format is rejected
+  with a clear error, and no task is added.
+
+### Input
+~~~text
+deadline pay bills /by June 6th
+deadline pay bills /by 6/6/2019
+deadline pay bills /by 2019-13-01
+list
+bye
+~~~
+
+### Expected output
+~~~text
+__   __  ___   ____  ____   ___ _____
+\ \ / / / _ \ |  _ \| __ ) / _ \_   _|
+ \ V / | |_| || |_) |  _ \| |_| || |
+  |_|   \___/ |____/|___/ \___/ |_|
+Hello! I'm YAPBOT.
+What can I do for you?
+Please enter the deadline date in yyyy-mm-dd format, e.g. 2019-10-15.
+Please enter the deadline date in yyyy-mm-dd format, e.g. 2019-10-15.
+Please enter the deadline date in yyyy-mm-dd format, e.g. 2019-10-15.
+Here are the tasks in your list:
+Bye. Hope to see you again soon!
+~~~
+- Note: 2019-13-01 has a valid yyyy-mm-dd shape but an invalid month (13),
+  so LocalDate.parse() rejects it the same way as a malformed string.
