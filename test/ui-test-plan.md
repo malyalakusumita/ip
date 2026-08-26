@@ -523,6 +523,88 @@ Here are the tasks in your list:
 Bye. Hope to see you again soon!
 ~~~
 
+## Test case: Task fields cannot contain '|'
+- Aim: Verify that a task field containing the '|' character is rejected at
+  input time, since it is the save-file delimiter, instead of being silently
+  accepted and corrupting the save file on the next write.
+
+### Input
+~~~text
+todo read | book
+deadline return book /by June | 6th
+event x /from a | b /to c
+list
+bye
+~~~
+
+### Expected output
+~~~text
+__   __  ___   ____  ____   ___ _____
+\ \ / / / _ \ |  _ \| __ ) / _ \_   _|
+ \ V / | |_| || |_) |  _ \| |_| || |
+  |_|   \___/ |____/|___/ \___/ |_|
+Hello! I'm yapBot.
+What can I do for you?
+The description of a todo cannot contain the '|' character, as it is reserved for the save file format.
+The '/by' date of a deadline cannot contain the '|' character, as it is reserved for the save file format.
+The '/from' time of an event cannot contain the '|' character, as it is reserved for the save file format.
+Here are the tasks in your list:
+Bye. Hope to see you again soon!
+~~~
+
+## Test case: Corrupted save-file lines are skipped, not crashed on
+- Aim: Verify that a save file containing bad lines (wrong field count,
+  invalid status, unknown type, blank required field) loads whatever valid
+  tasks it can, skips the rest with a warning, and does not crash the
+  program on startup.
+- Setup: before running, create `./data/yapBot.txt` with exactly the
+  following contents:
+~~~text
+T | 1 | read book
+X | 0 | unknown type
+T | 2 | bad status value
+D | 0 | missing by field
+T | 0 |
+E | 0 | ok event | Aug 6th 2pm | 4pm
+~~~
+
+### Input
+~~~text
+list
+bye
+~~~
+
+### Expected console output
+~~~text
+__   __  ___   ____  ____   ___ _____
+\ \ / / / _ \ |  _ \| __ ) / _ \_   _|
+ \ V / | |_| || |_) |  _ \| |_| || |
+  |_|   \___/ |____/|___/ \___/ |_|
+Hello! I'm yapBot.
+What can I do for you?
+Here are the tasks in your list:
+1.[T][X] read book
+2.[E][ ] ok event (from: Aug 6th 2pm to: 4pm)
+Bye. Hope to see you again soon!
+~~~
+- Note: the exact wording of the "Warning: skipping..." lines that also get
+  printed during load is not asserted here, since it is diagnostic text
+  aimed at the developer rather than a stable interface. What matters is
+  that only the two well-formed lines are loaded (in order, with the
+  correct type/description/status/extra fields), and the program does not
+  crash. Diff the ACTUAL output against EXPECTED with this in mind.
+
+## Test case: Save file with more tasks than the array can hold
+- Aim: Verify that a save file with more entries than the task array's
+  capacity (100) loads only the first 100 and warns about the rest, rather
+  than crashing with an out-of-bounds error.
+- Setup: generate a `./data/yapBot.txt` with 105 valid `T | 0 | task N`
+  lines (e.g. via a small script), then run `list` followed by `bye`.
+- Expected: exactly 100 tasks are listed (numbered 1 to 100, matching the
+  first 100 lines of the file in order); the program does not crash; a
+  warning about the remaining 5 tasks is printed to the console (exact
+  wording not asserted, per the note above).
+
 ## Test case: delete with invalid input
 - Aim: Verify delete on an empty list, with no number, and with a non-numeric or out-of-range number, is rejected without crashing, and a later valid delete still works.
 

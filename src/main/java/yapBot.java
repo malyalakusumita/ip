@@ -70,7 +70,7 @@ public class yapBot {
                         throw new yapBotException("The description of a todo cannot be empty. "
                                 + "Usage: todo <description>");
                     }
-                    Task task = new Todo(description);
+                    Task task = new Todo(checkNoDelimiter(description, "description of a todo"));
                     tasks[taskCount] = task;
                     taskCount++;
                     Storage.save(tasks, taskCount);
@@ -87,7 +87,10 @@ public class yapBot {
                         throw new yapBotException("A deadline needs both a description and a '/by' date. "
                                 + "Usage: deadline <description> /by <date>");
                     }
-                    Task task = new Deadline(parts[0].trim(), parts[1].trim());
+                    String deadlineDescription = checkNoDelimiter(
+                            parts[0].trim(), "description of a deadline");
+                    String by = checkNoDelimiter(parts[1].trim(), "'/by' date of a deadline");
+                    Task task = new Deadline(deadlineDescription, by);
                     tasks[taskCount] = task;
                     taskCount++;
                     Storage.save(tasks, taskCount);
@@ -107,7 +110,11 @@ public class yapBot {
                                         + "Usage: event <description> /from <start> /to <end>");
 
                     }
-                    Task task = new Event(parts[0].trim(), parts[1].trim(), parts[2].trim());
+                    String eventDescription = checkNoDelimiter(
+                            parts[0].trim(), "description of an event");
+                    String from = checkNoDelimiter(parts[1].trim(), "'/from' time of an event");
+                    String to = checkNoDelimiter(parts[2].trim(), "'/to' time of an event");
+                    Task task = new Event(eventDescription, from, to);
                     tasks[taskCount] = task;
                     taskCount++;
                     Storage.save(tasks, taskCount);
@@ -156,14 +163,31 @@ public class yapBot {
         return taskIndex;
     }
 
-    // Checks if space before adding into task list.
+    //checks if space before adding into task list
     private static void checkSpaceIsFull(int taskCount) throws yapBotException {
         if (taskCount >= 100) {
             throw new yapBotException("Sorry, your task list is full (max 100 tasks).");
         }
     }
 
-    // Helper method to print the response when a new task is added.
+    /**
+     * Rejects a task field that contains the '|' character, since it is the
+     * delimiter used by the save file format and would corrupt it if saved.
+     *
+     * @param value     the field value to check.
+     * @param fieldName a human-readable name for the field, used in the error message.
+     * @return {@code value} unchanged, if it passed the check.
+     * @throws yapBotException if {@code value} contains '|'.
+     */
+    private static String checkNoDelimiter(String value, String fieldName) throws yapBotException {
+        if (value.contains("|")) {
+            throw new yapBotException("The " + fieldName + " cannot contain the '|' character, "
+                    + "as it is reserved for the save file format.");
+        }
+        return value;
+    }
+
+    // Helper method to print the response when a new task is added
     private static void printAddTaskResponse(Task task, int count) {
         System.out.println("Got it. I've added this task:");
         System.out.println("  " + task);
