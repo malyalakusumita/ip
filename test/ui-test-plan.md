@@ -387,6 +387,65 @@ Here are the tasks in your list:
 Bye. Hope to see you again soon!
 ~~~
 
+## Test case: Tasks are saved to disk after each change
+- Aim: Verify that every task-list mutation (add, mark, unmark, delete) writes
+  the current task list to `./data/yapBot.txt` in the pipe-delimited format,
+  and that the console output is unaffected by this write.
+- Note: this test case cannot be captured purely by the stdout diff that the
+  other cases in this file use, since `Storage.save()` produces no output on
+  success. It needs a filesystem check in addition to (or instead of) a
+  stdout diff. If `runtest.sh`/`runtest.bat` only compares `ACTUAL.TXT`
+  against `EXPECTED.TXT`, this case should be run and checked manually until
+  the runner script is extended to also diff a saved-file fixture.
+
+### Input
+~~~text
+todo read book
+deadline return book /by June 6th
+event project meeting /from Aug 6th 2pm /to 4pm
+mark 1
+delete 2
+bye
+~~~
+
+### Expected console output
+~~~text
+__   __  ___   ____  ____   ___ _____
+\ \ / / / _ \ |  _ \| __ ) / _ \_   _|
+ \ V / | |_| || |_) |  _ \| |_| || |
+  |_|   \___/ |____/|___/ \___/ |_|
+Hello! I'm yapBot.
+What can I do for you?
+Got it. I've added this task:
+  [T][ ] read book
+Now you have 1 tasks in the list.
+Got it. I've added this task:
+  [D][ ] return book (by: June 6th)
+Now you have 2 tasks in the list.
+Got it. I've added this task:
+  [E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
+Now you have 3 tasks in the list.
+Nice! I've marked this task as done:
+  [T][X] read book
+I have removed this task:
+  [D][ ] return book (by: June 6th)
+Now you have 2 tasks in the list.
+Bye. Hope to see you again soon!
+~~~
+
+### Expected contents of `./data/yapBot.txt` after the run
+~~~text
+T | 1 | read book
+E | 0 | project meeting | Aug 6th 2pm | 4pm
+~~~
+
+### Manual verification steps
+1. Delete any existing `./data/yapBot.txt` before running, so the test starts clean.
+2. Run the program with the input above (e.g. pipe it in, or type it interactively).
+3. Confirm the console output matches the block above.
+4. Open `./data/yapBot.txt` and confirm its contents match the block above exactly
+   (two lines, in this order, reflecting the mark and the delete).
+
 ## Test case: delete with invalid input
 - Aim: Verify delete on an empty list, with no number, and with a non-numeric or out-of-range number, is rejected without crashing, and a later valid delete still works.
 

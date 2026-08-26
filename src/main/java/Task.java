@@ -34,6 +34,15 @@ public class Task {
     }
 
     /**
+     * Returns the status as it should appear in the save file ("1" for done, "0" otherwise).
+     *
+     * @return {@code "1"} when complete; otherwise, {@code "0"}
+     */
+    public String getStatusValue() {
+        return isDone ? "1" : "0";
+    }
+
+    /**
      * Marks this task as complete.
      */
     public void markAsDone() {
@@ -45,6 +54,26 @@ public class Task {
      */
     public void markAsNotDone() {
         isDone = false;
+    }
+
+    /**
+     * Returns the single-letter icon identifying this task's type in the save file.
+     * Subclasses override this to identify themselves (e.g. "D" for Deadline).
+     *
+     * @return the type icon, defaults to "T"
+     */
+    protected String getTypeIcon() {
+        return "T";
+    }
+
+    /**
+     * Returns this task serialized as a single line for the save file, in the format:
+     * {@code type | status | description}. Subclasses append any extra fields they have.
+     *
+     * @return the file-format representation of this task
+     */
+    public String toFileFormat() {
+        return getTypeIcon() + " | " + getStatusValue() + " | " + description;
     }
 
     @Override
