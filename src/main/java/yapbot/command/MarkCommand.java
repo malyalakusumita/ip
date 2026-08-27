@@ -1,6 +1,6 @@
 package yapbot.command;
 
-import yapbot.exception.yapBotException;
+import yapbot.exception.YapBotException;
 import yapbot.storage.Storage;
 import yapbot.task.TaskList;
 import yapbot.ui.Ui;
@@ -27,10 +27,10 @@ public class MarkCommand extends Command {
      *
      * @param taskList the task list containing the task to mark.
      * @param ui the Ui to show the confirmation on.
-     * @throws yapBotException if no valid task number was given.
+     * @throws YapBotException if no valid task number was given.
      */
     @Override
-    public void execute(TaskList taskList, Ui ui) throws yapBotException {
+    public void execute(TaskList taskList, Ui ui) throws YapBotException {
         int taskIndex = taskList.validateIndex(fullCommand, "mark");
         taskList.markAsDone(taskIndex);
         Storage.save(taskList.toArray(), taskList.size());

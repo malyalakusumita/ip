@@ -10,7 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-import yapbot.exception.yapBotException;
+import yapbot.exception.YapBotException;
 import yapbot.storage.Storage;
 import yapbot.task.Task;
 import yapbot.task.TaskList;
@@ -33,7 +33,7 @@ public class UnmarkCommandTest {
     }
 
     @Test
-    public void execute_validIndex_marksTaskAsNotDoneAndPersists() throws yapBotException {
+    public void execute_validIndex_marksTaskAsNotDoneAndPersists() throws YapBotException {
         TaskList taskList = new TaskList();
         taskList.add(new Todo("read book"));
         taskList.markAsDone(0);
@@ -53,6 +53,6 @@ public class UnmarkCommandTest {
         TaskList taskList = new TaskList();
         UnmarkCommand command = new UnmarkCommand("unmark 1");
 
-        assertThrows(yapBotException.class, () -> command.execute(taskList, new Ui()));
+        assertThrows(YapBotException.class, () -> command.execute(taskList, new Ui()));
     }
 }

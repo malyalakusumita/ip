@@ -1,6 +1,6 @@
 package yapbot.command;
 
-import yapbot.exception.yapBotException;
+import yapbot.exception.YapBotException;
 import yapbot.storage.Storage;
 import yapbot.task.Task;
 import yapbot.task.TaskList;
@@ -28,10 +28,10 @@ public class DeleteCommand extends Command {
      *
      * @param taskList the task list to remove from.
      * @param ui the Ui to show the confirmation on.
-     * @throws yapBotException if no valid task number was given.
+     * @throws YapBotException if no valid task number was given.
      */
     @Override
-    public void execute(TaskList taskList, Ui ui) throws yapBotException {
+    public void execute(TaskList taskList, Ui ui) throws YapBotException {
         int taskIndex = taskList.validateIndex(fullCommand, "delete");
         Task removedTask = taskList.delete(taskIndex);
         Storage.save(taskList.toArray(), taskList.size());

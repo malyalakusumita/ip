@@ -1,7 +1,7 @@
 package yapbot;
 
 import yapbot.command.Command;
-import yapbot.exception.yapBotException;
+import yapbot.exception.YapBotException;
 import yapbot.parser.Parser;
 import yapbot.storage.Storage;
 import yapbot.task.Task;
@@ -11,7 +11,7 @@ import yapbot.ui.Ui;
 /**
  * Entry point for yapBot, a command-line task-tracking chatbot.
  */
-public class yapBot {
+public class YapBot {
 
     /**
      * Runs the yapBot command loop, reading commands from standard input
@@ -34,7 +34,7 @@ public class yapBot {
                 Command command = Parser.parse(fullCommand);
                 command.execute(taskList, ui);
                 isExit = command.isExit();
-            } catch (yapBotException e) {
+            } catch (YapBotException e) {
                 ui.showMessage(e.getMessage());
             } catch (Exception e) {
                 // Safety net for unanticipated bad input

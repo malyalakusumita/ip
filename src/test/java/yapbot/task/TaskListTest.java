@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-import yapbot.exception.yapBotException;
+import yapbot.exception.YapBotException;
 
 public class TaskListTest {
 
@@ -46,7 +46,7 @@ public class TaskListTest {
     }
 
     @Test
-    public void size_afterAddingTasks_returnsTaskCount() throws yapBotException {
+    public void size_afterAddingTasks_returnsTaskCount() throws YapBotException {
         TaskList taskList = new TaskList();
         taskList.add(new Todo("read book"));
         taskList.add(new Todo("write code"));
@@ -62,7 +62,7 @@ public class TaskListTest {
     }
 
     @Test
-    public void isFull_belowMaxCapacity_returnsFalse() throws yapBotException {
+    public void isFull_belowMaxCapacity_returnsFalse() throws YapBotException {
         TaskList taskList = new TaskList();
         taskList.add(new Todo("read book"));
 
@@ -70,14 +70,14 @@ public class TaskListTest {
     }
 
     @Test
-    public void isFull_atMaxCapacity_returnsTrue() throws yapBotException {
+    public void isFull_atMaxCapacity_returnsTrue() throws YapBotException {
         TaskList taskList = fillToCapacity();
 
         assertTrue(taskList.isFull());
     }
 
     @Test
-    public void get_validIndex_returnsExpectedTask() throws yapBotException {
+    public void get_validIndex_returnsExpectedTask() throws YapBotException {
         TaskList taskList = new TaskList();
         Task task = new Todo("read book");
         taskList.add(task);
@@ -86,7 +86,7 @@ public class TaskListTest {
     }
 
     @Test
-    public void toArray_afterAddingTasks_containsAddedTasksInOrderWithBackingCapacity() throws yapBotException {
+    public void toArray_afterAddingTasks_containsAddedTasksInOrderWithBackingCapacity() throws YapBotException {
         TaskList taskList = new TaskList();
         Task first = new Todo("read book");
         Task second = new Todo("write code");
@@ -102,7 +102,7 @@ public class TaskListTest {
     }
 
     @Test
-    public void add_task_increasesSizeAndAppendsAtEnd() throws yapBotException {
+    public void add_task_increasesSizeAndAppendsAtEnd() throws YapBotException {
         TaskList taskList = new TaskList();
         taskList.add(new Todo("read book"));
         Task second = new Todo("write code");
@@ -114,14 +114,14 @@ public class TaskListTest {
     }
 
     @Test
-    public void add_whenListFull_exceptionThrown() throws yapBotException {
+    public void add_whenListFull_exceptionThrown() throws YapBotException {
         TaskList taskList = fillToCapacity();
 
-        assertThrows(yapBotException.class, () -> taskList.add(new Todo("one too many")));
+        assertThrows(YapBotException.class, () -> taskList.add(new Todo("one too many")));
     }
 
     @Test
-    public void delete_middleIndex_shiftsRemainingTasksAndReturnsRemovedTask() throws yapBotException {
+    public void delete_middleIndex_shiftsRemainingTasksAndReturnsRemovedTask() throws YapBotException {
         TaskList taskList = new TaskList();
         Task first = new Todo("read book");
         Task second = new Todo("write code");
@@ -139,7 +139,7 @@ public class TaskListTest {
     }
 
     @Test
-    public void delete_onlyTask_listBecomesEmpty() throws yapBotException {
+    public void delete_onlyTask_listBecomesEmpty() throws YapBotException {
         TaskList taskList = new TaskList();
         Task task = new Todo("read book");
         taskList.add(task);
@@ -152,7 +152,7 @@ public class TaskListTest {
     }
 
     @Test
-    public void markAsDone_validIndex_taskStatusBecomesDone() throws yapBotException {
+    public void markAsDone_validIndex_taskStatusBecomesDone() throws YapBotException {
         TaskList taskList = new TaskList();
         taskList.add(new Todo("read book"));
 
@@ -162,7 +162,7 @@ public class TaskListTest {
     }
 
     @Test
-    public void markAsNotDone_previouslyDoneTask_taskStatusBecomesNotDone() throws yapBotException {
+    public void markAsNotDone_previouslyDoneTask_taskStatusBecomesNotDone() throws YapBotException {
         TaskList taskList = new TaskList();
         taskList.add(new Todo("read book"));
         taskList.markAsDone(0);
@@ -172,7 +172,7 @@ public class TaskListTest {
         assertEquals("0", taskList.get(0).getStatusValue());
     }
 
-    private TaskList fillToCapacity() throws yapBotException {
+    private TaskList fillToCapacity() throws YapBotException {
         TaskList taskList = new TaskList();
         for (int i = 0; i < MAX_CAPACITY; i++) {
             taskList.add(new Todo("task " + i));
@@ -181,7 +181,7 @@ public class TaskListTest {
     }
 
     @Test
-    public void validateIndex_validIndexWithinRange_returnsZeroBasedIndex() throws yapBotException {
+    public void validateIndex_validIndexWithinRange_returnsZeroBasedIndex() throws YapBotException {
         TaskList taskList = new TaskList();
         taskList.add(new Todo("read book"));
         taskList.add(new Todo("write code"));
@@ -192,7 +192,7 @@ public class TaskListTest {
     }
 
     @Test
-    public void validateIndex_firstTask_returnsIndexZero() throws yapBotException {
+    public void validateIndex_firstTask_returnsIndexZero() throws YapBotException {
         TaskList taskList = new TaskList();
         taskList.add(new Todo("read book"));
 
@@ -202,7 +202,7 @@ public class TaskListTest {
     }
 
     @Test
-    public void validateIndex_extraWhitespaceAroundNumber_trimmedAndParsed() throws yapBotException {
+    public void validateIndex_extraWhitespaceAroundNumber_trimmedAndParsed() throws YapBotException {
         TaskList taskList = new TaskList();
         taskList.add(new Todo("read book"));
         taskList.add(new Todo("write code"));
@@ -216,51 +216,51 @@ public class TaskListTest {
     public void validateIndex_noArgumentGiven_exceptionThrown() {
         TaskList taskList = new TaskList();
 
-        assertThrows(yapBotException.class, () -> taskList.validateIndex("mark", "mark"));
+        assertThrows(YapBotException.class, () -> taskList.validateIndex("mark", "mark"));
     }
 
     @Test
     public void validateIndex_blankArgumentGiven_exceptionThrown() {
         TaskList taskList = new TaskList();
 
-        assertThrows(yapBotException.class, () -> taskList.validateIndex("mark   ", "mark"));
+        assertThrows(YapBotException.class, () -> taskList.validateIndex("mark   ", "mark"));
     }
 
     @Test
     public void validateIndex_nonNumericArgument_exceptionThrown() {
         TaskList taskList = new TaskList();
 
-        assertThrows(yapBotException.class, () -> taskList.validateIndex("mark two", "mark"));
+        assertThrows(YapBotException.class, () -> taskList.validateIndex("mark two", "mark"));
     }
 
     @Test
     public void validateIndex_emptyTaskList_exceptionThrown() {
         TaskList taskList = new TaskList();
 
-        assertThrows(yapBotException.class, () -> taskList.validateIndex("mark 1", "mark"));
+        assertThrows(YapBotException.class, () -> taskList.validateIndex("mark 1", "mark"));
     }
 
     @Test
-    public void validateIndex_indexZero_exceptionThrown() throws yapBotException {
+    public void validateIndex_indexZero_exceptionThrown() throws YapBotException {
         TaskList taskList = new TaskList();
         taskList.add(new Todo("read book"));
 
-        assertThrows(yapBotException.class, () -> taskList.validateIndex("mark 0", "mark"));
+        assertThrows(YapBotException.class, () -> taskList.validateIndex("mark 0", "mark"));
     }
 
     @Test
-    public void validateIndex_negativeIndex_exceptionThrown() throws yapBotException {
+    public void validateIndex_negativeIndex_exceptionThrown() throws YapBotException {
         TaskList taskList = new TaskList();
         taskList.add(new Todo("read book"));
 
-        assertThrows(yapBotException.class, () -> taskList.validateIndex("mark -1", "mark"));
+        assertThrows(YapBotException.class, () -> taskList.validateIndex("mark -1", "mark"));
     }
 
     @Test
-    public void validateIndex_indexBeyondListSize_exceptionThrown() throws yapBotException {
+    public void validateIndex_indexBeyondListSize_exceptionThrown() throws YapBotException {
         TaskList taskList = new TaskList();
         taskList.add(new Todo("read book"));
 
-        assertThrows(yapBotException.class, () -> taskList.validateIndex("mark 2", "mark"));
+        assertThrows(YapBotException.class, () -> taskList.validateIndex("mark 2", "mark"));
     }
 }

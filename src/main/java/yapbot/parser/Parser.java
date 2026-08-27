@@ -10,7 +10,7 @@ import yapbot.command.DeleteCommand;
 import yapbot.command.ListCommand;
 import yapbot.command.MarkCommand;
 import yapbot.command.UnmarkCommand;
-import yapbot.exception.yapBotException;
+import yapbot.exception.YapBotException;
 import yapbot.task.Deadline;
 import yapbot.task.Event;
 import yapbot.task.Task;
@@ -18,7 +18,7 @@ import yapbot.task.Todo;
 
 /**
  * Makes sense of user command text, turning it into a {@link Command} to
- * execute (or throwing a {@link yapBotException} if it can't be understood).
+ * execute (or throwing a {@link YapBotException} if it can't be understood).
  */
 public class Parser {
 
@@ -27,9 +27,9 @@ public class Parser {
      *
      * @param fullCommand the full command text as typed by the user.
      * @return the command to execute.
-     * @throws yapBotException if the command is empty, unrecognized, or malformed.
+     * @throws YapBotException if the command is empty, unrecognized, or malformed.
      */
-    public static Command parse(String fullCommand) throws yapBotException {
+    public static Command parse(String fullCommand) throws YapBotException {
         if (fullCommand.equals("bye")) {
             return new ByeCommand();
         } else if (fullCommand.equals("list")) {
@@ -47,10 +47,10 @@ public class Parser {
         } else if (fullCommand.startsWith("event")) {
             return new AddCommand(parseEvent(fullCommand));
         } else if (fullCommand.isBlank()) {
-            throw new yapBotException("You didn't type anything. Try 'todo', 'deadline', "
+            throw new YapBotException("You didn't type anything. Try 'todo', 'deadline', "
                     + "'event', 'list', 'mark', 'unmark', 'delete' or 'bye'.");
         } else {
-            throw new yapBotException(
+            throw new YapBotException(
                     "I'm sorry, but I don't know what that means. "
                             + "Try 'todo', 'deadline', 'event', 'list', 'mark', "
                             + "'unmark', 'delete' or 'bye'.");
@@ -62,12 +62,12 @@ public class Parser {
      *
      * @param command the full command text.
      * @return the parsed task.
-     * @throws yapBotException if the description is empty or contains '|'.
+     * @throws YapBotException if the description is empty or contains '|'.
      */
-    private static Task parseTodo(String command) throws yapBotException {
+    private static Task parseTodo(String command) throws YapBotException {
         String description = command.substring(4).trim();
         if (description.isEmpty()) {
-            throw new yapBotException("The description of a todo cannot be empty. "
+            throw new YapBotException("The description of a todo cannot be empty. "
                     + "Usage: todo <description>");
         }
         return new Todo(checkNoDelimiter(description, "description of a todo"));
@@ -78,18 +78,18 @@ public class Parser {
      *
      * @param command the full command text.
      * @return the parsed task.
-     * @throws yapBotException if the description/date is missing, contains
+     * @throws YapBotException if the description/date is missing, contains
      *         '|', or the date is not a valid {@code yyyy-mm-dd} date.
      */
-    private static Task parseDeadline(String command) throws yapBotException {
+    private static Task parseDeadline(String command) throws YapBotException {
         String details = command.length() > 8 ? command.substring(8).trim() : "";
         if (details.isEmpty()) {
-            throw new yapBotException("The description of a deadline cannot be empty. "
+            throw new YapBotException("The description of a deadline cannot be empty. "
                     + "Usage: deadline <description> /by <date>");
         }
         String[] parts = details.split(" /by ", 2);
         if (parts.length < 2 || parts[0].trim().isEmpty() || parts[1].trim().isEmpty()) {
-            throw new yapBotException("A deadline needs both a description and a '/by' date. "
+            throw new YapBotException("A deadline needs both a description and a '/by' date. "
                     + "Usage: deadline <description> /by <date>");
         }
         String description = checkNoDelimiter(parts[0].trim(), "description of a deadline");
@@ -103,18 +103,18 @@ public class Parser {
      *
      * @param command the full command text.
      * @return the parsed task.
-     * @throws yapBotException if the description/from/to are missing or contain '|'.
+     * @throws YapBotException if the description/from/to are missing or contain '|'.
      */
-    private static Task parseEvent(String command) throws yapBotException {
+    private static Task parseEvent(String command) throws YapBotException {
         String details = command.length() > 5 ? command.substring(5).trim() : "";
         if (details.isEmpty()) {
-            throw new yapBotException("The description of an event cannot be empty. "
+            throw new YapBotException("The description of an event cannot be empty. "
                     + "Usage: event <description> /from <start> /to <end>");
         }
         String[] parts = details.split(" /from | /to ");
         if (parts.length < 3 || parts[0].trim().isEmpty()
                 || parts[1].trim().isEmpty() || parts[2].trim().isEmpty()) {
-            throw new yapBotException(
+            throw new YapBotException(
                     "An event needs a description, a '/from' time and a '/to' time. "
                             + "Usage: event <description> /from <start> /to <end>");
         }
@@ -131,11 +131,11 @@ public class Parser {
      * @param value     the field value to check.
      * @param fieldName a human-readable name for the field, used in the error message.
      * @return {@code value} unchanged, if it passed the check.
-     * @throws yapBotException if {@code value} contains '|'.
+     * @throws YapBotException if {@code value} contains '|'.
      */
-    private static String checkNoDelimiter(String value, String fieldName) throws yapBotException {
+    private static String checkNoDelimiter(String value, String fieldName) throws YapBotException {
         if (value.contains("|")) {
-            throw new yapBotException("The " + fieldName + " cannot contain the '|' character, "
+            throw new YapBotException("The " + fieldName + " cannot contain the '|' character, "
                     + "as it is reserved for the save file format.");
         }
         return value;
@@ -146,13 +146,13 @@ public class Parser {
      *
      * @param value the raw '/by' text entered by the user.
      * @return the parsed date.
-     * @throws yapBotException if {@code value} is not a valid {@code yyyy-mm-dd} date.
+     * @throws YapBotException if {@code value} is not a valid {@code yyyy-mm-dd} date.
      */
-    private static LocalDate parseDeadlineDate(String value) throws yapBotException {
+    private static LocalDate parseDeadlineDate(String value) throws YapBotException {
         try {
             return LocalDate.parse(value);
         } catch (DateTimeParseException e) {
-            throw new yapBotException("Please enter the deadline date in yyyy-mm-dd format, "
+            throw new YapBotException("Please enter the deadline date in yyyy-mm-dd format, "
                     + "e.g. 2019-10-15.");
         }
     }
