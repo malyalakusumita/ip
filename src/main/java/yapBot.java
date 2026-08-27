@@ -16,8 +16,9 @@ public class yapBot {
         Ui ui = new Ui();
         ui.showWelcome();
 
-        Task[] tasks = new Task[100];
-        int taskCount = Storage.load(tasks);
+        Task[] loaded = new Task[100];
+        int loadedCount = Storage.load(loaded);
+        TaskList taskList = new TaskList(loaded, loadedCount);
 
         while (true) {
             String command = ui.readCommand();
@@ -28,41 +29,35 @@ public class yapBot {
                     ui.showGoodbye();
                     break;
                 } else if (command.equals("list")) {
-                    ui.showTaskList(tasks, taskCount);
+                    ui.showTaskList(taskList.toArray(), taskList.size());
                 } else if (command.startsWith("mark")) {
-                    int taskIndex = parseTaskIndex(command, "mark", taskCount);
-                    tasks[taskIndex].markAsDone();
-                    Storage.save(tasks, taskCount);
-                    ui.showTaskMarked(tasks[taskIndex]);
+                    int taskIndex = taskList.validateIndex(command, "mark");
+                    taskList.markAsDone(taskIndex);
+                    Storage.save(taskList.toArray(), taskList.size());
+                    ui.showTaskMarked(taskList.get(taskIndex));
                 } else if (command.startsWith("unmark")) {
-                    int taskIndex = parseTaskIndex(command, "unmark", taskCount);
-                    tasks[taskIndex].markAsNotDone();
-                    Storage.save(tasks, taskCount);
-                    ui.showTaskUnmarked(tasks[taskIndex]);
+                    int taskIndex = taskList.validateIndex(command, "unmark");
+                    taskList.markAsNotDone(taskIndex);
+                    Storage.save(taskList.toArray(), taskList.size());
+                    ui.showTaskUnmarked(taskList.get(taskIndex));
                 } else if (command.startsWith("delete")) {
-                    int taskIndex = parseTaskIndex(command, "delete", taskCount);
-                    Task removedTask = tasks[taskIndex];
-                    for (int i = taskIndex; i < taskCount - 1; i++) {
-                        tasks[i] = tasks[i + 1];
-                    }
-                    tasks[taskCount - 1] = null;
-                    taskCount--;
-                    Storage.save(tasks, taskCount);
-                    ui.showTaskDeleted(removedTask, taskCount);
+                    int taskIndex = taskList.validateIndex(command, "delete");
+                    Task removedTask = taskList.delete(taskIndex);
+                    Storage.save(taskList.toArray(), taskList.size());
+                    ui.showTaskDeleted(removedTask, taskList.size());
                 } else if (command.startsWith("todo")) {
-                    checkSpaceIsFull(taskCount);
+                    checkSpaceIsFull(taskList);
                     String description = command.substring(4).trim();
                     if (description.isEmpty()) {
                         throw new yapBotException("The description of a todo cannot be empty. "
                                 + "Usage: todo <description>");
                     }
                     Task task = new Todo(checkNoDelimiter(description, "description of a todo"));
-                    tasks[taskCount] = task;
-                    taskCount++;
-                    Storage.save(tasks, taskCount);
-                    ui.showTaskAdded(task, taskCount);
+                    taskList.add(task);
+                    Storage.save(taskList.toArray(), taskList.size());
+                    ui.showTaskAdded(task, taskList.size());
                 } else if (command.startsWith("deadline")) {
-                    checkSpaceIsFull(taskCount);
+                    checkSpaceIsFull(taskList);
                     String details = command.length() > 8 ? command.substring(8).trim() : "";
                     if (details.isEmpty()) {
                         throw new yapBotException("The description of a deadline cannot be empty. "
@@ -78,12 +73,11 @@ public class yapBot {
                     String byInput = checkNoDelimiter(parts[1].trim(), "'/by' date of a deadline");
                     LocalDate by = parseDeadlineDate(byInput);
                     Task task = new Deadline(deadlineDescription, by);
-                    tasks[taskCount] = task;
-                    taskCount++;
-                    Storage.save(tasks, taskCount);
-                    ui.showTaskAdded(task, taskCount);
+                    taskList.add(task);
+                    Storage.save(taskList.toArray(), taskList.size());
+                    ui.showTaskAdded(task, taskList.size());
                 } else if (command.startsWith("event")) {
-                    checkSpaceIsFull(taskCount);
+                    checkSpaceIsFull(taskList);
                     String details = command.length() > 5 ? command.substring(5).trim() : "";
                     if (details.isEmpty()) {
                         throw new yapBotException("The description of an event cannot be empty. "
@@ -102,10 +96,9 @@ public class yapBot {
                     String from = checkNoDelimiter(parts[1].trim(), "'/from' time of an event");
                     String to = checkNoDelimiter(parts[2].trim(), "'/to' time of an event");
                     Task task = new Event(eventDescription, from, to);
-                    tasks[taskCount] = task;
-                    taskCount++;
-                    Storage.save(tasks, taskCount);
-                    ui.showTaskAdded(task, taskCount);
+                    taskList.add(task);
+                    Storage.save(taskList.toArray(), taskList.size());
+                    ui.showTaskAdded(task, taskList.size());
                 } else if (command.isBlank()) {
                     throw new yapBotException("You didn't type anything. Try 'todo', 'deadline', "
                             + "'event', 'list', 'mark', 'unmark', 'delete' or 'bye'.");
@@ -124,35 +117,10 @@ public class yapBot {
         }
     }
 
-    // Parses the task number out of a "mark"/"unmark" command and validates it against the current task list.
-    private static int parseTaskIndex(String command, String keyword, int taskCount) throws yapBotException {
-        String argument = command.length() > keyword.length()
-                ? command.substring(keyword.length()).trim()
-                : "";
-        if (argument.isEmpty()) {
-            throw new yapBotException("Please specify a task number, e.g. '" + keyword + " 2'.");
-        }
-
-        int taskIndex;
-        try {
-            taskIndex = Integer.parseInt(argument) - 1;
-        } catch (NumberFormatException e) {
-            throw new yapBotException("'" + argument + "' is not a valid task number.");
-        }
-
-        if (taskCount == 0) {
-            throw new yapBotException("Your task list is empty, so there's nothing to " + keyword + ".");
-        }
-        if (taskIndex < 0 || taskIndex >= taskCount) {
-            throw new yapBotException("Task number " + (taskIndex + 1) + " doesn't exist. "
-                    + "You have " + taskCount + " task(s).");
-        }
-        return taskIndex;
-    }
-
-    //checks if space before adding into task list
-    private static void checkSpaceIsFull(int taskCount) throws yapBotException {
-        if (taskCount >= 100) {
+    // Checks there's room for one more task before parsing further, preserving the original
+    // check order (capacity is validated before description/date parsing, not after).
+    private static void checkSpaceIsFull(TaskList taskList) throws yapBotException {
+        if (taskList.isFull()) {
             throw new yapBotException("Sorry, your task list is full (max 100 tasks).");
         }
     }
