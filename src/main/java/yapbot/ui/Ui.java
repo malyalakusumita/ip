@@ -1,4 +1,8 @@
+package yapbot.ui;
+
 import java.util.Scanner;
+
+import yapbot.task.Task;
 
 /**
  * Handles all interaction with the user: reading input and printing output.

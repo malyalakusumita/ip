@@ -1,3 +1,9 @@
+package yapbot.command;
+
+import yapbot.exception.yapBotException;
+import yapbot.task.TaskList;
+import yapbot.ui.Ui;
+
 /**
  * Represents a user command that can be executed against the task list.
  */

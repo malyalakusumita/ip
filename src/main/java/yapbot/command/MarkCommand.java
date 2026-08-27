@@ -1,3 +1,10 @@
+package yapbot.command;
+
+import yapbot.exception.yapBotException;
+import yapbot.storage.Storage;
+import yapbot.task.TaskList;
+import yapbot.ui.Ui;
+
 /**
  * Represents the "mark" command, which marks a task as done.
  */
