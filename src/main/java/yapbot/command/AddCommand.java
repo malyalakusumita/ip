@@ -24,6 +24,17 @@ public class AddCommand extends Command {
         this.task = task;
     }
 
+    /**
+     * Returns the task this command will add. Exists mainly so tests (e.g.
+     * for {@link yapbot.parser.Parser}) can verify the task was built
+     * correctly without needing to execute the command.
+     *
+     * @return the task to be added.
+     */
+    public Task getTask() {
+        return task;
+    }
+
     @Override
     public void execute(TaskList taskList, Ui ui) throws yapBotException {
         taskList.add(task);

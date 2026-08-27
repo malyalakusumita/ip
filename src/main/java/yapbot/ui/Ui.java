@@ -1,5 +1,6 @@
 package yapbot.ui;
 
+import java.io.InputStream;
 import java.util.Scanner;
 
 import yapbot.task.Task;
@@ -16,7 +17,17 @@ public class Ui {
      * Creates a Ui that reads user input from standard input.
      */
     public Ui() {
-        this.scanner = new Scanner(System.in);
+        this(System.in);
+    }
+
+    /**
+     * Creates a Ui that reads user input from the given stream. Exists so
+     * tests can supply input without going through the real standard input.
+     *
+     * @param in the input stream to read commands from.
+     */
+    Ui(InputStream in) {
+        this.scanner = new Scanner(in);
     }
 
     /**

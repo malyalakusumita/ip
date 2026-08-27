@@ -32,6 +32,26 @@ public class Storage {
     private static final String STATUS_DONE = "1";
     private static final String STATUS_NOT_DONE = "0";
 
+    private static Path targetPathOverride = null;
+
+    /**
+     * Redirects {@link #save} and {@link #load} to the given path instead of
+     * the real save file. Exists only so tests can point storage at a
+     * temporary file instead of touching {@code data/yapBot.txt}.
+     *
+     * @param path the path to use in place of the real save file.
+     */
+    public static void setTargetPathForTesting(Path path) {
+        targetPathOverride = path;
+    }
+
+    /**
+     * Undoes {@link #setTargetPathForTesting}, restoring the real save-file path.
+     */
+    public static void resetTargetPathForTesting() {
+        targetPathOverride = null;
+    }
+
     /**
      * Builds the save-file path in an OS-independent way: the directory and
      * file name are supplied as separate arguments so the {@link Path} API
@@ -41,6 +61,9 @@ public class Storage {
      * @return the (relative) path to the save file.
      */
     private static Path getTargetPath() {
+        if (targetPathOverride != null) {
+            return targetPathOverride;
+        }
         return Paths.get(DATA_DIRECTORY_NAME, DATA_FILE_NAME);
     }
 
