@@ -1,13 +1,184 @@
 package yapbot.task;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
 import yapbot.exception.yapBotException;
 
 public class TaskListTest {
+
+    private static final int MAX_CAPACITY = 100;
+
+    @Test
+    public void constructor_default_createsEmptyList() {
+        TaskList taskList = new TaskList();
+
+        assertEquals(0, taskList.size());
+        assertFalse(taskList.isFull());
+    }
+
+    @Test
+    public void constructor_fromLoadedArray_copiesOnlyLoadedCountTasks() {
+        Task first = new Todo("read book");
+        Task second = new Todo("write code");
+        Task third = new Todo("should not be loaded");
+        Task[] loadedTasks = new Task[]{first, second, third};
+
+        TaskList taskList = new TaskList(loadedTasks, 2);
+
+        assertEquals(2, taskList.size());
+        assertSame(first, taskList.get(0));
+        assertSame(second, taskList.get(1));
+        assertNull(taskList.toArray()[2]);
+    }
+
+    @Test
+    public void size_emptyList_returnsZero() {
+        TaskList taskList = new TaskList();
+
+        assertEquals(0, taskList.size());
+    }
+
+    @Test
+    public void size_afterAddingTasks_returnsTaskCount() throws yapBotException {
+        TaskList taskList = new TaskList();
+        taskList.add(new Todo("read book"));
+        taskList.add(new Todo("write code"));
+
+        assertEquals(2, taskList.size());
+    }
+
+    @Test
+    public void isFull_emptyList_returnsFalse() {
+        TaskList taskList = new TaskList();
+
+        assertFalse(taskList.isFull());
+    }
+
+    @Test
+    public void isFull_belowMaxCapacity_returnsFalse() throws yapBotException {
+        TaskList taskList = new TaskList();
+        taskList.add(new Todo("read book"));
+
+        assertFalse(taskList.isFull());
+    }
+
+    @Test
+    public void isFull_atMaxCapacity_returnsTrue() throws yapBotException {
+        TaskList taskList = fillToCapacity();
+
+        assertTrue(taskList.isFull());
+    }
+
+    @Test
+    public void get_validIndex_returnsExpectedTask() throws yapBotException {
+        TaskList taskList = new TaskList();
+        Task task = new Todo("read book");
+        taskList.add(task);
+
+        assertSame(task, taskList.get(0));
+    }
+
+    @Test
+    public void toArray_afterAddingTasks_containsAddedTasksInOrderWithBackingCapacity() throws yapBotException {
+        TaskList taskList = new TaskList();
+        Task first = new Todo("read book");
+        Task second = new Todo("write code");
+        taskList.add(first);
+        taskList.add(second);
+
+        Task[] tasks = taskList.toArray();
+
+        assertEquals(MAX_CAPACITY, tasks.length);
+        assertSame(first, tasks[0]);
+        assertSame(second, tasks[1]);
+        assertNull(tasks[2]);
+    }
+
+    @Test
+    public void add_task_increasesSizeAndAppendsAtEnd() throws yapBotException {
+        TaskList taskList = new TaskList();
+        taskList.add(new Todo("read book"));
+        Task second = new Todo("write code");
+
+        taskList.add(second);
+
+        assertEquals(2, taskList.size());
+        assertSame(second, taskList.get(1));
+    }
+
+    @Test
+    public void add_whenListFull_exceptionThrown() throws yapBotException {
+        TaskList taskList = fillToCapacity();
+
+        assertThrows(yapBotException.class, () -> taskList.add(new Todo("one too many")));
+    }
+
+    @Test
+    public void delete_middleIndex_shiftsRemainingTasksAndReturnsRemovedTask() throws yapBotException {
+        TaskList taskList = new TaskList();
+        Task first = new Todo("read book");
+        Task second = new Todo("write code");
+        Task third = new Todo("walk dog");
+        taskList.add(first);
+        taskList.add(second);
+        taskList.add(third);
+
+        Task removed = taskList.delete(0);
+
+        assertSame(first, removed);
+        assertEquals(2, taskList.size());
+        assertSame(second, taskList.get(0));
+        assertSame(third, taskList.get(1));
+    }
+
+    @Test
+    public void delete_onlyTask_listBecomesEmpty() throws yapBotException {
+        TaskList taskList = new TaskList();
+        Task task = new Todo("read book");
+        taskList.add(task);
+
+        Task removed = taskList.delete(0);
+
+        assertSame(task, removed);
+        assertEquals(0, taskList.size());
+        assertNull(taskList.toArray()[0]);
+    }
+
+    @Test
+    public void markAsDone_validIndex_taskStatusBecomesDone() throws yapBotException {
+        TaskList taskList = new TaskList();
+        taskList.add(new Todo("read book"));
+
+        taskList.markAsDone(0);
+
+        assertEquals("1", taskList.get(0).getStatusValue());
+    }
+
+    @Test
+    public void markAsNotDone_previouslyDoneTask_taskStatusBecomesNotDone() throws yapBotException {
+        TaskList taskList = new TaskList();
+        taskList.add(new Todo("read book"));
+        taskList.markAsDone(0);
+
+        taskList.markAsNotDone(0);
+
+        assertEquals("0", taskList.get(0).getStatusValue());
+    }
+
+    private TaskList fillToCapacity() throws yapBotException {
+        TaskList taskList = new TaskList();
+        for (int i = 0; i < MAX_CAPACITY; i++) {
+            taskList.add(new Todo("task " + i));
+        }
+        return taskList;
+    }
 
     @Test
     public void validateIndex_validIndexWithinRange_returnsZeroBasedIndex() throws yapBotException {
