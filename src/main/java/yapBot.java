@@ -1,6 +1,5 @@
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
-import java.util.Scanner;
 
 /**
  * Entry point for yapBot, a command-line task-tracking chatbot.
@@ -14,45 +13,32 @@ public class yapBot {
      * @param args command-line arguments (not used).
      */
     public static void main(String[] args) {
-        String banner = """
-                __   __  ___   ____  ____   ___ _____
-                \\ \\ / / / _ \\ |  _ \\| __ ) / _ \\_   _|
-                 \\ V / | |_| || |_) |  _ \\| |_| || |
-                  |_|   \\___/ |____/|___/ \\___/ |_|
-                """;
-        System.out.print(banner);
-        System.out.println("Hello! I'm YAPBOT.");
-        System.out.println("What can I do for you?");
+        Ui ui = new Ui();
+        ui.showWelcome();
 
-        Scanner scanner = new Scanner(System.in);
         Task[] tasks = new Task[100];
         int taskCount = Storage.load(tasks);
 
         while (true) {
-            String command = scanner.nextLine();
+            String command = ui.readCommand();
 
             try {
 
                 if (command.equals("bye")) {
-                    System.out.println("Bye. Hope to see you again soon!");
+                    ui.showGoodbye();
                     break;
                 } else if (command.equals("list")) {
-                    System.out.println("Here are the tasks in your list:");
-                    for (int i = 0; i < taskCount; i++) {
-                        System.out.println((i + 1) + "." + tasks[i]);
-                    }
+                    ui.showTaskList(tasks, taskCount);
                 } else if (command.startsWith("mark")) {
                     int taskIndex = parseTaskIndex(command, "mark", taskCount);
                     tasks[taskIndex].markAsDone();
                     Storage.save(tasks, taskCount);
-                    System.out.println("Nice! I've marked this task as done:");
-                    System.out.println("  " + tasks[taskIndex]);
+                    ui.showTaskMarked(tasks[taskIndex]);
                 } else if (command.startsWith("unmark")) {
                     int taskIndex = parseTaskIndex(command, "unmark", taskCount);
                     tasks[taskIndex].markAsNotDone();
                     Storage.save(tasks, taskCount);
-                    System.out.println("I've marked this task as not done yet:");
-                    System.out.println("  " + tasks[taskIndex]);
+                    ui.showTaskUnmarked(tasks[taskIndex]);
                 } else if (command.startsWith("delete")) {
                     int taskIndex = parseTaskIndex(command, "delete", taskCount);
                     Task removedTask = tasks[taskIndex];
@@ -62,9 +48,7 @@ public class yapBot {
                     tasks[taskCount - 1] = null;
                     taskCount--;
                     Storage.save(tasks, taskCount);
-                    System.out.println("I have removed this task:");
-                    System.out.println("  " + removedTask);
-                    System.out.println("Now you have " + taskCount + " tasks in the list.");
+                    ui.showTaskDeleted(removedTask, taskCount);
                 } else if (command.startsWith("todo")) {
                     checkSpaceIsFull(taskCount);
                     String description = command.substring(4).trim();
@@ -76,7 +60,7 @@ public class yapBot {
                     tasks[taskCount] = task;
                     taskCount++;
                     Storage.save(tasks, taskCount);
-                    printAddTaskResponse(task, taskCount);
+                    ui.showTaskAdded(task, taskCount);
                 } else if (command.startsWith("deadline")) {
                     checkSpaceIsFull(taskCount);
                     String details = command.length() > 8 ? command.substring(8).trim() : "";
@@ -97,7 +81,7 @@ public class yapBot {
                     tasks[taskCount] = task;
                     taskCount++;
                     Storage.save(tasks, taskCount);
-                    printAddTaskResponse(task, taskCount);
+                    ui.showTaskAdded(task, taskCount);
                 } else if (command.startsWith("event")) {
                     checkSpaceIsFull(taskCount);
                     String details = command.length() > 5 ? command.substring(5).trim() : "";
@@ -121,7 +105,7 @@ public class yapBot {
                     tasks[taskCount] = task;
                     taskCount++;
                     Storage.save(tasks, taskCount);
-                    printAddTaskResponse(task, taskCount);
+                    ui.showTaskAdded(task, taskCount);
                 } else if (command.isBlank()) {
                     throw new yapBotException("You didn't type anything. Try 'todo', 'deadline', "
                             + "'event', 'list', 'mark', 'unmark', 'delete' or 'bye'.");
@@ -132,10 +116,10 @@ public class yapBot {
                                     + "'unmark', 'delete' or 'bye'.");
                 }
             } catch (yapBotException e) {
-                System.out.println(e.getMessage());
+                ui.showMessage(e.getMessage());
             } catch (Exception e) {
                 // Safety net for unanticipated bad input
-                System.out.println("Oops, something went wrong: " + e.getMessage());
+                ui.showMessage("Oops, something went wrong: " + e.getMessage());
             }
         }
     }
@@ -205,12 +189,4 @@ public class yapBot {
                     + "e.g. 2019-10-15.");
         }
     }
-
-    // Helper method to print the response when a new task is added
-    private static void printAddTaskResponse(Task task, int count) {
-        System.out.println("Got it. I've added this task:");
-        System.out.println("  " + task);
-        System.out.println("Now you have " + count + " tasks in the list.");
-    }
-
 }
