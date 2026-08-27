@@ -1,5 +1,7 @@
 package yapbot.task;
 
+import java.util.Arrays;
+
 import yapbot.exception.YapBotException;
 import yapbot.storage.Storage;
 
@@ -122,6 +124,25 @@ public class TaskList {
      */
     public void markAsNotDone(int index) {
         tasks[index].markAsNotDone();
+    }
+
+    /**
+     * Returns every task whose description contains the given keyword, in
+     * list order.
+     *
+     * @param keyword the text to search for, matched as a case-sensitive substring.
+     * @return the matching tasks, sized to exactly the number of matches.
+     */
+    public Task[] findMatching(String keyword) {
+        Task[] matches = new Task[size];
+        int matchCount = 0;
+        for (int i = 0; i < size; i++) {
+            if (tasks[i].getDescription().contains(keyword)) {
+                matches[matchCount] = tasks[i];
+                matchCount++;
+            }
+        }
+        return Arrays.copyOf(matches, matchCount);
     }
 
     /**

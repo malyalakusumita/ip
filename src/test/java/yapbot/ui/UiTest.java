@@ -123,4 +123,22 @@ public class UiTest {
         assertTrue(output().contains("1.[T][ ]read book"));
         assertTrue(output().contains("2.[T][ ]write code"));
     }
+
+    @Test
+    public void showMatchingTasks_emptyMatches_printsHeaderOnlyAndNoItems() {
+        new Ui().showMatchingTasks(new Task[0]);
+
+        assertTrue(output().contains("Here are the matching tasks in your list:"));
+        assertFalse(output().contains("1."));
+    }
+
+    @Test
+    public void showMatchingTasks_someMatches_printsEachOneNumbered() {
+        Task[] matches = new Task[]{new Todo("read book"), new Todo("return book")};
+
+        new Ui().showMatchingTasks(matches);
+
+        assertTrue(output().contains("1.[T][ ]read book"));
+        assertTrue(output().contains("2.[T][ ]return book"));
+    }
 }

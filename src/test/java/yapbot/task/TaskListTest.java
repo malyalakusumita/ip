@@ -181,6 +181,52 @@ public class TaskListTest {
     }
 
     @Test
+    public void findMatching_keywordPresentInSomeDescriptions_returnsOnlyMatchesInOrder() throws YapBotException {
+        TaskList taskList = new TaskList();
+        Task first = new Todo("read book");
+        Task second = new Todo("write code");
+        Task third = new Todo("return book");
+        taskList.add(first);
+        taskList.add(second);
+        taskList.add(third);
+
+        Task[] matches = taskList.findMatching("book");
+
+        assertEquals(2, matches.length);
+        assertSame(first, matches[0]);
+        assertSame(third, matches[1]);
+    }
+
+    @Test
+    public void findMatching_noDescriptionContainsKeyword_returnsEmptyArray() throws YapBotException {
+        TaskList taskList = new TaskList();
+        taskList.add(new Todo("read book"));
+
+        Task[] matches = taskList.findMatching("nomatch");
+
+        assertEquals(0, matches.length);
+    }
+
+    @Test
+    public void findMatching_emptyList_returnsEmptyArray() {
+        TaskList taskList = new TaskList();
+
+        Task[] matches = taskList.findMatching("book");
+
+        assertEquals(0, matches.length);
+    }
+
+    @Test
+    public void findMatching_keywordDifferentCase_doesNotMatch() throws YapBotException {
+        TaskList taskList = new TaskList();
+        taskList.add(new Todo("read book"));
+
+        Task[] matches = taskList.findMatching("BOOK");
+
+        assertEquals(0, matches.length);
+    }
+
+    @Test
     public void validateIndex_validIndexWithinRange_returnsZeroBasedIndex() throws YapBotException {
         TaskList taskList = new TaskList();
         taskList.add(new Todo("read book"));

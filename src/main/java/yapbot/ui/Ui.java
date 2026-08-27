@@ -126,4 +126,16 @@ public class Ui {
             System.out.println((i + 1) + "." + tasks[i]);
         }
     }
+
+    /**
+     * Prints the tasks that matched a search keyword.
+     *
+     * @param matches the matching tasks, in list order.
+     */
+    public void showMatchingTasks(Task[] matches) {
+        System.out.println("Here are the matching tasks in your list:");
+        for (int i = 0; i < matches.length; i++) {
+            System.out.println((i + 1) + "." + matches[i]);
+        }
+    }
 }
