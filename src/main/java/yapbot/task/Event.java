@@ -1,3 +1,5 @@
+package yapbot.task;
+
 /**
  * Represents an event task with a start and end time.
  */

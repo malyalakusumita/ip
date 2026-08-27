@@ -1,3 +1,8 @@
+package yapbot.task;
+
+import yapbot.exception.yapBotException;
+import yapbot.storage.Storage;
+
 /**
  * Holds the list of tasks and the operations that mutate it: adding,
  * deleting, marking/unmarking as done, and validating a user-supplied

@@ -1,3 +1,8 @@
+package yapbot.command;
+
+import yapbot.task.TaskList;
+import yapbot.ui.Ui;
+
 /**
  * Represents the "bye" command, which says goodbye and ends the program.
  */

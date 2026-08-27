@@ -1,3 +1,13 @@
+package yapbot;
+
+import yapbot.command.Command;
+import yapbot.exception.yapBotException;
+import yapbot.parser.Parser;
+import yapbot.storage.Storage;
+import yapbot.task.Task;
+import yapbot.task.TaskList;
+import yapbot.ui.Ui;
+
 /**
  * Entry point for yapBot, a command-line task-tracking chatbot.
  */

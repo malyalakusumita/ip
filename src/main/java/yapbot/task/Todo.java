@@ -1,3 +1,5 @@
+package yapbot.task;
+
 /**
  * Represents a todo task, i.e. a task with no date/time attached.
  */

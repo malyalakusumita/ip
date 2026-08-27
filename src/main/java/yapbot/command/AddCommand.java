@@ -1,3 +1,11 @@
+package yapbot.command;
+
+import yapbot.exception.yapBotException;
+import yapbot.storage.Storage;
+import yapbot.task.Task;
+import yapbot.task.TaskList;
+import yapbot.ui.Ui;
+
 /**
  * Represents a command that adds an already-constructed task to the list.
  * Used for todo, deadline, and event alike, since by the time the Parser

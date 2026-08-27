@@ -1,3 +1,11 @@
+package yapbot.command;
+
+import yapbot.exception.yapBotException;
+import yapbot.storage.Storage;
+import yapbot.task.Task;
+import yapbot.task.TaskList;
+import yapbot.ui.Ui;
+
 /**
  * Represents the "delete" command, which removes a task from the list.
  */
