@@ -12,6 +12,7 @@ import yapbot.command.AddCommand;
 import yapbot.command.ByeCommand;
 import yapbot.command.Command;
 import yapbot.command.DeleteCommand;
+import yapbot.command.FindCommand;
 import yapbot.command.ListCommand;
 import yapbot.command.MarkCommand;
 import yapbot.command.UnmarkCommand;
@@ -58,6 +59,22 @@ public class ParserTest {
         Command command = Parser.parse("delete 2");
 
         assertInstanceOf(DeleteCommand.class, command);
+    }
+
+    @Test
+    public void parse_find_returnsFindCommand() throws yapBotException {
+        Command command = Parser.parse("find book");
+
+        assertInstanceOf(FindCommand.class, command);
+    }
+
+    @Test
+    public void parse_findWithNoKeyword_returnsFindCommandWithoutThrowing() throws yapBotException {
+        // Like mark/unmark/delete, the keyword is validated in FindCommand.execute(),
+        // not at parse time, so this should return normally rather than throw.
+        Command command = Parser.parse("find");
+
+        assertInstanceOf(FindCommand.class, command);
     }
 
     @Test
