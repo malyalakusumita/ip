@@ -1,6 +1,6 @@
 package yapbot.task;
 
-import yapbot.exception.yapBotException;
+import yapbot.exception.YapBotException;
 import yapbot.storage.Storage;
 
 /**
@@ -80,11 +80,11 @@ public class TaskList {
      * Adds a task to the end of the list.
      *
      * @param task the task to add.
-     * @throws yapBotException if the list is already at capacity.
+     * @throws YapBotException if the list is already at capacity.
      */
-    public void add(Task task) throws yapBotException {
+    public void add(Task task) throws YapBotException {
         if (isFull()) {
-            throw new yapBotException("Sorry, your task list is full (max " + MAX_CAPACITY + " tasks).");
+            throw new YapBotException("Sorry, your task list is full (max " + MAX_CAPACITY + " tasks).");
         }
         tasks[size] = task;
         size++;
@@ -132,29 +132,29 @@ public class TaskList {
      * @param command the full command text as typed by the user.
      * @param keyword the command keyword to strip off the front (e.g. "mark").
      * @return the validated, zero-based task index.
-     * @throws yapBotException if no number was given, it isn't a valid
+     * @throws YapBotException if no number was given, it isn't a valid
      *         integer, the list is empty, or the number is out of range.
      */
-    public int validateIndex(String command, String keyword) throws yapBotException {
+    public int validateIndex(String command, String keyword) throws YapBotException {
         String argument = command.length() > keyword.length()
                 ? command.substring(keyword.length()).trim()
                 : "";
         if (argument.isEmpty()) {
-            throw new yapBotException("Please specify a task number, e.g. '" + keyword + " 2'.");
+            throw new YapBotException("Please specify a task number, e.g. '" + keyword + " 2'.");
         }
 
         int index;
         try {
             index = Integer.parseInt(argument) - 1;
         } catch (NumberFormatException e) {
-            throw new yapBotException("'" + argument + "' is not a valid task number.");
+            throw new YapBotException("'" + argument + "' is not a valid task number.");
         }
 
         if (size == 0) {
-            throw new yapBotException("Your task list is empty, so there's nothing to " + keyword + ".");
+            throw new YapBotException("Your task list is empty, so there's nothing to " + keyword + ".");
         }
         if (index < 0 || index >= size) {
-            throw new yapBotException("Task number " + (index + 1) + " doesn't exist. "
+            throw new YapBotException("Task number " + (index + 1) + " doesn't exist. "
                     + "You have " + size + " task(s).");
         }
         return index;

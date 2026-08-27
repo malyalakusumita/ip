@@ -1,6 +1,6 @@
 package yapbot.command;
 
-import yapbot.exception.yapBotException;
+import yapbot.exception.YapBotException;
 import yapbot.task.TaskList;
 import yapbot.ui.Ui;
 
@@ -14,9 +14,9 @@ public abstract class Command {
      *
      * @param taskList the task list to operate on.
      * @param ui the Ui to use for any user-facing output.
-     * @throws yapBotException if the command cannot be carried out.
+     * @throws YapBotException if the command cannot be carried out.
      */
-    public abstract void execute(TaskList taskList, Ui ui) throws yapBotException;
+    public abstract void execute(TaskList taskList, Ui ui) throws YapBotException;
 
     /**
      * Returns whether this command should end the program's main loop.

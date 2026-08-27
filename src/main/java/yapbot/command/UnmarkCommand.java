@@ -1,6 +1,6 @@
 package yapbot.command;
 
-import yapbot.exception.yapBotException;
+import yapbot.exception.YapBotException;
 import yapbot.storage.Storage;
 import yapbot.task.TaskList;
 import yapbot.ui.Ui;
@@ -22,7 +22,7 @@ public class UnmarkCommand extends Command {
     }
 
     @Override
-    public void execute(TaskList taskList, Ui ui) throws yapBotException {
+    public void execute(TaskList taskList, Ui ui) throws YapBotException {
         int taskIndex = taskList.validateIndex(fullCommand, "unmark");
         taskList.markAsNotDone(taskIndex);
         Storage.save(taskList.toArray(), taskList.size());

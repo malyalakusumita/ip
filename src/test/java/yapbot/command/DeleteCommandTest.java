@@ -11,7 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-import yapbot.exception.yapBotException;
+import yapbot.exception.YapBotException;
 import yapbot.storage.Storage;
 import yapbot.task.Task;
 import yapbot.task.TaskList;
@@ -34,7 +34,7 @@ public class DeleteCommandTest {
     }
 
     @Test
-    public void execute_validIndex_removesTaskAndPersistsRemainder() throws yapBotException {
+    public void execute_validIndex_removesTaskAndPersistsRemainder() throws YapBotException {
         TaskList taskList = new TaskList();
         Task first = new Todo("read book");
         Task second = new Todo("write code");
@@ -58,7 +58,7 @@ public class DeleteCommandTest {
         TaskList taskList = new TaskList();
         DeleteCommand command = new DeleteCommand("delete 1");
 
-        assertThrows(yapBotException.class, () -> command.execute(taskList, new Ui()));
+        assertThrows(YapBotException.class, () -> command.execute(taskList, new Ui()));
         assertEquals(0, taskList.size());
     }
 }

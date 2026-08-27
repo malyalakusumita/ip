@@ -10,7 +10,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 
-import yapbot.exception.yapBotException;
+import yapbot.exception.YapBotException;
 import yapbot.task.Deadline;
 import yapbot.task.Event;
 import yapbot.task.Task;
@@ -213,7 +213,7 @@ public class Storage {
         try {
             tasks[taskCount] = parseTask(line);
             return taskCount + 1;
-        } catch (yapBotException e) {
+        } catch (YapBotException e) {
             System.out.println("Warning: skipping corrupted save-file line ("
                     + e.getMessage() + "): " + line);
             return taskCount;
@@ -227,12 +227,12 @@ public class Storage {
      *
      * @param line one line from the save file, e.g. {@code "T | 1 | read book"}.
      * @return the parsed task, with its done status applied.
-     * @throws yapBotException if the line is not in a recognized, well-formed format.
+     * @throws YapBotException if the line is not in a recognized, well-formed format.
      */
-    private static Task parseTask(String line) throws yapBotException {
+    private static Task parseTask(String line) throws YapBotException {
         String[] parts = line.split(FIELD_SEPARATOR_REGEX, -1);
         if (parts.length < 3) {
-            throw new yapBotException("too few fields");
+            throw new YapBotException("too few fields");
         }
 
         String type = parts[0].trim();
@@ -240,10 +240,10 @@ public class Storage {
         String description = parts[2].trim();
 
         if (description.isEmpty()) {
-            throw new yapBotException("description is empty");
+            throw new YapBotException("description is empty");
         }
         if (!statusValue.equals(STATUS_DONE) && !statusValue.equals(STATUS_NOT_DONE)) {
-            throw new yapBotException("status must be '0' or '1', was '" + statusValue + "'");
+            throw new YapBotException("status must be '0' or '1', was '" + statusValue + "'");
         }
 
         Task task = buildTask(type, description, parts);
@@ -262,42 +262,42 @@ public class Storage {
      * @param description the (already-validated, non-blank) task description.
      * @param parts       the full set of pipe-separated fields from the line.
      * @return the constructed task, not yet marked as done.
-     * @throws yapBotException if the type is unrecognized or a field is invalid.
+     * @throws YapBotException if the type is unrecognized or a field is invalid.
      */
-    private static Task buildTask(String type, String description, String[] parts) throws yapBotException {
+    private static Task buildTask(String type, String description, String[] parts) throws YapBotException {
         switch (type) {
             case TYPE_TODO:
                 if (parts.length != 3) {
-                    throw new yapBotException("todo line has extra fields");
+                    throw new YapBotException("todo line has extra fields");
                 }
                 return new Todo(description);
             case TYPE_DEADLINE:
                 if (parts.length != 4) {
-                    throw new yapBotException("deadline line must have exactly 4 fields");
+                    throw new YapBotException("deadline line must have exactly 4 fields");
                 }
                 String byRaw = parts[3].trim();
                 if (byRaw.isEmpty()) {
-                    throw new yapBotException("deadline 'by' field is empty");
+                    throw new YapBotException("deadline 'by' field is empty");
                 }
                 LocalDate by;
                 try {
                     by = LocalDate.parse(byRaw);
                 } catch (DateTimeParseException e) {
-                    throw new yapBotException("deadline 'by' field is not a valid date: '" + byRaw + "'");
+                    throw new YapBotException("deadline 'by' field is not a valid date: '" + byRaw + "'");
                 }
                 return new Deadline(description, by);
             case TYPE_EVENT:
                 if (parts.length != 5) {
-                    throw new yapBotException("event line must have exactly 5 fields");
+                    throw new YapBotException("event line must have exactly 5 fields");
                 }
                 String from = parts[3].trim();
                 String to = parts[4].trim();
                 if (from.isEmpty() || to.isEmpty()) {
-                    throw new yapBotException("event 'from'/'to' field is empty");
+                    throw new YapBotException("event 'from'/'to' field is empty");
                 }
                 return new Event(description, from, to);
             default:
-                throw new yapBotException("unknown task type '" + type + "'");
+                throw new YapBotException("unknown task type '" + type + "'");
         }
     }
 }

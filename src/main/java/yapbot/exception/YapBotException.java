@@ -1,7 +1,7 @@
 package yapbot.exception;
 
-public class yapBotException extends Exception {
-    public yapBotException(String msg) {
+public class YapBotException extends Exception {
+    public YapBotException(String msg) {
         super(msg);
     }
 }

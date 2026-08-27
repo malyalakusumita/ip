@@ -15,7 +15,7 @@ import yapbot.command.DeleteCommand;
 import yapbot.command.ListCommand;
 import yapbot.command.MarkCommand;
 import yapbot.command.UnmarkCommand;
-import yapbot.exception.yapBotException;
+import yapbot.exception.YapBotException;
 import yapbot.task.Deadline;
 import yapbot.task.Event;
 import yapbot.task.Task;
@@ -24,7 +24,7 @@ import yapbot.task.Todo;
 public class ParserTest {
 
     @Test
-    public void parse_bye_returnsExitingByeCommand() throws yapBotException {
+    public void parse_bye_returnsExitingByeCommand() throws YapBotException {
         Command command = Parser.parse("bye");
 
         assertInstanceOf(ByeCommand.class, command);
@@ -32,7 +32,7 @@ public class ParserTest {
     }
 
     @Test
-    public void parse_list_returnsNonExitingListCommand() throws yapBotException {
+    public void parse_list_returnsNonExitingListCommand() throws YapBotException {
         Command command = Parser.parse("list");
 
         assertInstanceOf(ListCommand.class, command);
@@ -40,28 +40,28 @@ public class ParserTest {
     }
 
     @Test
-    public void parse_mark_returnsMarkCommand() throws yapBotException {
+    public void parse_mark_returnsMarkCommand() throws YapBotException {
         Command command = Parser.parse("mark 2");
 
         assertInstanceOf(MarkCommand.class, command);
     }
 
     @Test
-    public void parse_unmark_returnsUnmarkCommand() throws yapBotException {
+    public void parse_unmark_returnsUnmarkCommand() throws YapBotException {
         Command command = Parser.parse("unmark 2");
 
         assertInstanceOf(UnmarkCommand.class, command);
     }
 
     @Test
-    public void parse_delete_returnsDeleteCommand() throws yapBotException {
+    public void parse_delete_returnsDeleteCommand() throws YapBotException {
         Command command = Parser.parse("delete 2");
 
         assertInstanceOf(DeleteCommand.class, command);
     }
 
     @Test
-    public void parse_todo_returnsAddCommandWithMatchingTodoTask() throws yapBotException {
+    public void parse_todo_returnsAddCommandWithMatchingTodoTask() throws YapBotException {
         Command command = Parser.parse("todo read book");
 
         AddCommand addCommand = assertInstanceOf(AddCommand.class, command);
@@ -73,17 +73,17 @@ public class ParserTest {
 
     @Test
     public void parse_todoWithEmptyDescription_exceptionThrown() {
-        assertThrows(yapBotException.class, () -> Parser.parse("todo"));
-        assertThrows(yapBotException.class, () -> Parser.parse("todo   "));
+        assertThrows(YapBotException.class, () -> Parser.parse("todo"));
+        assertThrows(YapBotException.class, () -> Parser.parse("todo   "));
     }
 
     @Test
     public void parse_todoWithPipeCharacter_exceptionThrown() {
-        assertThrows(yapBotException.class, () -> Parser.parse("todo read | book"));
+        assertThrows(YapBotException.class, () -> Parser.parse("todo read | book"));
     }
 
     @Test
-    public void parse_deadline_returnsAddCommandWithMatchingDeadlineTask() throws yapBotException {
+    public void parse_deadline_returnsAddCommandWithMatchingDeadlineTask() throws YapBotException {
         Command command = Parser.parse("deadline return book /by 2019-10-15");
 
         AddCommand addCommand = assertInstanceOf(AddCommand.class, command);
@@ -95,22 +95,22 @@ public class ParserTest {
 
     @Test
     public void parse_deadlineMissingByClause_exceptionThrown() {
-        assertThrows(yapBotException.class, () -> Parser.parse("deadline return book"));
+        assertThrows(YapBotException.class, () -> Parser.parse("deadline return book"));
     }
 
     @Test
     public void parse_deadlineWithInvalidDate_exceptionThrown() {
-        assertThrows(yapBotException.class, () -> Parser.parse("deadline return book /by tomorrow"));
+        assertThrows(YapBotException.class, () -> Parser.parse("deadline return book /by tomorrow"));
     }
 
     @Test
     public void parse_deadlineWithBlankDescriptionOrDate_exceptionThrown() {
-        assertThrows(yapBotException.class, () -> Parser.parse("deadline /by 2019-10-15"));
-        assertThrows(yapBotException.class, () -> Parser.parse("deadline return book /by "));
+        assertThrows(YapBotException.class, () -> Parser.parse("deadline /by 2019-10-15"));
+        assertThrows(YapBotException.class, () -> Parser.parse("deadline return book /by "));
     }
 
     @Test
-    public void parse_event_returnsAddCommandWithMatchingEventTask() throws yapBotException {
+    public void parse_event_returnsAddCommandWithMatchingEventTask() throws YapBotException {
         Command command = Parser.parse("event project meeting /from Mon 2pm /to 4pm");
 
         AddCommand addCommand = assertInstanceOf(AddCommand.class, command);
@@ -122,23 +122,23 @@ public class ParserTest {
 
     @Test
     public void parse_eventMissingToClause_exceptionThrown() {
-        assertThrows(yapBotException.class, () -> Parser.parse("event project meeting /from Mon 2pm"));
+        assertThrows(YapBotException.class, () -> Parser.parse("event project meeting /from Mon 2pm"));
     }
 
     @Test
     public void parse_eventWithBlankField_exceptionThrown() {
-        assertThrows(yapBotException.class,
+        assertThrows(YapBotException.class,
                 () -> Parser.parse("event project meeting /from  /to 4pm"));
     }
 
     @Test
     public void parse_blankInput_exceptionThrown() {
-        assertThrows(yapBotException.class, () -> Parser.parse(""));
-        assertThrows(yapBotException.class, () -> Parser.parse("   "));
+        assertThrows(YapBotException.class, () -> Parser.parse(""));
+        assertThrows(YapBotException.class, () -> Parser.parse("   "));
     }
 
     @Test
     public void parse_unrecognizedCommand_exceptionThrown() {
-        assertThrows(yapBotException.class, () -> Parser.parse("frobnicate"));
+        assertThrows(YapBotException.class, () -> Parser.parse("frobnicate"));
     }
 }

@@ -11,7 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-import yapbot.exception.yapBotException;
+import yapbot.exception.YapBotException;
 import yapbot.storage.Storage;
 import yapbot.task.Task;
 import yapbot.task.TaskList;
@@ -34,7 +34,7 @@ public class AddCommandTest {
     }
 
     @Test
-    public void execute_addsTaskToListAndPersistsIt() throws yapBotException {
+    public void execute_addsTaskToListAndPersistsIt() throws YapBotException {
         TaskList taskList = new TaskList();
         Task task = new Todo("read book");
         AddCommand command = new AddCommand(task);

@@ -1,6 +1,6 @@
 package yapbot.command;
 
-import yapbot.exception.yapBotException;
+import yapbot.exception.YapBotException;
 import yapbot.storage.Storage;
 import yapbot.task.Task;
 import yapbot.task.TaskList;
@@ -23,7 +23,7 @@ public class DeleteCommand extends Command {
     }
 
     @Override
-    public void execute(TaskList taskList, Ui ui) throws yapBotException {
+    public void execute(TaskList taskList, Ui ui) throws YapBotException {
         int taskIndex = taskList.validateIndex(fullCommand, "delete");
         Task removedTask = taskList.delete(taskIndex);
         Storage.save(taskList.toArray(), taskList.size());
