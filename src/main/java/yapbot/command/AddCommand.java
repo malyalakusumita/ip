@@ -35,6 +35,14 @@ public class AddCommand extends Command {
         return task;
     }
 
+    /**
+     * Adds the wrapped task to the task list, persists the updated list to
+     * disk, and shows a confirmation to the user.
+     *
+     * @param taskList the task list to add to.
+     * @param ui the Ui to show the confirmation on.
+     * @throws yapBotException if the task list is already at capacity.
+     */
     @Override
     public void execute(TaskList taskList, Ui ui) throws yapBotException {
         taskList.add(task);

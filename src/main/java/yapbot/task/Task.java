@@ -78,6 +78,11 @@ public class Task {
         return getTypeIcon() + " | " + getStatusValue() + " | " + description;
     }
 
+    /**
+     * Returns this task as it should be displayed to the user, e.g. {@code "[X]read book"}.
+     *
+     * @return the display representation of this task.
+     */
     @Override
     public String toString() {
         return "[" + getStatusIcon() + "]" + description;

@@ -41,6 +41,12 @@ public class Event extends Task {
         return super.toFileFormat() + " | " + from + " | " + to;
     }
 
+    /**
+     * Returns this event as it should be displayed to the user, e.g.
+     * {@code "[E][ ]project meeting (from: Mon 2pm to: 4pm)"}.
+     *
+     * @return the display representation of this task.
+     */
     @Override
     public String toString() {
         return "[E]" + super.toString() + " (from: " + from + " to: " + to + ")";

@@ -22,6 +22,14 @@ public class DeleteCommand extends Command {
         this.fullCommand = fullCommand;
     }
 
+    /**
+     * Removes the task named in the command from the task list, persists the
+     * updated list to disk, and shows a confirmation to the user.
+     *
+     * @param taskList the task list to remove from.
+     * @param ui the Ui to show the confirmation on.
+     * @throws yapBotException if no valid task number was given.
+     */
     @Override
     public void execute(TaskList taskList, Ui ui) throws yapBotException {
         int taskIndex = taskList.validateIndex(fullCommand, "delete");

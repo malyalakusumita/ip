@@ -21,6 +21,14 @@ public class MarkCommand extends Command {
         this.fullCommand = fullCommand;
     }
 
+    /**
+     * Marks the task named in the command as done, persists the updated list
+     * to disk, and shows a confirmation to the user.
+     *
+     * @param taskList the task list containing the task to mark.
+     * @param ui the Ui to show the confirmation on.
+     * @throws yapBotException if no valid task number was given.
+     */
     @Override
     public void execute(TaskList taskList, Ui ui) throws yapBotException {
         int taskIndex = taskList.validateIndex(fullCommand, "mark");

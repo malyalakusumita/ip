@@ -45,6 +45,12 @@ public class Deadline extends Task {
         return super.toFileFormat() + " | " + by;
     }
 
+    /**
+     * Returns this deadline as it should be displayed to the user, e.g.
+     * {@code "[D][ ]return book (by: Oct 15 2019)"}.
+     *
+     * @return the display representation of this task.
+     */
     @Override
     public String toString() {
         return "[D]" + super.toString() + " (by: " + by.format(DISPLAY_FORMAT) + ")";
