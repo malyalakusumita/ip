@@ -28,6 +28,11 @@ Unless the user says otherwise, assume that you are assisting a student working 
 
 Ensure that Java 25 is used when running the application or build tasks. On macOS, use `sdk use java 25.0.3.fx-zulu` to switch to Java 25 if needed.
 
+## Testing
+
+Maintain at least 50% JUnit test coverage across the codebase.
+Whenever production code changes, update the JUnit tests (adding, adjusting, or removing cases as needed) so coverage stays at or above that target — do not let the test suite go stale relative to the code it covers.
+
 ## Git
 
 Use lightweight tags unless the user requests an annotated tag.
