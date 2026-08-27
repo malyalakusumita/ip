@@ -22,3 +22,30 @@ yapBot ASCII-art banner
 ```
 
 **Warning:** Keep the `src/main/java` folder as the root folder for Java files. Tools such as Gradle expect Java source files there.
+
+## Packaging as a JAR file
+
+The project uses the [Shadow](https://gradleup.com/shadow/) Gradle plugin (configured in `build.gradle`) to package the app, together with all its dependencies, into a single executable "fat" JAR.
+
+**To create the JAR:**
+
+```
+./gradlew clean shadowJar
+```
+
+(On Windows, use `gradlew.bat clean shadowJar` instead of `./gradlew clean shadowJar`.)
+
+**To locate it:** the JAR is created at `build/libs/yapBot.jar`.
+
+**To run it:**
+
+1. Copy `yapBot.jar` into an empty folder.
+2. Open a command window in that folder.
+3. Run:
+   ```
+   java -jar "yapBot.jar"
+   ```
+
+The JAR is fully self-contained (no other files or classpath setup needed), and creates its own `data/yapBot.txt` save file in the folder it's run from, the same way running the app from source does.
+
+Note: the generated JAR file is not committed to this repository (see `.gitignore`) since it's a build artifact, not source code. If distributing a release, publish it as a [GitHub release](https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository) instead, attaching the JAR as a release binary.
