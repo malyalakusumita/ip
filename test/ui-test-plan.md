@@ -697,3 +697,68 @@ Bye. Hope to see you again soon!
 ~~~
 - Note: 2019-13-01 has a valid yyyy-mm-dd shape but an invalid month (13),
   so LocalDate.parse() rejects it the same way as a malformed string.
+
+## Test case: Find tasks by keyword
+- Aim: Verify that find lists only the tasks whose description contains
+  the given keyword, and leaves the task list itself unchanged.
+
+### Input
+~~~text
+todo read book
+todo return book
+todo borrow laptop
+find book
+bye
+~~~
+
+### Expected output
+~~~text
+__   __  ___   ____  ____   ___ _____
+\ \ / / / _ \ |  _ \| __ ) / _ \_   _|
+ \ V / | |_| || |_) |  _ \| |_| || |
+  |_|   \___/ |____/|___/ \___/ |_|
+Hello! I'm YAPBOT.
+What can I do for you?
+Got it. I've added this task:
+  [T][ ]read book
+Now you have 1 tasks in the list.
+Got it. I've added this task:
+  [T][ ]return book
+Now you have 2 tasks in the list.
+Got it. I've added this task:
+  [T][ ]borrow laptop
+Now you have 3 tasks in the list.
+Here are the matching tasks in your list:
+1.[T][ ]read book
+2.[T][ ]return book
+Bye. Hope to see you again soon!
+~~~
+
+## Test case: find with no matches and with no keyword
+- Aim: Verify that find with a keyword that matches nothing shows an
+  empty (header-only) result, and that find with no keyword at all is
+  rejected with a clear error rather than crashing.
+
+### Input
+~~~text
+todo read book
+find nomatch
+find
+bye
+~~~
+
+### Expected output
+~~~text
+__   __  ___   ____  ____   ___ _____
+\ \ / / / _ \ |  _ \| __ ) / _ \_   _|
+ \ V / | |_| || |_) |  _ \| |_| || |
+  |_|   \___/ |____/|___/ \___/ |_|
+Hello! I'm YAPBOT.
+What can I do for you?
+Got it. I've added this task:
+  [T][ ]read book
+Now you have 1 tasks in the list.
+Here are the matching tasks in your list:
+Please specify a keyword to search for, e.g. 'find book'.
+Bye. Hope to see you again soon!
+~~~
