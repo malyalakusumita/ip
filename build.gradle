@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'application'
     id 'com.gradleup.shadow' version '9.5.1'
+    id 'org.openjfx.javafxplugin' version '0.1.0'
 }
 
 java {
@@ -13,10 +14,19 @@ repositories {
     mavenCentral()
 }
 
+javafx {
+    version = '21.0.2'
+    modules = ['javafx.controls', 'javafx.fxml']
+}
+
 dependencies {
     String jUnitVersion = '5.14.4'
+    String testFxVersion = '4.0.18'
 
     testImplementation "org.junit.jupiter:junit-jupiter-api:${jUnitVersion}"
+    testImplementation "org.testfx:testfx-core:${testFxVersion}"
+    testImplementation "org.testfx:testfx-junit5:${testFxVersion}"
+    testImplementation 'org.hamcrest:hamcrest:2.2'
 
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${jUnitVersion}"
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.14.4'
@@ -24,6 +34,11 @@ dependencies {
 
 test {
     useJUnitPlatform()
+
+    // MainWindowTestFX drives a real JavaFX window and needs an interactive
+    // desktop session; it's not reliable in headless/non-interactive
+    // environments, so it's run separately via the guiTest task instead.
+    exclude '**/MainWindowTestFX.class'
 
     testLogging {
         events 'passed', 'skipped', 'failed'
@@ -36,8 +51,29 @@ test {
     }
 }
 
+tasks.register('guiTest', Test) {
+    description = 'Runs the TestFX GUI tests. Needs a real, focused desktop session to pass.'
+    group = 'verification'
+
+    useJUnitPlatform()
+    testClassesDirs = sourceSets.test.output.classesDirs
+    classpath = sourceSets.test.runtimeClasspath
+    include '**/MainWindowTestFX.class'
+
+    testLogging {
+        events 'passed', 'skipped', 'failed'
+
+        showExceptions = true
+        exceptionFormat = 'full'
+        showStandardStreams = false
+    }
+}
+
 application {
-    mainClass = 'yapbot.YapBot'
+    // Launches the JavaFX GUI by default; the console entry point
+    // (yapbot.YapBot) is still directly runnable from an IDE or via
+    // `./gradlew run --args=...`-style overrides if ever needed.
+    mainClass = 'yapbot.gui.Launcher'
 }
 
 jar {

@@ -58,7 +58,7 @@ public class Ui {
      * Prints the goodbye message shown when the user exits.
      */
     public void showGoodbye() {
-        System.out.println("Bye. Hope to see you again soon!");
+        output("Bye. Hope to see you again soon!");
     }
 
     /**
@@ -67,7 +67,7 @@ public class Ui {
      * @param message the message to print.
      */
     public void showMessage(String message) {
-        System.out.println(message);
+        output(message);
     }
 
     /**
@@ -77,9 +77,9 @@ public class Ui {
      * @param count the total number of tasks now in the list.
      */
     public void showTaskAdded(Task task, int count) {
-        System.out.println("Got it. I've added this task:");
-        System.out.println("  " + task);
-        System.out.println("Now you have " + count + " tasks in the list.");
+        output("Got it. I've added this task:");
+        output("  " + task);
+        output("Now you have " + count + " tasks in the list.");
     }
 
     /**
@@ -88,8 +88,8 @@ public class Ui {
      * @param task the task that was marked.
      */
     public void showTaskMarked(Task task) {
-        System.out.println("Nice! I've marked this task as done:");
-        System.out.println("  " + task);
+        output("Nice! I've marked this task as done:");
+        output("  " + task);
     }
 
     /**
@@ -98,8 +98,8 @@ public class Ui {
      * @param task the task that was unmarked.
      */
     public void showTaskUnmarked(Task task) {
-        System.out.println("I've marked this task as not done yet:");
-        System.out.println("  " + task);
+        output("I've marked this task as not done yet:");
+        output("  " + task);
     }
 
     /**
@@ -109,9 +109,9 @@ public class Ui {
      * @param count the total number of tasks remaining in the list.
      */
     public void showTaskDeleted(Task task, int count) {
-        System.out.println("I have removed this task:");
-        System.out.println("  " + task);
-        System.out.println("Now you have " + count + " tasks in the list.");
+        output("I have removed this task:");
+        output("  " + task);
+        output("Now you have " + count + " tasks in the list.");
     }
 
     /**
@@ -121,9 +121,9 @@ public class Ui {
      * @param taskCount the number of active tasks in the array.
      */
     public void showTaskList(Task[] tasks, int taskCount) {
-        System.out.println("Here are the tasks in your list:");
+        output("Here are the tasks in your list:");
         for (int i = 0; i < taskCount; i++) {
-            System.out.println((i + 1) + "." + tasks[i]);
+            output((i + 1) + "." + tasks[i]);
         }
     }
 
@@ -133,9 +133,21 @@ public class Ui {
      * @param matches the matching tasks, in list order.
      */
     public void showMatchingTasks(Task[] matches) {
-        System.out.println("Here are the matching tasks in your list:");
+        output("Here are the matching tasks in your list:");
         for (int i = 0; i < matches.length; i++) {
-            System.out.println((i + 1) + "." + matches[i]);
+            output((i + 1) + "." + matches[i]);
         }
+    }
+
+    /**
+     * Emits one line of user-facing output. The console {@link Ui} prints it
+     * to standard output; {@link GuiUi} overrides this to capture lines
+     * instead, so both front ends share the exact same message text without
+     * duplicating it.
+     *
+     * @param line the line to emit.
+     */
+    protected void output(String line) {
+        System.out.println(line);
     }
 }
