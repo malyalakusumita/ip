@@ -8,6 +8,7 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.util.WaitForAsyncUtils;
@@ -22,9 +23,10 @@ import javafx.stage.Stage;
 import yapbot.storage.Storage;
 
 /**
- * End-to-end GUI test, driven headlessly through TestFX/Monocle: it types
+ * End-to-end GUI test, driven through TestFX against a real window: it types
  * into the real text field and clicks the real send button, exercising the
- * same path a person testing the window by hand would.
+ * same path a person testing the window by hand would. Needs a focused
+ * interactive desktop session to run reliably.
  */
 public class MainWindowTestFX extends ApplicationTest {
 
@@ -51,6 +53,15 @@ public class MainWindowTestFX extends ApplicationTest {
     @AfterEach
     public void resetStorage() {
         Storage.resetTargetPathForTesting();
+    }
+
+    @BeforeEach
+    public void waitForWindowToBecomeFocusable() {
+        // The very first window a test class creates can take the OS a
+        // moment to actually activate/focus after show(); without this,
+        // whichever test method runs first can have its typed input land
+        // before the window is ready to receive it.
+        sleep(300);
     }
 
     @Test
