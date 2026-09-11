@@ -74,6 +74,10 @@ application {
     // (yapbot.YapBot) is still directly runnable from an IDE or via
     // `./gradlew run --args=...`-style overrides if ever needed.
     mainClass = 'yapbot.gui.Launcher'
+
+    // The JVM disables assert statements by default; without -ea they
+    // are silently skipped, so this turns them on for `./gradlew run`.
+    applicationDefaultJvmArgs = ['-ea']
 }
 
 jar {
