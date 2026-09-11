@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 import yapbot.exception.YapBotException;
 import yapbot.task.Deadline;
 import yapbot.task.Event;
+import yapbot.task.Priority;
 import yapbot.task.Task;
 import yapbot.task.Todo;
 
@@ -277,63 +278,97 @@ public class Storage {
     }
 
     /**
-     * Builds a {@link Todo} from a parsed line's fields, validating that
-     * there are no fields beyond type/status/description.
+     * Builds a {@link Todo} from a parsed line's fields, validating the
+     * field count and, if present, the trailing priority field.
      *
      * @param description the already-validated, non-blank task description.
      * @param parts       the full set of pipe-separated fields from the line.
      * @return the constructed task.
-     * @throws YapBotException if the line has extra fields.
+     * @throws YapBotException if the field count is wrong or the priority is invalid.
      */
     private static Task buildTodo(String description, String[] parts) throws YapBotException {
-        if (parts.length != 3) {
-            throw new YapBotException("todo line has extra fields");
+        final int baseFieldCount = 3;
+        if (parts.length != baseFieldCount && parts.length != baseFieldCount + 1) {
+            throw new YapBotException("todo line must have " + baseFieldCount + " or " + (baseFieldCount + 1)
+                    + " fields");
         }
-        return new Todo(description);
+        Task task = new Todo(description);
+        applyOptionalPriority(task, parts, baseFieldCount);
+        return task;
     }
 
     /**
      * Builds a {@link Deadline} from a parsed line's fields, validating the
-     * field count and that the 'by' field is a non-blank, valid date.
+     * field count, that the 'by' field is a non-blank, valid date, and, if
+     * present, the trailing priority field.
      *
      * @param description the already-validated, non-blank task description.
      * @param parts       the full set of pipe-separated fields from the line.
      * @return the constructed task.
-     * @throws YapBotException if the field count is wrong or 'by' is invalid.
+     * @throws YapBotException if the field count is wrong, 'by' is invalid,
+     *         or the priority is invalid.
      */
     private static Task buildDeadline(String description, String[] parts) throws YapBotException {
-        if (parts.length != 4) {
-            throw new YapBotException("deadline line must have exactly 4 fields");
+        final int baseFieldCount = 4;
+        if (parts.length != baseFieldCount && parts.length != baseFieldCount + 1) {
+            throw new YapBotException("deadline line must have " + baseFieldCount + " or " + (baseFieldCount + 1)
+                    + " fields");
         }
         String byRaw = parts[3].trim();
         if (byRaw.isEmpty()) {
             throw new YapBotException("deadline 'by' field is empty");
         }
+        Task task;
         try {
-            return new Deadline(description, LocalDate.parse(byRaw));
+            task = new Deadline(description, LocalDate.parse(byRaw));
         } catch (DateTimeParseException e) {
             throw new YapBotException("deadline 'by' field is not a valid date: '" + byRaw + "'");
         }
+        applyOptionalPriority(task, parts, baseFieldCount);
+        return task;
     }
 
     /**
      * Builds an {@link Event} from a parsed line's fields, validating the
-     * field count and that the 'from'/'to' fields are non-blank.
+     * field count, that the 'from'/'to' fields are non-blank, and, if
+     * present, the trailing priority field.
      *
      * @param description the already-validated, non-blank task description.
      * @param parts       the full set of pipe-separated fields from the line.
      * @return the constructed task.
-     * @throws YapBotException if the field count is wrong or a field is blank.
+     * @throws YapBotException if the field count is wrong, a field is blank,
+     *         or the priority is invalid.
      */
     private static Task buildEvent(String description, String[] parts) throws YapBotException {
-        if (parts.length != 5) {
-            throw new YapBotException("event line must have exactly 5 fields");
+        final int baseFieldCount = 5;
+        if (parts.length != baseFieldCount && parts.length != baseFieldCount + 1) {
+            throw new YapBotException("event line must have " + baseFieldCount + " or " + (baseFieldCount + 1)
+                    + " fields");
         }
         String from = parts[3].trim();
         String to = parts[4].trim();
         if (from.isEmpty() || to.isEmpty()) {
             throw new YapBotException("event 'from'/'to' field is empty");
         }
-        return new Event(description, from, to);
+        Task task = new Event(description, from, to);
+        applyOptionalPriority(task, parts, baseFieldCount);
+        return task;
+    }
+
+    /**
+     * Applies the optional trailing priority field to an already-built task,
+     * if the line carried one (i.e. exactly one field beyond the type's base
+     * count). Leaves the task's priority unset otherwise.
+     *
+     * @param task           the already-built task to apply the priority to.
+     * @param parts          the full set of pipe-separated fields from the line.
+     * @param baseFieldCount the number of fields this task type has without a priority.
+     * @throws YapBotException if the trailing field is not a valid priority.
+     */
+    private static void applyOptionalPriority(Task task, String[] parts, int baseFieldCount)
+            throws YapBotException {
+        if (parts.length == baseFieldCount + 1) {
+            task.setPriority(Priority.fromInput(parts[baseFieldCount].trim()));
+        }
     }
 }

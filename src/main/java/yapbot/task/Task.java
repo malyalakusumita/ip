@@ -6,6 +6,7 @@ package yapbot.task;
 public class Task {
     private final String description;
     private boolean isDone;
+    private Priority priority;
 
     /**
      * Creates an incomplete task with the given description.
@@ -61,6 +62,24 @@ public class Task {
     }
 
     /**
+     * Returns this task's priority, or {@code null} if none has been set.
+     *
+     * @return the priority, or {@code null}.
+     */
+    public Priority getPriority() {
+        return priority;
+    }
+
+    /**
+     * Sets this task's priority.
+     *
+     * @param priority the priority to set.
+     */
+    public void setPriority(Priority priority) {
+        this.priority = priority;
+    }
+
+    /**
      * Returns the single-letter icon identifying this task's type in the save file.
      * Subclasses override this to identify themselves (e.g. "D" for Deadline).
      *
@@ -81,12 +100,30 @@ public class Task {
     }
 
     /**
-     * Returns this task as it should be displayed to the user, e.g. {@code "[X]read book"}.
+     * Appends this task's priority to an already-built file-format line, if
+     * one is set. Subclasses call this last, after appending their own
+     * extra fields, so the priority field (when present) is always the
+     * final field on the line; this keeps every earlier field's position
+     * (e.g. Deadline's 'by') unaffected by whether a priority is present.
+     *
+     * @param fileFormatSoFar the line built so far, without the priority field.
+     * @return {@code fileFormatSoFar} unchanged if no priority is set;
+     *         otherwise, with the priority appended as the final field.
+     */
+    protected final String appendPriorityField(String fileFormatSoFar) {
+        return priority == null ? fileFormatSoFar : fileFormatSoFar + " | " + priority;
+    }
+
+    /**
+     * Returns this task as it should be displayed to the user, e.g.
+     * {@code "[X]read book"}, or {@code "[X][HIGH]read book"} once a
+     * priority is set. Nothing is shown for the priority when none is set.
      *
      * @return the display representation of this task.
      */
     @Override
     public String toString() {
-        return "[" + getStatusIcon() + "]" + description;
+        String priorityTag = priority == null ? "" : "[" + priority + "]";
+        return "[" + getStatusIcon() + "]" + priorityTag + description;
     }
 }

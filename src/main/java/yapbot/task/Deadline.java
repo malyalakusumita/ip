@@ -43,7 +43,7 @@ public class Deadline extends Task {
      */
     @Override
     public String toFileFormat() {
-        return super.toFileFormat() + " | " + by;
+        return appendPriorityField(super.toFileFormat() + " | " + by);
     }
 
     /**

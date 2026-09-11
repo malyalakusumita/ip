@@ -3,6 +3,7 @@ package yapbot.parser;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -15,10 +16,12 @@ import yapbot.command.DeleteCommand;
 import yapbot.command.FindCommand;
 import yapbot.command.ListCommand;
 import yapbot.command.MarkCommand;
+import yapbot.command.PriorityCommand;
 import yapbot.command.UnmarkCommand;
 import yapbot.exception.YapBotException;
 import yapbot.task.Deadline;
 import yapbot.task.Event;
+import yapbot.task.Priority;
 import yapbot.task.Task;
 import yapbot.task.Todo;
 
@@ -62,6 +65,13 @@ public class ParserTest {
     }
 
     @Test
+    public void parse_priority_returnsPriorityCommand() throws YapBotException {
+        Command command = Parser.parse("priority 2 high");
+
+        assertInstanceOf(PriorityCommand.class, command);
+    }
+
+    @Test
     public void parse_find_returnsFindCommand() throws YapBotException {
         Command command = Parser.parse("find book");
 
@@ -100,6 +110,42 @@ public class ParserTest {
     }
 
     @Test
+    public void parse_todoWithPriorityFlag_taskHasMatchingPriorityAndCleanDescription() throws YapBotException {
+        Command command = Parser.parse("todo read book /priority high");
+
+        Task task = ((AddCommand) command).getTask();
+        assertEquals("read book", task.getDescription());
+        assertEquals(Priority.HIGH, task.getPriority());
+        assertEquals("T | 0 | read book | HIGH", task.toFileFormat());
+    }
+
+    @Test
+    public void parse_todoWithMixedCasePriorityFlag_priorityMatchedCaseInsensitively() throws YapBotException {
+        Command command = Parser.parse("todo read book /priority HIGH");
+
+        Task task = ((AddCommand) command).getTask();
+        assertEquals(Priority.HIGH, task.getPriority());
+    }
+
+    @Test
+    public void parse_todoWithoutPriorityFlag_taskHasNoPriority() throws YapBotException {
+        Command command = Parser.parse("todo read book");
+
+        Task task = ((AddCommand) command).getTask();
+        assertNull(task.getPriority());
+    }
+
+    @Test
+    public void parse_todoWithPriorityFlagButNoLevel_exceptionThrown() {
+        assertThrows(YapBotException.class, () -> Parser.parse("todo read book /priority"));
+    }
+
+    @Test
+    public void parse_todoWithInvalidPriorityLevel_exceptionThrown() {
+        assertThrows(YapBotException.class, () -> Parser.parse("todo read book /priority urgent"));
+    }
+
+    @Test
     public void parse_deadline_returnsAddCommandWithMatchingDeadlineTask() throws YapBotException {
         Command command = Parser.parse("deadline return book /by 2019-10-15");
 
@@ -127,6 +173,15 @@ public class ParserTest {
     }
 
     @Test
+    public void parse_deadlineWithPriorityFlag_taskHasMatchingPriorityAndCleanByDate() throws YapBotException {
+        Command command = Parser.parse("deadline return book /by 2019-10-15 /priority medium");
+
+        Task task = ((AddCommand) command).getTask();
+        assertEquals(Priority.MEDIUM, task.getPriority());
+        assertEquals("D | 0 | return book | 2019-10-15 | MEDIUM", task.toFileFormat());
+    }
+
+    @Test
     public void parse_event_returnsAddCommandWithMatchingEventTask() throws YapBotException {
         Command command = Parser.parse("event project meeting /from Mon 2pm /to 4pm");
 
@@ -146,6 +201,15 @@ public class ParserTest {
     public void parse_eventWithBlankField_exceptionThrown() {
         assertThrows(YapBotException.class,
                 () -> Parser.parse("event project meeting /from  /to 4pm"));
+    }
+
+    @Test
+    public void parse_eventWithPriorityFlag_taskHasMatchingPriorityAndCleanFromTo() throws YapBotException {
+        Command command = Parser.parse("event project meeting /from Mon 2pm /to 4pm /priority low");
+
+        Task task = ((AddCommand) command).getTask();
+        assertEquals(Priority.LOW, task.getPriority());
+        assertEquals("E | 0 | project meeting | Mon 2pm | 4pm | LOW", task.toFileFormat());
     }
 
     @Test

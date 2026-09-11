@@ -13,6 +13,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import yapbot.task.Priority;
 import yapbot.task.Task;
 import yapbot.task.Todo;
 
@@ -85,6 +86,16 @@ public class UiTest {
         new Ui().showTaskMarked(task);
 
         assertTrue(output().contains("[X]read book"));
+    }
+
+    @Test
+    public void showPriorityChanged_printsTaskWithPriorityTag() {
+        Task task = new Todo("read book");
+        task.setPriority(Priority.HIGH);
+
+        new Ui().showPriorityChanged(task);
+
+        assertTrue(output().contains("[HIGH]read book"));
     }
 
     @Test

@@ -37,4 +37,20 @@ public class DeadlineTest {
 
         assertEquals("[D][X]return book (by: Oct 15 2019)", deadline.toString());
     }
+
+    @Test
+    public void toFileFormat_prioritySet_appendsPriorityAfterDate() {
+        Deadline deadline = new Deadline("return book", LocalDate.of(2019, 10, 15));
+        deadline.setPriority(Priority.LOW);
+
+        assertEquals("D | 0 | return book | 2019-10-15 | LOW", deadline.toFileFormat());
+    }
+
+    @Test
+    public void toString_prioritySet_showsPriorityTagBeforeDescription() {
+        Deadline deadline = new Deadline("return book", LocalDate.of(2019, 10, 15));
+        deadline.setPriority(Priority.LOW);
+
+        assertEquals("[D][ ][LOW]return book (by: Oct 15 2019)", deadline.toString());
+    }
 }
