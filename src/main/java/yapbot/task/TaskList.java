@@ -152,15 +152,9 @@ public class TaskList {
      */
     public Task[] findMatching(String keyword) {
         assert keyword != null : "FindCommand must validate the keyword before calling this";
-        Task[] matches = new Task[size];
-        int matchCount = 0;
-        for (int i = 0; i < size; i++) {
-            if (tasks[i].getDescription().contains(keyword)) {
-                matches[matchCount] = tasks[i];
-                matchCount++;
-            }
-        }
-        return Arrays.copyOf(matches, matchCount);
+        return Arrays.stream(tasks, 0, size)
+                .filter(task -> task.getDescription().contains(keyword))
+                .toArray(Task[]::new);
     }
 
     /**

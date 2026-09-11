@@ -8,7 +8,9 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import yapbot.exception.YapBotException;
 import yapbot.task.Deadline;
@@ -111,11 +113,9 @@ public class Storage {
      * @return the file content, one task per line.
      */
     private static String buildFileContent(Task[] tasks, int taskCount) {
-        StringBuilder content = new StringBuilder();
-        for (int i = 0; i < taskCount; i++) {
-            content.append(tasks[i].toFileFormat()).append(System.lineSeparator());
-        }
-        return content.toString();
+        return Arrays.stream(tasks, 0, taskCount)
+                .map(task -> task.toFileFormat() + System.lineSeparator())
+                .collect(Collectors.joining());
     }
 
     /**
