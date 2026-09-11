@@ -255,8 +255,7 @@ public class Storage {
 
     /**
      * Builds the task-specific object (Todo/Deadline/Event) for a parsed line,
-     * validating that the field count matches exactly and that no extra field
-     * required by that type is blank.
+     * dispatching to the builder for that type.
      *
      * @param type        the single-letter task type ("T", "D", or "E").
      * @param description the (already-validated, non-blank) task description.
@@ -267,37 +266,74 @@ public class Storage {
     private static Task buildTask(String type, String description, String[] parts) throws YapBotException {
         switch (type) {
             case TYPE_TODO:
-                if (parts.length != 3) {
-                    throw new YapBotException("todo line has extra fields");
-                }
-                return new Todo(description);
+                return buildTodo(description, parts);
             case TYPE_DEADLINE:
-                if (parts.length != 4) {
-                    throw new YapBotException("deadline line must have exactly 4 fields");
-                }
-                String byRaw = parts[3].trim();
-                if (byRaw.isEmpty()) {
-                    throw new YapBotException("deadline 'by' field is empty");
-                }
-                LocalDate by;
-                try {
-                    by = LocalDate.parse(byRaw);
-                } catch (DateTimeParseException e) {
-                    throw new YapBotException("deadline 'by' field is not a valid date: '" + byRaw + "'");
-                }
-                return new Deadline(description, by);
+                return buildDeadline(description, parts);
             case TYPE_EVENT:
-                if (parts.length != 5) {
-                    throw new YapBotException("event line must have exactly 5 fields");
-                }
-                String from = parts[3].trim();
-                String to = parts[4].trim();
-                if (from.isEmpty() || to.isEmpty()) {
-                    throw new YapBotException("event 'from'/'to' field is empty");
-                }
-                return new Event(description, from, to);
+                return buildEvent(description, parts);
             default:
                 throw new YapBotException("unknown task type '" + type + "'");
         }
+    }
+
+    /**
+     * Builds a {@link Todo} from a parsed line's fields, validating that
+     * there are no fields beyond type/status/description.
+     *
+     * @param description the already-validated, non-blank task description.
+     * @param parts       the full set of pipe-separated fields from the line.
+     * @return the constructed task.
+     * @throws YapBotException if the line has extra fields.
+     */
+    private static Task buildTodo(String description, String[] parts) throws YapBotException {
+        if (parts.length != 3) {
+            throw new YapBotException("todo line has extra fields");
+        }
+        return new Todo(description);
+    }
+
+    /**
+     * Builds a {@link Deadline} from a parsed line's fields, validating the
+     * field count and that the 'by' field is a non-blank, valid date.
+     *
+     * @param description the already-validated, non-blank task description.
+     * @param parts       the full set of pipe-separated fields from the line.
+     * @return the constructed task.
+     * @throws YapBotException if the field count is wrong or 'by' is invalid.
+     */
+    private static Task buildDeadline(String description, String[] parts) throws YapBotException {
+        if (parts.length != 4) {
+            throw new YapBotException("deadline line must have exactly 4 fields");
+        }
+        String byRaw = parts[3].trim();
+        if (byRaw.isEmpty()) {
+            throw new YapBotException("deadline 'by' field is empty");
+        }
+        try {
+            return new Deadline(description, LocalDate.parse(byRaw));
+        } catch (DateTimeParseException e) {
+            throw new YapBotException("deadline 'by' field is not a valid date: '" + byRaw + "'");
+        }
+    }
+
+    /**
+     * Builds an {@link Event} from a parsed line's fields, validating the
+     * field count and that the 'from'/'to' fields are non-blank.
+     *
+     * @param description the already-validated, non-blank task description.
+     * @param parts       the full set of pipe-separated fields from the line.
+     * @return the constructed task.
+     * @throws YapBotException if the field count is wrong or a field is blank.
+     */
+    private static Task buildEvent(String description, String[] parts) throws YapBotException {
+        if (parts.length != 5) {
+            throw new YapBotException("event line must have exactly 5 fields");
+        }
+        String from = parts[3].trim();
+        String to = parts[4].trim();
+        if (from.isEmpty() || to.isEmpty()) {
+            throw new YapBotException("event 'from'/'to' field is empty");
+        }
+        return new Event(description, from, to);
     }
 }
