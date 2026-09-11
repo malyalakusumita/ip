@@ -1,6 +1,7 @@
 package yapbot.task;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.junit.jupiter.api.Test;
 
@@ -13,6 +14,22 @@ public class TaskTest {
         assertEquals("read book", task.getDescription());
         assertEquals(" ", task.getStatusIcon());
         assertEquals("0", task.getStatusValue());
+    }
+
+    @Test
+    public void getPriority_newTask_returnsNull() {
+        Task task = new Task("read book");
+
+        assertNull(task.getPriority());
+    }
+
+    @Test
+    public void setPriority_validLevel_getPriorityReturnsIt() {
+        Task task = new Task("read book");
+
+        task.setPriority(Priority.HIGH);
+
+        assertEquals(Priority.HIGH, task.getPriority());
     }
 
     @Test
@@ -52,6 +69,21 @@ public class TaskTest {
     }
 
     @Test
+    public void appendPriorityField_priorityNotSet_returnsInputUnchanged() {
+        Task task = new Task("read book");
+
+        assertEquals("base line", task.appendPriorityField("base line"));
+    }
+
+    @Test
+    public void appendPriorityField_prioritySet_appendsPriorityAsFinalField() {
+        Task task = new Task("read book");
+        task.setPriority(Priority.LOW);
+
+        assertEquals("base line | LOW", task.appendPriorityField("base line"));
+    }
+
+    @Test
     public void toString_notDoneTask_showsBlankStatusBox() {
         Task task = new Task("read book");
 
@@ -64,5 +96,13 @@ public class TaskTest {
         task.markAsDone();
 
         assertEquals("[X]read book", task.toString());
+    }
+
+    @Test
+    public void toString_priorityIsSet_showsPriorityTagAfterStatusBox() {
+        Task task = new Task("read book");
+        task.setPriority(Priority.HIGH);
+
+        assertEquals("[ ][HIGH]read book", task.toString());
     }
 }

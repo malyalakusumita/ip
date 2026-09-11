@@ -27,4 +27,20 @@ public class TodoTest {
 
         assertEquals("T | 0 | read book", todo.toFileFormat());
     }
+
+    @Test
+    public void toFileFormat_prioritySet_appendsPriorityAsLastField() {
+        Todo todo = new Todo("read book");
+        todo.setPriority(Priority.HIGH);
+
+        assertEquals("T | 0 | read book | HIGH", todo.toFileFormat());
+    }
+
+    @Test
+    public void toString_prioritySet_showsPriorityTagAfterStatusBox() {
+        Todo todo = new Todo("read book");
+        todo.setPriority(Priority.HIGH);
+
+        assertEquals("[T][ ][HIGH]read book", todo.toString());
+    }
 }

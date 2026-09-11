@@ -35,4 +35,20 @@ public class EventTest {
 
         assertEquals("[E][X]project meeting (from: Mon 2pm to: 4pm)", event.toString());
     }
+
+    @Test
+    public void toFileFormat_prioritySet_appendsPriorityAfterFromAndTo() {
+        Event event = new Event("project meeting", "Mon 2pm", "4pm");
+        event.setPriority(Priority.MEDIUM);
+
+        assertEquals("E | 0 | project meeting | Mon 2pm | 4pm | MEDIUM", event.toFileFormat());
+    }
+
+    @Test
+    public void toString_prioritySet_showsPriorityTagBeforeDescription() {
+        Event event = new Event("project meeting", "Mon 2pm", "4pm");
+        event.setPriority(Priority.MEDIUM);
+
+        assertEquals("[E][ ][MEDIUM]project meeting (from: Mon 2pm to: 4pm)", event.toString());
+    }
 }
