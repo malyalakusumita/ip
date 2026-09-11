@@ -31,6 +31,7 @@ public class Parser {
      * @throws YapBotException if the command is empty, unrecognized, or malformed.
      */
     public static Command parse(String fullCommand) throws YapBotException {
+        assert fullCommand != null : "Ui.readCommand() throws instead of ever returning null";
         if (fullCommand.equals("bye")) {
             return new ByeCommand();
         } else if (fullCommand.equals("list")) {

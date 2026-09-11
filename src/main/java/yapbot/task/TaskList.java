@@ -145,6 +145,7 @@ public class TaskList {
      * @return the matching tasks, sized to exactly the number of matches.
      */
     public Task[] findMatching(String keyword) {
+        assert keyword != null : "FindCommand must validate the keyword before calling this";
         Task[] matches = new Task[size];
         int matchCount = 0;
         for (int i = 0; i < size; i++) {

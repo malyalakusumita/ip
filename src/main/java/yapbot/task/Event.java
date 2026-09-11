@@ -17,6 +17,8 @@ public class Event extends Task {
      */
     public Event(String description, String from, String to) {
         super(description);
+        assert from != null && !from.isBlank() : "Parser/Storage must validate 'from' beforehand";
+        assert to != null && !to.isBlank() : "Parser/Storage must validate 'to' beforehand";
         this.from = from;
         this.to = to;
     }
