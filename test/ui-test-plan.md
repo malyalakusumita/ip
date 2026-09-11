@@ -55,7 +55,7 @@ What can I do for you?
 Got it. I've added this task:
   [T][ ] read book
 Now you have 1 tasks in the list.
-I'm sorry, but I don't know what that means. Try 'todo', 'deadline', 'event', 'list', 'mark', 'unmark', 'delete' or 'bye'.
+I'm sorry, but I don't know what that means. Try 'todo', 'deadline', 'event', 'list', 'find', 'mark', 'unmark', 'delete', 'priority' or 'bye'.
 Here are the tasks in your list:
 1.[T][ ] read book
 Bye. Hope to see you again soon!
@@ -267,7 +267,7 @@ What can I do for you?
 Got it. I've added this task:
   [T][ ] read book
 Now you have 1 tasks in the list.
-You didn't type anything. Try 'todo', 'deadline', 'event', 'list', 'mark', 'unmark', 'delete' or 'bye'.
+You didn't type anything. Try 'todo', 'deadline', 'event', 'list', 'find', 'mark', 'unmark', 'delete', 'priority' or 'bye'.
 Here are the tasks in your list:
 1.[T][ ] read book
 Bye. Hope to see you again soon!
@@ -302,7 +302,7 @@ What can I do for you?
 Got it. I've added this task:
   [T][ ] task A
 Now you have 1 tasks in the list.
-I'm sorry, but I don't know what that means. Try 'todo', 'deadline', 'event', 'list', 'mark', 'unmark', 'delete' or 'bye'.
+I'm sorry, but I don't know what that means. Try 'todo', 'deadline', 'event', 'list', 'find', 'mark', 'unmark', 'delete', 'priority' or 'bye'.
 Got it. I've added this task:
   [T][ ] task B
 Now you have 2 tasks in the list.
@@ -762,3 +762,149 @@ Here are the matching tasks in your list:
 Please specify a keyword to search for, e.g. 'find book'.
 Bye. Hope to see you again soon!
 ~~~
+
+## Test case: Setting a priority at creation
+- Aim: Verify that todo/deadline/event all accept an optional trailing
+  '/priority <level>' flag, tag the task with it in the add confirmation
+  and in list, and that omitting it leaves a task exactly as before.
+
+### Input
+~~~text
+todo read book /priority high
+deadline return book /by 2019-10-15 /priority medium
+event meeting /from Mon 2pm /to 4pm /priority low
+list
+bye
+~~~
+
+### Expected output
+~~~text
+__   __  ___   ____  ____   ___ _____
+\ \ / / / _ \ |  _ \| __ ) / _ \_   _|
+ \ V / | |_| || |_) |  _ \| |_| || |
+  |_|   \___/ |____/|___/ \___/ |_|
+Hello! I'm YAPBOT.
+What can I do for you?
+Got it. I've added this task:
+  [T][ ][HIGH]read book
+Now you have 1 tasks in the list.
+Got it. I've added this task:
+  [D][ ][MEDIUM]return book (by: Oct 15 2019)
+Now you have 2 tasks in the list.
+Got it. I've added this task:
+  [E][ ][LOW]meeting (from: Mon 2pm to: 4pm)
+Now you have 3 tasks in the list.
+Here are the tasks in your list:
+1.[T][ ][HIGH]read book
+2.[D][ ][MEDIUM]return book (by: Oct 15 2019)
+3.[E][ ][LOW]meeting (from: Mon 2pm to: 4pm)
+Bye. Hope to see you again soon!
+~~~
+
+## Test case: Changing a task's priority
+- Aim: Verify that 'priority <index> <level>' sets a task's priority (even
+  if it had none before) and can change it again afterward.
+
+### Input
+~~~text
+todo read book
+priority 1 high
+priority 1 low
+list
+bye
+~~~
+
+### Expected output
+~~~text
+__   __  ___   ____  ____   ___ _____
+\ \ / / / _ \ |  _ \| __ ) / _ \_   _|
+ \ V / | |_| || |_) |  _ \| |_| || |
+  |_|   \___/ |____/|___/ \___/ |_|
+Hello! I'm YAPBOT.
+What can I do for you?
+Got it. I've added this task:
+  [T][ ]read book
+Now you have 1 tasks in the list.
+Nice! I've updated this task's priority:
+  [T][ ][HIGH]read book
+Nice! I've updated this task's priority:
+  [T][ ][LOW]read book
+Here are the tasks in your list:
+1.[T][ ][LOW]read book
+Bye. Hope to see you again soon!
+~~~
+
+## Test case: Priority commands with invalid input
+- Aim: Verify bad '/priority'/'priority' input (missing level, non-numeric
+  index, out-of-range index, unrecognized level) is rejected with a clear
+  error rather than crashing or changing the task list.
+
+### Input
+~~~text
+todo read book
+priority
+priority 1
+priority abc high
+priority 99 high
+priority 1 urgent
+list
+bye
+~~~
+
+### Expected output
+~~~text
+__   __  ___   ____  ____   ___ _____
+\ \ / / / _ \ |  _ \| __ ) / _ \_   _|
+ \ V / | |_| || |_) |  _ \| |_| || |
+  |_|   \___/ |____/|___/ \___/ |_|
+Hello! I'm YAPBOT.
+What can I do for you?
+Got it. I've added this task:
+  [T][ ]read book
+Now you have 1 tasks in the list.
+Please specify a task number and a priority, e.g. 'priority 2 high'.
+Please specify a task number and a priority, e.g. 'priority 2 high'.
+'abc' is not a valid task number.
+Task number 99 doesn't exist. You have 1 task(s).
+'urgent' is not a valid priority. Use high, medium or low.
+Here are the tasks in your list:
+1.[T][ ]read book
+Bye. Hope to see you again soon!
+~~~
+
+## Test case: Loading a save file from before this feature existed
+- Aim: Verify that a save file with no priority field on any line (i.e.
+  written before this feature existed) still loads exactly as before,
+  with every task showing no priority -- the core backward-compatibility
+  guarantee for this feature.
+- Setup: before running the input below, create `./data/yapBot.txt` with
+  exactly the following contents (no trailing priority field on any line):
+~~~text
+T | 1 | read book
+D | 0 | return book | 2019-06-06
+E | 0 | project meeting | Aug 6th 2pm | 4pm
+~~~
+
+### Input
+~~~text
+list
+bye
+~~~
+
+### Expected output
+~~~text
+__   __  ___   ____  ____   ___ _____
+\ \ / / / _ \ |  _ \| __ ) / _ \_   _|
+ \ V / | |_| || |_) |  _ \| |_| || |
+  |_|   \___/ |____/|___/ \___/ |_|
+Hello! I'm YAPBOT.
+What can I do for you?
+Here are the tasks in your list:
+1.[T][X]read book
+2.[D][ ]return book (by: Jun 06 2019)
+3.[E][ ]project meeting (from: Aug 6th 2pm to: 4pm)
+Bye. Hope to see you again soon!
+~~~
+- Note: none of the loaded tasks show a priority tag, and saving again
+  (e.g. via any mutating command) reproduces the exact same field counts
+  as the original file -- no priority field is invented on save.
