@@ -110,7 +110,8 @@ public class ParserTest {
     }
 
     @Test
-    public void parse_todoWithPriorityFlag_taskHasMatchingPriorityAndCleanDescription() throws YapBotException {
+    public void parse_todoWithPriorityFlag_taskHasMatchingPriorityAndCleanDescription()
+            throws YapBotException {
         Command command = Parser.parse("todo read book /priority high");
 
         Task task = ((AddCommand) command).getTask();
@@ -120,7 +121,8 @@ public class ParserTest {
     }
 
     @Test
-    public void parse_todoWithMixedCasePriorityFlag_priorityMatchedCaseInsensitively() throws YapBotException {
+    public void parse_todoWithMixedCasePriorityFlag_priorityMatchedCaseInsensitively()
+            throws YapBotException {
         Command command = Parser.parse("todo read book /priority HIGH");
 
         Task task = ((AddCommand) command).getTask();
@@ -173,7 +175,8 @@ public class ParserTest {
     }
 
     @Test
-    public void parse_deadlineWithPriorityFlag_taskHasMatchingPriorityAndCleanByDate() throws YapBotException {
+    public void parse_deadlineWithPriorityFlag_taskHasMatchingPriorityAndCleanByDate()
+            throws YapBotException {
         Command command = Parser.parse("deadline return book /by 2019-10-15 /priority medium");
 
         Task task = ((AddCommand) command).getTask();

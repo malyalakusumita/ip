@@ -311,8 +311,8 @@ public class Storage {
     private static Task buildDeadline(String description, String[] parts) throws YapBotException {
         final int baseFieldCount = 4;
         if (parts.length != baseFieldCount && parts.length != baseFieldCount + 1) {
-            throw new YapBotException("deadline line must have " + baseFieldCount + " or " + (baseFieldCount + 1)
-                    + " fields");
+            throw new YapBotException("deadline line must have " + baseFieldCount
+                    + " or " + (baseFieldCount + 1) + " fields");
         }
         String byRaw = parts[3].trim();
         if (byRaw.isEmpty()) {
