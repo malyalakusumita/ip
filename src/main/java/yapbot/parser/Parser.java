@@ -10,6 +10,7 @@ import yapbot.command.DeleteCommand;
 import yapbot.command.FindCommand;
 import yapbot.command.ListCommand;
 import yapbot.command.MarkCommand;
+import yapbot.command.PriorityCommand;
 import yapbot.command.UnmarkCommand;
 import yapbot.exception.YapBotException;
 import yapbot.task.Deadline;
@@ -56,6 +57,8 @@ public class Parser {
             return new UnmarkCommand(fullCommand);
         } else if (fullCommand.startsWith("delete")) {
             return new DeleteCommand(fullCommand);
+        } else if (fullCommand.startsWith("priority")) {
+            return new PriorityCommand(fullCommand);
         } else if (fullCommand.startsWith("find")) {
             return new FindCommand(fullCommand);
         } else if (fullCommand.startsWith(COMMAND_WORD_TODO)) {
@@ -66,12 +69,12 @@ public class Parser {
             return new AddCommand(parseEvent(fullCommand));
         } else if (fullCommand.isBlank()) {
             throw new YapBotException("You didn't type anything. Try 'todo', 'deadline', "
-                    + "'event', 'list', 'find', 'mark', 'unmark', 'delete' or 'bye'.");
+                    + "'event', 'list', 'find', 'mark', 'unmark', 'delete', 'priority' or 'bye'.");
         } else {
             throw new YapBotException(
                     "I'm sorry, but I don't know what that means. "
                             + "Try 'todo', 'deadline', 'event', 'list', 'find', 'mark', "
-                            + "'unmark', 'delete' or 'bye'.");
+                            + "'unmark', 'delete', 'priority' or 'bye'.");
         }
     }
 

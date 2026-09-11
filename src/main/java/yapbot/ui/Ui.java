@@ -103,6 +103,16 @@ public class Ui {
     }
 
     /**
+     * Prints the confirmation shown after a task's priority is changed.
+     *
+     * @param task the task whose priority was changed.
+     */
+    public void showPriorityChanged(Task task) {
+        output("Nice! I've updated this task's priority:");
+        output("  " + task);
+    }
+
+    /**
      * Prints the confirmation shown after a task is deleted.
      *
      * @param task  the task that was removed.

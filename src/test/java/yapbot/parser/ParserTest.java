@@ -16,6 +16,7 @@ import yapbot.command.DeleteCommand;
 import yapbot.command.FindCommand;
 import yapbot.command.ListCommand;
 import yapbot.command.MarkCommand;
+import yapbot.command.PriorityCommand;
 import yapbot.command.UnmarkCommand;
 import yapbot.exception.YapBotException;
 import yapbot.task.Deadline;
@@ -61,6 +62,13 @@ public class ParserTest {
         Command command = Parser.parse("delete 2");
 
         assertInstanceOf(DeleteCommand.class, command);
+    }
+
+    @Test
+    public void parse_priority_returnsPriorityCommand() throws YapBotException {
+        Command command = Parser.parse("priority 2 high");
+
+        assertInstanceOf(PriorityCommand.class, command);
     }
 
     @Test
