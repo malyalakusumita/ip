@@ -11,6 +11,8 @@ import yapbot.ui.Ui;
  */
 public class FindCommand extends Command {
 
+    private static final String COMMAND_WORD_FIND = "find";
+
     private final String fullCommand;
 
     /**
@@ -45,7 +47,9 @@ public class FindCommand extends Command {
      * @throws YapBotException if no keyword was given.
      */
     private static String extractKeyword(String fullCommand) throws YapBotException {
-        String keyword = fullCommand.length() > 4 ? fullCommand.substring(4).trim() : "";
+        String keyword = fullCommand.length() > COMMAND_WORD_FIND.length()
+                ? fullCommand.substring(COMMAND_WORD_FIND.length()).trim()
+                : "";
         if (keyword.isEmpty()) {
             throw new YapBotException("Please specify a keyword to search for, e.g. 'find book'.");
         }

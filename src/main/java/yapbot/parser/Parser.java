@@ -23,6 +23,10 @@ import yapbot.task.Todo;
  */
 public class Parser {
 
+    private static final String COMMAND_WORD_TODO = "todo";
+    private static final String COMMAND_WORD_DEADLINE = "deadline";
+    private static final String COMMAND_WORD_EVENT = "event";
+
     /**
      * Parses a full line of user input into the matching command.
      *
@@ -44,11 +48,11 @@ public class Parser {
             return new DeleteCommand(fullCommand);
         } else if (fullCommand.startsWith("find")) {
             return new FindCommand(fullCommand);
-        } else if (fullCommand.startsWith("todo")) {
+        } else if (fullCommand.startsWith(COMMAND_WORD_TODO)) {
             return new AddCommand(parseTodo(fullCommand));
-        } else if (fullCommand.startsWith("deadline")) {
+        } else if (fullCommand.startsWith(COMMAND_WORD_DEADLINE)) {
             return new AddCommand(parseDeadline(fullCommand));
-        } else if (fullCommand.startsWith("event")) {
+        } else if (fullCommand.startsWith(COMMAND_WORD_EVENT)) {
             return new AddCommand(parseEvent(fullCommand));
         } else if (fullCommand.isBlank()) {
             throw new YapBotException("You didn't type anything. Try 'todo', 'deadline', "
@@ -69,7 +73,7 @@ public class Parser {
      * @throws YapBotException if the description is empty or contains '|'.
      */
     private static Task parseTodo(String command) throws YapBotException {
-        String description = command.substring(4).trim();
+        String description = command.substring(COMMAND_WORD_TODO.length()).trim();
         if (description.isEmpty()) {
             throw new YapBotException("The description of a todo cannot be empty. "
                     + "Usage: todo <description>");
@@ -86,7 +90,9 @@ public class Parser {
      *         '|', or the date is not a valid {@code yyyy-mm-dd} date.
      */
     private static Task parseDeadline(String command) throws YapBotException {
-        String details = command.length() > 8 ? command.substring(8).trim() : "";
+        String details = command.length() > COMMAND_WORD_DEADLINE.length()
+                ? command.substring(COMMAND_WORD_DEADLINE.length()).trim()
+                : "";
         if (details.isEmpty()) {
             throw new YapBotException("The description of a deadline cannot be empty. "
                     + "Usage: deadline <description> /by <date>");
@@ -110,7 +116,9 @@ public class Parser {
      * @throws YapBotException if the description/from/to are missing or contain '|'.
      */
     private static Task parseEvent(String command) throws YapBotException {
-        String details = command.length() > 5 ? command.substring(5).trim() : "";
+        String details = command.length() > COMMAND_WORD_EVENT.length()
+                ? command.substring(COMMAND_WORD_EVENT.length()).trim()
+                : "";
         if (details.isEmpty()) {
             throw new YapBotException("The description of an event cannot be empty. "
                     + "Usage: event <description> /from <start> /to <end>");
