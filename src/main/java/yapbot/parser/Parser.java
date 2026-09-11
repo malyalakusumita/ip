@@ -14,6 +14,7 @@ import yapbot.command.UnmarkCommand;
 import yapbot.exception.YapBotException;
 import yapbot.task.Deadline;
 import yapbot.task.Event;
+import yapbot.task.Priority;
 import yapbot.task.Task;
 import yapbot.task.Todo;
 
@@ -26,6 +27,15 @@ public class Parser {
     private static final String COMMAND_WORD_TODO = "todo";
     private static final String COMMAND_WORD_DEADLINE = "deadline";
     private static final String COMMAND_WORD_EVENT = "event";
+    private static final String FLAG_PRIORITY = " /priority";
+
+    /**
+     * The remainder of an add command's text once an optional trailing
+     * {@code /priority} flag has been stripped off, paired with the
+     * priority it carried (or {@code null} if it had none).
+     */
+    private record TextWithPriority(String text, Priority priority) {
+    }
 
     /**
      * Parses a full line of user input into the matching command.
@@ -66,19 +76,48 @@ public class Parser {
     }
 
     /**
+     * Strips an optional trailing {@code /priority <level>} flag off the end
+     * of an add command's text (after its keyword has already been
+     * removed), before any type-specific splitting (e.g. on {@code /by}).
+     *
+     * @param text the add command's text, keyword already stripped.
+     * @return the text with the flag removed (unchanged if there was none),
+     *         paired with the priority it specified (or {@code null}).
+     * @throws YapBotException if the flag is present but names no level, or
+     *         names one that isn't {@code high}/{@code medium}/{@code low}.
+     */
+    private static TextWithPriority extractPriority(String text) throws YapBotException {
+        int flagIndex = text.indexOf(FLAG_PRIORITY);
+        if (flagIndex == -1) {
+            return new TextWithPriority(text, null);
+        }
+        String remainder = text.substring(0, flagIndex);
+        String levelInput = text.substring(flagIndex + FLAG_PRIORITY.length()).trim();
+        if (levelInput.isEmpty()) {
+            throw new YapBotException("Please specify a priority: high, medium or low, "
+                    + "e.g. '/priority high'.");
+        }
+        return new TextWithPriority(remainder, Priority.fromInput(levelInput));
+    }
+
+    /**
      * Parses a "todo" command into a {@link Todo}.
      *
      * @param command the full command text.
      * @return the parsed task.
-     * @throws YapBotException if the description is empty or contains '|'.
+     * @throws YapBotException if the description is empty or contains '|',
+     *         or the optional {@code /priority} flag is invalid.
      */
     private static Task parseTodo(String command) throws YapBotException {
-        String description = command.substring(COMMAND_WORD_TODO.length()).trim();
+        TextWithPriority extracted = extractPriority(command.substring(COMMAND_WORD_TODO.length()).trim());
+        String description = extracted.text();
         if (description.isEmpty()) {
             throw new YapBotException("The description of a todo cannot be empty. "
                     + "Usage: todo <description>");
         }
-        return new Todo(checkNoDelimiter(description, "description of a todo"));
+        Task task = new Todo(checkNoDelimiter(description, "description of a todo"));
+        task.setPriority(extracted.priority());
+        return task;
     }
 
     /**
@@ -87,12 +126,15 @@ public class Parser {
      * @param command the full command text.
      * @return the parsed task.
      * @throws YapBotException if the description/date is missing, contains
-     *         '|', or the date is not a valid {@code yyyy-mm-dd} date.
+     *         '|', the date is not a valid {@code yyyy-mm-dd} date, or the
+     *         optional {@code /priority} flag is invalid.
      */
     private static Task parseDeadline(String command) throws YapBotException {
-        String details = command.length() > COMMAND_WORD_DEADLINE.length()
+        String rawDetails = command.length() > COMMAND_WORD_DEADLINE.length()
                 ? command.substring(COMMAND_WORD_DEADLINE.length()).trim()
                 : "";
+        TextWithPriority extracted = extractPriority(rawDetails);
+        String details = extracted.text();
         if (details.isEmpty()) {
             throw new YapBotException("The description of a deadline cannot be empty. "
                     + "Usage: deadline <description> /by <date>");
@@ -105,7 +147,9 @@ public class Parser {
         String description = checkNoDelimiter(parts[0].trim(), "description of a deadline");
         String byInput = checkNoDelimiter(parts[1].trim(), "'/by' date of a deadline");
         LocalDate by = parseDeadlineDate(byInput);
-        return new Deadline(description, by);
+        Task task = new Deadline(description, by);
+        task.setPriority(extracted.priority());
+        return task;
     }
 
     /**
@@ -113,12 +157,15 @@ public class Parser {
      *
      * @param command the full command text.
      * @return the parsed task.
-     * @throws YapBotException if the description/from/to are missing or contain '|'.
+     * @throws YapBotException if the description/from/to are missing,
+     *         contain '|', or the optional {@code /priority} flag is invalid.
      */
     private static Task parseEvent(String command) throws YapBotException {
-        String details = command.length() > COMMAND_WORD_EVENT.length()
+        String rawDetails = command.length() > COMMAND_WORD_EVENT.length()
                 ? command.substring(COMMAND_WORD_EVENT.length()).trim()
                 : "";
+        TextWithPriority extracted = extractPriority(rawDetails);
+        String details = extracted.text();
         if (details.isEmpty()) {
             throw new YapBotException("The description of an event cannot be empty. "
                     + "Usage: event <description> /from <start> /to <end>");
@@ -133,7 +180,9 @@ public class Parser {
         String description = checkNoDelimiter(parts[0].trim(), "description of an event");
         String from = checkNoDelimiter(parts[1].trim(), "'/from' time of an event");
         String to = checkNoDelimiter(parts[2].trim(), "'/to' time of an event");
-        return new Event(description, from, to);
+        Task task = new Event(description, from, to);
+        task.setPriority(extracted.priority());
+        return task;
     }
 
     /**
