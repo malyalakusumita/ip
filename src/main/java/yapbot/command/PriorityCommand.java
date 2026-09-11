@@ -65,7 +65,8 @@ public class PriorityCommand extends Command {
      */
     private int validateTaskIndex(TaskList taskList, String indexToken) throws YapBotException {
         if (taskList.size() == 0) {
-            throw new YapBotException("Your task list is empty, so there's nothing to change the priority of.");
+            throw new YapBotException(
+                    "Your task list is empty, so there's nothing to change the priority of.");
         }
         return taskList.validateIndex(COMMAND_WORD + " " + indexToken, COMMAND_WORD);
     }
