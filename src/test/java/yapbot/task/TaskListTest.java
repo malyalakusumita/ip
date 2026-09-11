@@ -13,8 +13,6 @@ import yapbot.exception.YapBotException;
 
 public class TaskListTest {
 
-    private static final int MAX_CAPACITY = 100;
-
     @Test
     public void constructor_default_createsEmptyList() {
         TaskList taskList = new TaskList();
@@ -95,7 +93,7 @@ public class TaskListTest {
 
         Task[] tasks = taskList.toArray();
 
-        assertEquals(MAX_CAPACITY, tasks.length);
+        assertEquals(TaskList.MAX_CAPACITY, tasks.length);
         assertSame(first, tasks[0]);
         assertSame(second, tasks[1]);
         assertNull(tasks[2]);
@@ -174,7 +172,7 @@ public class TaskListTest {
 
     private TaskList fillToCapacity() throws YapBotException {
         TaskList taskList = new TaskList();
-        for (int i = 0; i < MAX_CAPACITY; i++) {
+        for (int i = 0; i < TaskList.MAX_CAPACITY; i++) {
             taskList.add(new Todo("task " + i));
         }
         return taskList;

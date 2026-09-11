@@ -23,7 +23,7 @@ public class YapBot {
         Ui ui = new Ui();
         ui.showWelcome();
 
-        Task[] loaded = new Task[100];
+        Task[] loaded = new Task[TaskList.MAX_CAPACITY];
         int loadedCount = Storage.load(loaded);
         TaskList taskList = new TaskList(loaded, loadedCount);
 
