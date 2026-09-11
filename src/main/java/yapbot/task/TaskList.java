@@ -33,6 +33,8 @@ public class TaskList {
      * @param loadedCount the number of valid tasks at the start of {@code loadedTasks}.
      */
     public TaskList(Task[] loadedTasks, int loadedCount) {
+        assert loadedCount >= 0 && loadedCount <= MAX_CAPACITY
+                : "Storage.load() must never report a count outside the array it was given";
         this.tasks = new Task[MAX_CAPACITY];
         System.arraycopy(loadedTasks, 0, this.tasks, 0, loadedCount);
         this.size = loadedCount;
@@ -63,6 +65,8 @@ public class TaskList {
      * @return the task at that index.
      */
     public Task get(int index) {
+        assert index >= 0 && index < size
+                : "index must already be validated by validateIndex() before reaching here";
         return tasks[index];
     }
 
@@ -88,6 +92,7 @@ public class TaskList {
         if (isFull()) {
             throw new YapBotException("Sorry, your task list is full (max " + MAX_CAPACITY + " tasks).");
         }
+        assert size < MAX_CAPACITY : "the isFull() guard above must have already ruled out this case";
         tasks[size] = task;
         size++;
     }
@@ -99,6 +104,8 @@ public class TaskList {
      * @return the task that was removed.
      */
     public Task delete(int index) {
+        assert index >= 0 && index < size
+                : "index must already be validated by validateIndex() before reaching here";
         Task removed = tasks[index];
         for (int i = index; i < size - 1; i++) {
             tasks[i] = tasks[i + 1];
@@ -114,6 +121,8 @@ public class TaskList {
      * @param index a valid, zero-based index (see {@link #validateIndex}).
      */
     public void markAsDone(int index) {
+        assert index >= 0 && index < size
+                : "index must already be validated by validateIndex() before reaching here";
         tasks[index].markAsDone();
     }
 
@@ -123,6 +132,8 @@ public class TaskList {
      * @param index a valid, zero-based index (see {@link #validateIndex}).
      */
     public void markAsNotDone(int index) {
+        assert index >= 0 && index < size
+                : "index must already be validated by validateIndex() before reaching here";
         tasks[index].markAsNotDone();
     }
 
@@ -134,6 +145,7 @@ public class TaskList {
      * @return the matching tasks, sized to exactly the number of matches.
      */
     public Task[] findMatching(String keyword) {
+        assert keyword != null : "FindCommand must validate the keyword before calling this";
         Task[] matches = new Task[size];
         int matchCount = 0;
         for (int i = 0; i < size; i++) {
