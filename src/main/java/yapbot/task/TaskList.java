@@ -12,7 +12,13 @@ import yapbot.storage.Storage;
  */
 public class TaskList {
 
-    private static final int MAX_CAPACITY = 100;
+    /**
+     * The maximum number of tasks a {@code TaskList} can hold. The single
+     * source of truth for that limit: callers that build the array they
+     * later pass to {@link #TaskList(Task[], int)} (e.g. {@link Storage#load})
+     * should size it against this constant rather than a separate literal.
+     */
+    public static final int MAX_CAPACITY = 100;
 
     private final Task[] tasks;
     private int size;

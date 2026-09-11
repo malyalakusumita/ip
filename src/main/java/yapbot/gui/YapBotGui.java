@@ -15,8 +15,6 @@ import yapbot.ui.GuiUi;
  */
 public class YapBotGui {
 
-    private static final int MAX_TASKS = 100;
-
     private final TaskList taskList;
     private final GuiUi ui;
     private boolean isExit;
@@ -25,7 +23,7 @@ public class YapBotGui {
      * Creates a GUI session, loading any previously saved tasks from disk.
      */
     public YapBotGui() {
-        Task[] loaded = new Task[MAX_TASKS];
+        Task[] loaded = new Task[TaskList.MAX_CAPACITY];
         int loadedCount = Storage.load(loaded);
         this.taskList = new TaskList(loaded, loadedCount);
         this.ui = new GuiUi();
