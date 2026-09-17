@@ -19,18 +19,18 @@ __   __  ___   ____  ____   ___ _____
 \ \ / / / _ \ |  _ \| __ ) / _ \_   _|
  \ V / | |_| || |_) |  _ \| |_| || |
   |_|   \___/ |____/|___/ \___/ |_|
-Hello! I'm YAPBOT.
-What can I do for you?
-Got it. I've added this task:
+Hey there! I'm YapBot, your hype squad for getting things done.
+What are we tackling today?
+Great, I've added read book to the list
   [T][ ] read book
 Now you have 1 tasks in the list.
-Got it. I've added this task:
+Great, I've added return book to the list
   [T][ ] return book
 Now you have 2 tasks in the list.
-Here are the tasks in your list:
+Here's everything on your list:
 1.[T][ ] read book
 2.[T][ ] return book
-Bye. Hope to see you again soon!
+Nice work today! Catch you next time - bye for now!
 ~~~
 
 ## Test case: Unrecognized command does not corrupt the task list
@@ -50,15 +50,15 @@ __   __  ___   ____  ____   ___ _____
 \ \ / / / _ \ |  _ \| __ ) / _ \_   _|
  \ V / | |_| || |_) |  _ \| |_| || |
   |_|   \___/ |____/|___/ \___/ |_|
-Hello! I'm YAPBOT.
-What can I do for you?
-Got it. I've added this task:
+Hey there! I'm YapBot, your hype squad for getting things done.
+What are we tackling today?
+Great, I've added read book to the list
   [T][ ] read book
 Now you have 1 tasks in the list.
 I'm sorry, but I don't know what that means. Try 'todo', 'deadline', 'event', 'list', 'find', 'mark', 'unmark', 'delete', 'priority' or 'bye'.
-Here are the tasks in your list:
+Here's everything on your list:
 1.[T][ ] read book
-Bye. Hope to see you again soon!
+Nice work today! Catch you next time - bye for now!
 ~~~
 
 ## Test case: Mark and unmark a task
@@ -79,18 +79,18 @@ __   __  ___   ____  ____   ___ _____
 \ \ / / / _ \ |  _ \| __ ) / _ \_   _|
  \ V / | |_| || |_) |  _ \| |_| || |
   |_|   \___/ |____/|___/ \___/ |_|
-Hello! I'm YAPBOT.
-What can I do for you?
-Got it. I've added this task:
+Hey there! I'm YapBot, your hype squad for getting things done.
+What are we tackling today?
+Great, I've added read book to the list
   [T][ ] read book
 Now you have 1 tasks in the list.
-Nice! I've marked this task as done:
+Woo, nice work! Marked as done:
   [T][X] read book
-I've marked this task as not done yet:
+No worries, I've marked this as not done yet:
   [T][ ] read book
-Here are the tasks in your list:
+Here's everything on your list:
 1.[T][ ] read book
-Bye. Hope to see you again soon!
+Nice work today! Catch you next time - bye for now!
 ~~~
 
 ## Test case: mark/unmark with invalid input
@@ -116,22 +116,22 @@ __   __  ___   ____  ____   ___ _____
 \ \ / / / _ \ |  _ \| __ ) / _ \_   _|
  \ V / | |_| || |_) |  _ \| |_| || |
   |_|   \___/ |____/|___/ \___/ |_|
-Hello! I'm YAPBOT.
-What can I do for you?
+Hey there! I'm YapBot, your hype squad for getting things done.
+What are we tackling today?
 Your task list is empty, so there's nothing to mark.
 Your task list is empty, so there's nothing to unmark.
-Got it. I've added this task:
+Great, I've added read book to the list
   [T][ ] read book
 Now you have 1 tasks in the list.
 'abc' is not a valid task number.
 Task number 99 doesn't exist. You have 1 task(s).
 Task number 0 doesn't exist. You have 1 task(s).
 'abc' is not a valid task number.
-Nice! I've marked this task as done:
+Woo, nice work! Marked as done:
   [T][X] read book
-Here are the tasks in your list:
+Here's everything on your list:
 1.[T][X] read book
-Bye. Hope to see you again soon!
+Nice work today! Catch you next time - bye for now!
 ~~~
 
 ## Test case: Todo, Deadline, and Event tasks
@@ -152,22 +152,22 @@ __   __  ___   ____  ____   ___ _____
 \ \ / / / _ \ |  _ \| __ ) / _ \_   _|
  \ V / | |_| || |_) |  _ \| |_| || |
   |_|   \___/ |____/|___/ \___/ |_|
-Hello! I'm YAPBOT.
-What can I do for you?
-Got it. I've added this task:
+Hey there! I'm YapBot, your hype squad for getting things done.
+What are we tackling today?
+Great, I've added borrow book to the list
   [T][ ] borrow book
 Now you have 1 tasks in the list.
-Got it. I've added this task:
+Remember to do return book by Oct 15 2019
   [D][ ] return book (by: Oct 15 2019)
 Now you have 2 tasks in the list.
-Got it. I've added this task:
+Noted! I've pencilled in project meeting on your schedule
   [E][ ] project meeting (from: Mon 2pm to: 4pm)
 Now you have 3 tasks in the list.
-Here are the tasks in your list:
+Here's everything on your list:
 1.[T][ ] borrow book
 2.[D][ ] return book (by: Oct 15 2019)
 3.[E][ ] project meeting (from: Mon 2pm to: 4pm)
-Bye. Hope to see you again soon!
+Nice work today! Catch you next time - bye for now!
 ~~~
 
 ## Test case: Empty descriptions for todo/deadline/event
@@ -202,16 +202,16 @@ __   __  ___   ____  ____   ___ _____
 \ \ / / / _ \ |  _ \| __ ) / _ \_   _|
  \ V / | |_| || |_) |  _ \| |_| || |
   |_|   \___/ |____/|___/ \___/ |_|
-Hello! I'm YAPBOT.
-What can I do for you?
+Hey there! I'm YapBot, your hype squad for getting things done.
+What are we tackling today?
 The description of a todo cannot be empty. Usage: todo <description>
 The description of a todo cannot be empty. Usage: todo <description>
 The description of a deadline cannot be empty. Usage: deadline <description> /by <date>
 The description of a deadline cannot be empty. Usage: deadline <description> /by <date>
 The description of an event cannot be empty. Usage: event <description> /from <start> /to <end>
 The description of an event cannot be empty. Usage: event <description> /from <start> /to <end>
-Here are the tasks in your list:
-Bye. Hope to see you again soon!
+Here's everything on your list:
+Nice work today! Catch you next time - bye for now!
 ~~~
 
 ## Test case: Deadline/event missing required parts
@@ -234,15 +234,15 @@ __   __  ___   ____  ____   ___ _____
 \ \ / / / _ \ |  _ \| __ ) / _ \_   _|
  \ V / | |_| || |_) |  _ \| |_| || |
   |_|   \___/ |____/|___/ \___/ |_|
-Hello! I'm YAPBOT.
-What can I do for you?
+Hey there! I'm YapBot, your hype squad for getting things done.
+What are we tackling today?
 A deadline needs both a description and a '/by' date. Usage: deadline <description> /by <date>
 A deadline needs both a description and a '/by' date. Usage: deadline <description> /by <date>
 An event needs a description, a '/from' time and a '/to' time. Usage: event <description> /from <start> /to <end>
 An event needs a description, a '/from' time and a '/to' time. Usage: event <description> /from <start> /to <end>
 An event needs a description, a '/from' time and a '/to' time. Usage: event <description> /from <start> /to <end>
-Here are the tasks in your list:
-Bye. Hope to see you again soon!
+Here's everything on your list:
+Nice work today! Catch you next time - bye for now!
 ~~~
 
 ## Test case: Blank input line
@@ -262,15 +262,15 @@ __   __  ___   ____  ____   ___ _____
 \ \ / / / _ \ |  _ \| __ ) / _ \_   _|
  \ V / | |_| || |_) |  _ \| |_| || |
   |_|   \___/ |____/|___/ \___/ |_|
-Hello! I'm YAPBOT.
-What can I do for you?
-Got it. I've added this task:
+Hey there! I'm YapBot, your hype squad for getting things done.
+What are we tackling today?
+Great, I've added read book to the list
   [T][ ] read book
 Now you have 1 tasks in the list.
 You didn't type anything. Try 'todo', 'deadline', 'event', 'list', 'find', 'mark', 'unmark', 'delete', 'priority' or 'bye'.
-Here are the tasks in your list:
+Here's everything on your list:
 1.[T][ ] read book
-Bye. Hope to see you again soon!
+Nice work today! Catch you next time - bye for now!
 ~~~
 
 ## Test case: Interleaved valid and invalid commands
@@ -297,29 +297,29 @@ __   __  ___   ____  ____   ___ _____
 \ \ / / / _ \ |  _ \| __ ) / _ \_   _|
  \ V / | |_| || |_) |  _ \| |_| || |
   |_|   \___/ |____/|___/ \___/ |_|
-Hello! I'm YAPBOT.
-What can I do for you?
-Got it. I've added this task:
+Hey there! I'm YapBot, your hype squad for getting things done.
+What are we tackling today?
+Great, I've added task A to the list
   [T][ ] task A
 Now you have 1 tasks in the list.
 I'm sorry, but I don't know what that means. Try 'todo', 'deadline', 'event', 'list', 'find', 'mark', 'unmark', 'delete', 'priority' or 'bye'.
-Got it. I've added this task:
+Great, I've added task B to the list
   [T][ ] task B
 Now you have 2 tasks in the list.
 Task number 99 doesn't exist. You have 2 task(s).
 The description of a deadline cannot be empty. Usage: deadline <description> /by <date>
-Nice! I've marked this task as done:
+Woo, nice work! Marked as done:
   [T][X] task A
 Task number 3 doesn't exist. You have 2 task(s).
 The description of a todo cannot be empty. Usage: todo <description>
-Got it. I've added this task:
+Noted! I've pencilled in x on your schedule
   [E][ ] x (from: a to: b)
 Now you have 3 tasks in the list.
-Here are the tasks in your list:
+Here's everything on your list:
 1.[T][X] task A
 2.[T][ ] task B
 3.[E][ ] x (from: a to: b)
-Bye. Hope to see you again soon!
+Nice work today! Catch you next time - bye for now!
 ~~~
 
 ## Test case: Delete a task
@@ -347,44 +347,44 @@ __   __  ___   ____  ____   ___ _____
 \ \ / / / _ \ |  _ \| __ ) / _ \_   _|
  \ V / | |_| || |_) |  _ \| |_| || |
   |_|   \___/ |____/|___/ \___/ |_|
-Hello! I'm YAPBOT.
-What can I do for you?
-Got it. I've added this task:
+Hey there! I'm YapBot, your hype squad for getting things done.
+What are we tackling today?
+Great, I've added read book to the list
   [T][ ] read book
 Now you have 1 tasks in the list.
-Nice! I've marked this task as done:
+Woo, nice work! Marked as done:
   [T][X] read book
-Got it. I've added this task:
+Remember to do return book by Jun 06 2019
   [D][ ] return book (by: Jun 06 2019)
 Now you have 2 tasks in the list.
-Nice! I've marked this task as done:
+Woo, nice work! Marked as done:
   [D][X] return book (by: Jun 06 2019)
-Got it. I've added this task:
+Noted! I've pencilled in project meeting on your schedule
   [E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
 Now you have 3 tasks in the list.
-Got it. I've added this task:
+Great, I've added join sports club to the list
   [T][ ] join sports club
 Now you have 4 tasks in the list.
-Nice! I've marked this task as done:
+Woo, nice work! Marked as done:
   [T][X] join sports club
-Got it. I've added this task:
+Great, I've added borrow book to the list
   [T][ ] borrow book
 Now you have 5 tasks in the list.
-Here are the tasks in your list:
+Here's everything on your list:
 1.[T][X] read book
 2.[D][X] return book (by: Jun 06 2019)
 3.[E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
 4.[T][X] join sports club
 5.[T][ ] borrow book
-I have removed this task:
+I've removed project meeting from the list
   [E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
 Now you have 4 tasks in the list.
-Here are the tasks in your list:
+Here's everything on your list:
 1.[T][X] read book
 2.[D][X] return book (by: Jun 06 2019)
 3.[T][X] join sports club
 4.[T][ ] borrow book
-Bye. Hope to see you again soon!
+Nice work today! Catch you next time - bye for now!
 ~~~
 
 ## Test case: Tasks are saved to disk after each change
@@ -420,23 +420,23 @@ __   __  ___   ____  ____   ___ _____
 \ \ / / / _ \ |  _ \| __ ) / _ \_   _|
  \ V / | |_| || |_) |  _ \| |_| || |
   |_|   \___/ |____/|___/ \___/ |_|
-Hello! I'm YAPBOT.
-What can I do for you?
-Got it. I've added this task:
+Hey there! I'm YapBot, your hype squad for getting things done.
+What are we tackling today?
+Great, I've added read book to the list
   [T][ ] read book
 Now you have 1 tasks in the list.
-Got it. I've added this task:
+Remember to do return book by Jun 06 2019
   [D][ ] return book (by: Jun 06 2019)
 Now you have 2 tasks in the list.
-Got it. I've added this task:
+Noted! I've pencilled in project meeting on your schedule
   [E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
 Now you have 3 tasks in the list.
-Nice! I've marked this task as done:
+Woo, nice work! Marked as done:
   [T][X] read book
-I have removed this task:
+I've removed return book from the list
   [D][ ] return book (by: Jun 06 2019)
 Now you have 2 tasks in the list.
-Bye. Hope to see you again soon!
+Nice work today! Catch you next time - bye for now!
 ~~~
 
 ### Expected contents of `./data/yapBot.txt` after the run
@@ -477,13 +477,13 @@ __   __  ___   ____  ____   ___ _____
 \ \ / / / _ \ |  _ \| __ ) / _ \_   _|
  \ V / | |_| || |_) |  _ \| |_| || |
   |_|   \___/ |____/|___/ \___/ |_|
-Hello! I'm YAPBOT.
-What can I do for you?
-Here are the tasks in your list:
+Hey there! I'm YapBot, your hype squad for getting things done.
+What are we tackling today?
+Here's everything on your list:
 1.[T][X] read book
 2.[D][ ] return book (by: Jun 06 2019)
 3.[E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
-Bye. Hope to see you again soon!
+Nice work today! Catch you next time - bye for now!
 ~~~
 
 ### Manual verification steps
@@ -517,10 +517,10 @@ __   __  ___   ____  ____   ___ _____
 \ \ / / / _ \ |  _ \| __ ) / _ \_   _|
  \ V / | |_| || |_) |  _ \| |_| || |
   |_|   \___/ |____/|___/ \___/ |_|
-Hello! I'm YAPBOT.
-What can I do for you?
-Here are the tasks in your list:
-Bye. Hope to see you again soon!
+Hey there! I'm YapBot, your hype squad for getting things done.
+What are we tackling today?
+Here's everything on your list:
+Nice work today! Catch you next time - bye for now!
 ~~~
 
 ## Test case: Task fields cannot contain '|'
@@ -543,13 +543,13 @@ __   __  ___   ____  ____   ___ _____
 \ \ / / / _ \ |  _ \| __ ) / _ \_   _|
  \ V / | |_| || |_) |  _ \| |_| || |
   |_|   \___/ |____/|___/ \___/ |_|
-Hello! I'm YAPBOT.
-What can I do for you?
+Hey there! I'm YapBot, your hype squad for getting things done.
+What are we tackling today?
 The description of a todo cannot contain the '|' character, as it is reserved for the save file format.
 The '/by' date of a deadline cannot contain the '|' character, as it is reserved for the save file format.
 The '/from' time of an event cannot contain the '|' character, as it is reserved for the save file format.
-Here are the tasks in your list:
-Bye. Hope to see you again soon!
+Here's everything on your list:
+Nice work today! Catch you next time - bye for now!
 ~~~
 
 ## Test case: Corrupted save-file lines are skipped, not crashed on
@@ -580,12 +580,12 @@ __   __  ___   ____  ____   ___ _____
 \ \ / / / _ \ |  _ \| __ ) / _ \_   _|
  \ V / | |_| || |_) |  _ \| |_| || |
   |_|   \___/ |____/|___/ \___/ |_|
-Hello! I'm YAPBOT.
-What can I do for you?
-Here are the tasks in your list:
+Hey there! I'm YapBot, your hype squad for getting things done.
+What are we tackling today?
+Here's everything on your list:
 1.[T][X] read book
 2.[E][ ] ok event (from: Aug 6th 2pm to: 4pm)
-Bye. Hope to see you again soon!
+Nice work today! Catch you next time - bye for now!
 ~~~
 - Note: the exact wording of the "Warning: skipping..." lines that also get
   printed during load is not asserted here, since it is diagnostic text
@@ -625,19 +625,19 @@ __   __  ___   ____  ____   ___ _____
 \ \ / / / _ \ |  _ \| __ ) / _ \_   _|
  \ V / | |_| || |_) |  _ \| |_| || |
   |_|   \___/ |____/|___/ \___/ |_|
-Hello! I'm YAPBOT.
-What can I do for you?
+Hey there! I'm YapBot, your hype squad for getting things done.
+What are we tackling today?
 Please specify a task number, e.g. 'delete 2'.
 'abc' is not a valid task number.
 Your task list is empty, so there's nothing to delete.
-Got it. I've added this task:
+Great, I've added x to the list
   [T][ ] x
 Now you have 1 tasks in the list.
-I have removed this task:
+I've removed x from the list
   [T][ ] x
 Now you have 0 tasks in the list.
-Here are the tasks in your list:
-Bye. Hope to see you again soon!
+Here's everything on your list:
+Nice work today! Catch you next time - bye for now!
 ~~~
 
 ## Test case: Deadline date is parsed and reformatted for display
@@ -658,14 +658,14 @@ __   __  ___   ____  ____   ___ _____
 \ \ / / / _ \ |  _ \| __ ) / _ \_   _|
  \ V / | |_| || |_) |  _ \| |_| || |
   |_|   \___/ |____/|___/ \___/ |_|
-Hello! I'm YAPBOT.
-What can I do for you?
-Got it. I've added this task:
+Hey there! I'm YapBot, your hype squad for getting things done.
+What are we tackling today?
+Remember to do pay bills by Jan 05 2019
   [D][ ] pay bills (by: Jan 05 2019)
 Now you have 1 tasks in the list.
-Here are the tasks in your list:
+Here's everything on your list:
 1.[D][ ] pay bills (by: Jan 05 2019)
-Bye. Hope to see you again soon!
+Nice work today! Catch you next time - bye for now!
 ~~~
 
 ## Test case: Invalid deadline date format is rejected
@@ -687,13 +687,13 @@ __   __  ___   ____  ____   ___ _____
 \ \ / / / _ \ |  _ \| __ ) / _ \_   _|
  \ V / | |_| || |_) |  _ \| |_| || |
   |_|   \___/ |____/|___/ \___/ |_|
-Hello! I'm YAPBOT.
-What can I do for you?
+Hey there! I'm YapBot, your hype squad for getting things done.
+What are we tackling today?
 Please enter the deadline date in yyyy-mm-dd format, e.g. 2019-10-15.
 Please enter the deadline date in yyyy-mm-dd format, e.g. 2019-10-15.
 Please enter the deadline date in yyyy-mm-dd format, e.g. 2019-10-15.
-Here are the tasks in your list:
-Bye. Hope to see you again soon!
+Here's everything on your list:
+Nice work today! Catch you next time - bye for now!
 ~~~
 - Note: 2019-13-01 has a valid yyyy-mm-dd shape but an invalid month (13),
   so LocalDate.parse() rejects it the same way as a malformed string.
@@ -717,21 +717,21 @@ __   __  ___   ____  ____   ___ _____
 \ \ / / / _ \ |  _ \| __ ) / _ \_   _|
  \ V / | |_| || |_) |  _ \| |_| || |
   |_|   \___/ |____/|___/ \___/ |_|
-Hello! I'm YAPBOT.
-What can I do for you?
-Got it. I've added this task:
+Hey there! I'm YapBot, your hype squad for getting things done.
+What are we tackling today?
+Great, I've added read book to the list
   [T][ ]read book
 Now you have 1 tasks in the list.
-Got it. I've added this task:
+Great, I've added return book to the list
   [T][ ]return book
 Now you have 2 tasks in the list.
-Got it. I've added this task:
+Great, I've added borrow laptop to the list
   [T][ ]borrow laptop
 Now you have 3 tasks in the list.
-Here are the matching tasks in your list:
+Here's what I found for you:
 1.[T][ ]read book
 2.[T][ ]return book
-Bye. Hope to see you again soon!
+Nice work today! Catch you next time - bye for now!
 ~~~
 
 ## Test case: find with no matches and with no keyword
@@ -753,14 +753,14 @@ __   __  ___   ____  ____   ___ _____
 \ \ / / / _ \ |  _ \| __ ) / _ \_   _|
  \ V / | |_| || |_) |  _ \| |_| || |
   |_|   \___/ |____/|___/ \___/ |_|
-Hello! I'm YAPBOT.
-What can I do for you?
-Got it. I've added this task:
+Hey there! I'm YapBot, your hype squad for getting things done.
+What are we tackling today?
+Great, I've added read book to the list
   [T][ ]read book
 Now you have 1 tasks in the list.
-Here are the matching tasks in your list:
+Here's what I found for you:
 Please specify a keyword to search for, e.g. 'find book'.
-Bye. Hope to see you again soon!
+Nice work today! Catch you next time - bye for now!
 ~~~
 
 ## Test case: Setting a priority at creation
@@ -783,22 +783,22 @@ __   __  ___   ____  ____   ___ _____
 \ \ / / / _ \ |  _ \| __ ) / _ \_   _|
  \ V / | |_| || |_) |  _ \| |_| || |
   |_|   \___/ |____/|___/ \___/ |_|
-Hello! I'm YAPBOT.
-What can I do for you?
-Got it. I've added this task:
+Hey there! I'm YapBot, your hype squad for getting things done.
+What are we tackling today?
+Great, I've added read book to the list
   [T][ ][HIGH]read book
 Now you have 1 tasks in the list.
-Got it. I've added this task:
+Remember to do return book by Oct 15 2019
   [D][ ][MEDIUM]return book (by: Oct 15 2019)
 Now you have 2 tasks in the list.
-Got it. I've added this task:
+Noted! I've pencilled in meeting on your schedule
   [E][ ][LOW]meeting (from: Mon 2pm to: 4pm)
 Now you have 3 tasks in the list.
-Here are the tasks in your list:
+Here's everything on your list:
 1.[T][ ][HIGH]read book
 2.[D][ ][MEDIUM]return book (by: Oct 15 2019)
 3.[E][ ][LOW]meeting (from: Mon 2pm to: 4pm)
-Bye. Hope to see you again soon!
+Nice work today! Catch you next time - bye for now!
 ~~~
 
 ## Test case: Changing a task's priority
@@ -820,18 +820,18 @@ __   __  ___   ____  ____   ___ _____
 \ \ / / / _ \ |  _ \| __ ) / _ \_   _|
  \ V / | |_| || |_) |  _ \| |_| || |
   |_|   \___/ |____/|___/ \___/ |_|
-Hello! I'm YAPBOT.
-What can I do for you?
-Got it. I've added this task:
+Hey there! I'm YapBot, your hype squad for getting things done.
+What are we tackling today?
+Great, I've added read book to the list
   [T][ ]read book
 Now you have 1 tasks in the list.
-Nice! I've updated this task's priority:
+Got it, priority updated:
   [T][ ][HIGH]read book
-Nice! I've updated this task's priority:
+Got it, priority updated:
   [T][ ][LOW]read book
-Here are the tasks in your list:
+Here's everything on your list:
 1.[T][ ][LOW]read book
-Bye. Hope to see you again soon!
+Nice work today! Catch you next time - bye for now!
 ~~~
 
 ## Test case: Priority commands with invalid input
@@ -857,9 +857,9 @@ __   __  ___   ____  ____   ___ _____
 \ \ / / / _ \ |  _ \| __ ) / _ \_   _|
  \ V / | |_| || |_) |  _ \| |_| || |
   |_|   \___/ |____/|___/ \___/ |_|
-Hello! I'm YAPBOT.
-What can I do for you?
-Got it. I've added this task:
+Hey there! I'm YapBot, your hype squad for getting things done.
+What are we tackling today?
+Great, I've added read book to the list
   [T][ ]read book
 Now you have 1 tasks in the list.
 Please specify a task number and a priority, e.g. 'priority 2 high'.
@@ -867,9 +867,9 @@ Please specify a task number and a priority, e.g. 'priority 2 high'.
 'abc' is not a valid task number.
 Task number 99 doesn't exist. You have 1 task(s).
 'urgent' is not a valid priority. Use high, medium or low.
-Here are the tasks in your list:
+Here's everything on your list:
 1.[T][ ]read book
-Bye. Hope to see you again soon!
+Nice work today! Catch you next time - bye for now!
 ~~~
 
 ## Test case: Loading a save file from before this feature existed
@@ -897,13 +897,13 @@ __   __  ___   ____  ____   ___ _____
 \ \ / / / _ \ |  _ \| __ ) / _ \_   _|
  \ V / | |_| || |_) |  _ \| |_| || |
   |_|   \___/ |____/|___/ \___/ |_|
-Hello! I'm YAPBOT.
-What can I do for you?
-Here are the tasks in your list:
+Hey there! I'm YapBot, your hype squad for getting things done.
+What are we tackling today?
+Here's everything on your list:
 1.[T][X]read book
 2.[D][ ]return book (by: Jun 06 2019)
 3.[E][ ]project meeting (from: Aug 6th 2pm to: 4pm)
-Bye. Hope to see you again soon!
+Nice work today! Catch you next time - bye for now!
 ~~~
 - Note: none of the loaded tasks show a priority tag, and saving again
   (e.g. via any mutating command) reproduces the exact same field counts

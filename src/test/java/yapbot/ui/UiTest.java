@@ -8,11 +8,14 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import yapbot.task.Deadline;
+import yapbot.task.Event;
 import yapbot.task.Priority;
 import yapbot.task.Task;
 import yapbot.task.Todo;
@@ -50,15 +53,15 @@ public class UiTest {
     public void showWelcome_printsGreeting() {
         new Ui().showWelcome();
 
-        assertTrue(output().contains("Hello! I'm YAPBOT."));
-        assertTrue(output().contains("What can I do for you?"));
+        assertTrue(output().contains("Hey there! I'm YapBot"));
+        assertTrue(output().contains("What are we tackling today?"));
     }
 
     @Test
     public void showGoodbye_printsGoodbyeMessage() {
         new Ui().showGoodbye();
 
-        assertTrue(output().contains("Bye. Hope to see you again soon!"));
+        assertTrue(output().contains("Nice work today! Catch you next time - bye for now!"));
     }
 
     @Test
@@ -76,6 +79,33 @@ public class UiTest {
 
         assertTrue(output().contains("read book"));
         assertTrue(output().contains("Now you have 3 tasks in the list."));
+    }
+
+    @Test
+    public void showTaskAdded_todo_usesAddedToListPhrase() {
+        Task task = new Todo("read book");
+
+        new Ui().showTaskAdded(task, 1);
+
+        assertTrue(output().contains("Great, I've added read book to the list"));
+    }
+
+    @Test
+    public void showTaskAdded_deadline_usesRemindPhraseWithFormattedDate() {
+        Task task = new Deadline("return book", LocalDate.of(2019, 10, 15));
+
+        new Ui().showTaskAdded(task, 1);
+
+        assertTrue(output().contains("Remember to do return book by Oct 15 2019"));
+    }
+
+    @Test
+    public void showTaskAdded_event_usesPencilledInPhrase() {
+        Task task = new Event("project meeting", "Mon 2pm", "4pm");
+
+        new Ui().showTaskAdded(task, 1);
+
+        assertTrue(output().contains("Noted! I've pencilled in project meeting on your schedule"));
     }
 
     @Test
@@ -118,10 +148,19 @@ public class UiTest {
     }
 
     @Test
+    public void showTaskDeleted_usesRemovedFromListPhrase() {
+        Task task = new Todo("read book");
+
+        new Ui().showTaskDeleted(task, 0);
+
+        assertTrue(output().contains("I've removed read book from the list"));
+    }
+
+    @Test
     public void showTaskList_emptyList_printsHeaderOnlyAndNoItems() {
         new Ui().showTaskList(new Task[0], 0);
 
-        assertTrue(output().contains("Here are the tasks in your list:"));
+        assertTrue(output().contains("Here's everything on your list:"));
         assertFalse(output().contains("1."));
     }
 
@@ -139,7 +178,7 @@ public class UiTest {
     public void showMatchingTasks_emptyMatches_printsHeaderOnlyAndNoItems() {
         new Ui().showMatchingTasks(new Task[0]);
 
-        assertTrue(output().contains("Here are the matching tasks in your list:"));
+        assertTrue(output().contains("Here's what I found for you:"));
         assertFalse(output().contains("1."));
     }
 

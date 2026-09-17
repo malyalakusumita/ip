@@ -13,32 +13,35 @@ public class DialogBox extends HBox {
 
     private static final double WRAP_WIDTH = 300.0;
 
-    private DialogBox(String text, Pos alignment) {
+    private DialogBox(String text, Pos alignment, String bubbleStyleClass) {
         Label label = new Label(text);
         label.setWrapText(true);
         label.setMaxWidth(WRAP_WIDTH);
+        label.getStyleClass().addAll("chat-bubble", bubbleStyleClass);
 
         setAlignment(alignment);
         getChildren().add(label);
     }
 
     /**
-     * Creates a dialog row for text the user typed, right-aligned.
+     * Creates a dialog row for text the user typed, right-aligned and styled
+     * as a "user" bubble (maroon background).
      *
      * @param text the user's input.
      * @return the dialog row to add to the conversation view.
      */
     public static DialogBox forUser(String text) {
-        return new DialogBox(text, Pos.CENTER_RIGHT);
+        return new DialogBox(text, Pos.CENTER_RIGHT, "user-bubble");
     }
 
     /**
-     * Creates a dialog row for YapBot's response, left-aligned.
+     * Creates a dialog row for YapBot's response, left-aligned and styled as
+     * a "bot" bubble (cream background).
      *
      * @param text YapBot's response text.
      * @return the dialog row to add to the conversation view.
      */
     public static DialogBox forYapBot(String text) {
-        return new DialogBox(text, Pos.CENTER_LEFT);
+        return new DialogBox(text, Pos.CENTER_LEFT, "bot-bubble");
     }
 }
