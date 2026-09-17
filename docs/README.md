@@ -1,61 +1,150 @@
-# yapBot User Guide
+# YapBot User Guide
 
-// Update the title above to match the actual product name
+![YapBot user interface](Ui.png)
 
-// Product screenshot goes here
+YapBot is a personal task-management chatbot for recording todos, deadlines,
+events, priorities, and completed work. It is available through a JavaFX
+graphical interface and a console interface.
 
-// Product intro goes here
+## Getting started
 
-## Adding deadlines
+YapBot requires **JDK 25**. In IntelliJ IDEA, open the project and run
+`yapbot.gui.Launcher` for the graphical interface or `yapbot.YapBot` for the
+console interface. In the GUI, enter commands in the text box. In the console,
+type a command and press Enter.
 
-// Describe the action and its outcome.
+To build and run the packaged application on Windows:
 
-// Give examples of usage
-
-Example: `keyword (optional arguments)`
-
-// A description of the expected outcome goes here
-
-```
-expected output
-```
-
-## Setting a task's priority
-
-Tag a task with how urgent it is: `high`, `medium`, or `low`. A task has
-no priority until you set one.
-
-**Set a priority when you add a task**, by adding `/priority <level>` as
-the last part of the command:
-
-Example: `todo read book /priority high`
-
-```
-Got it. I've added this task:
-  [T][ ][HIGH]read book
-Now you have 1 tasks in the list.
+```text
+gradlew.bat clean shadowJar
+java -jar build/libs/yapBot.jar
 ```
 
-This works the same way for `deadline` and `event`, with `/priority`
-always coming after their own `/by`/`/from`/`/to` parts, e.g.
-`deadline return book /by 2019-10-15 /priority medium`.
+## Command summary
 
-**Change an existing task's priority** (or set one for the first time)
-with `priority <task number> <level>`:
+| Command | Purpose |
+| --- | --- |
+| `todo <description>` | Add a simple task |
+| `deadline <description> /by <date>` | Add a task with a due date |
+| `event <description> /from <start> /to <end>` | Add an event |
+| `list` | Show all tasks |
+| `find <keyword>` | Search task descriptions |
+| `mark <number>` | Mark a task as done |
+| `unmark <number>` | Mark a task as not done |
+| `priority <number> <level>` | Change a task's priority |
+| `delete <number>` | Delete a task |
+| `bye` | Exit YapBot |
 
-Example: `priority 1 high`
+Task numbers are the numbers shown by `list` and start at 1.
 
+## Adding tasks
+
+Add a normal todo:
+
+```text
+todo read chapter 3
 ```
-Nice! I've updated this task's priority:
-  [T][ ][HIGH]read book
+
+Add a deadline. Dates must use `yyyy-mm-dd` format:
+
+```text
+deadline submit assignment /by 2026-10-15
 ```
 
-`<level>` must be `high`, `medium`, or `low` (any case). Leaving out
-`/priority` when adding a task, or never running `priority` on it,
-leaves that task with no priority — its listing looks exactly as it
-did before this feature existed.
+Add an event with a start and end time:
 
+```text
+event project meeting /from Monday 2pm /to Monday 3pm
+```
 
-## Feature XYZ
+Event times may be natural text. If both values are dates in `yyyy-mm-dd`
+format, YapBot checks that the start is earlier than the end.
 
-// Feature details
+## Priorities
+
+YapBot supports `high`, `medium`, and `low`. Set a priority while adding a
+task by placing `/priority <level>` at the end of the command:
+
+```text
+todo revise lecture notes /priority high
+deadline pay bill /by 2026-09-30 /priority medium
+event dentist appointment /from Friday 10am /to Friday 11am /priority low
+```
+
+For deadlines and events, `/priority` must come after `/by`, `/from`, and
+`/to`. To change an existing task's priority, use its number:
+
+```text
+priority 1 high
+```
+
+## Viewing and searching
+
+Display every task with:
+
+```text
+list
+```
+
+The list shows each task's number, type, completion status, description,
+deadline or event details, and priority when set.
+
+Search descriptions without changing the task list:
+
+```text
+find assignment
+```
+
+## Managing tasks
+
+Mark task 2 as completed:
+
+```text
+mark 2
+```
+
+Return task 2 to an incomplete state:
+
+```text
+unmark 2
+```
+
+Remove task 3:
+
+```text
+delete 3
+```
+
+Use `list` before changing or deleting a task if you are unsure of its number.
+
+## Saving data
+
+YapBot automatically saves tasks to `data/yapBot.txt` and loads them when it
+starts. Todos, deadlines, events, priorities, and completion statuses persist
+between sessions. When using the JAR, the `data` folder is created relative to
+the folder from which the JAR is run.
+
+## Input rules and troubleshooting
+
+- Enter one complete command per line.
+- Todos, deadlines, and events require descriptions.
+- A deadline requires exactly one `/by` date.
+- An event requires exactly one `/from` value and one `/to` value.
+- Priority must be `high`, `medium`, or `low`.
+- Do not use `|` in task details because it is reserved by the save format.
+- If a command is incomplete or unknown, YapBot displays an error and a usage
+  hint.
+- If a task number is invalid, run `list` and use a current number.
+- If tasks do not reappear after restarting, check that `data/yapBot.txt` is
+  being read from the expected working folder.
+
+## Exiting
+
+End the session with:
+
+```text
+bye
+```
+
+YapBot waits a short duration and then closes the session, 
+while saved tasks remain in `data/yapBot.txt`.
