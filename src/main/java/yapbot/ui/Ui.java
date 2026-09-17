@@ -3,6 +3,8 @@ package yapbot.ui;
 import java.io.InputStream;
 import java.util.Scanner;
 
+import yapbot.task.Deadline;
+import yapbot.task.Event;
 import yapbot.task.Task;
 
 /**
@@ -50,15 +52,15 @@ public class Ui {
                   |_|   \\___/ |____/|___/ \\___/ |_|
                 """;
         System.out.print(banner);
-        System.out.println("Hello! I'm YAPBOT.");
-        System.out.println("What can I do for you?");
+        System.out.println("Hey there! I'm YapBot, your hype squad for getting things done.");
+        System.out.println("What are we tackling today?");
     }
 
     /**
      * Prints the goodbye message shown when the user exits.
      */
     public void showGoodbye() {
-        output("Bye. Hope to see you again soon!");
+        output("Nice work today! Catch you next time - bye for now!");
     }
 
     /**
@@ -71,15 +73,35 @@ public class Ui {
     }
 
     /**
-     * Prints the confirmation shown after a task is added.
+     * Prints the confirmation shown after a task is added. The announcement
+     * line's wording depends on the task's type (e.g. a deadline gets a
+     * "remember to..." reminder rather than a generic "added" line), to keep
+     * YapBot's encouraging-accountability-buddy voice specific to what was
+     * actually added.
      *
      * @param task  the task that was added.
      * @param count the total number of tasks now in the list.
      */
     public void showTaskAdded(Task task, int count) {
-        output("Got it. I've added this task:");
+        output(describeTaskAdded(task));
         output("  " + task);
         output("Now you have " + count + " tasks in the list.");
+    }
+
+    /**
+     * Builds the type-specific announcement line for {@link #showTaskAdded}.
+     *
+     * @param task the task that was added.
+     * @return the announcement line, without the trailing task detail/count lines.
+     */
+    private String describeTaskAdded(Task task) {
+        if (task instanceof Deadline deadline) {
+            return "Remember to do " + deadline.getDescription() + " by " + deadline.getFormattedBy();
+        }
+        if (task instanceof Event event) {
+            return "Noted! I've pencilled in " + event.getDescription() + " on your schedule";
+        }
+        return "Great, I've added " + task.getDescription() + " to the list";
     }
 
     /**
@@ -88,7 +110,7 @@ public class Ui {
      * @param task the task that was marked.
      */
     public void showTaskMarked(Task task) {
-        output("Nice! I've marked this task as done:");
+        output("Woo, nice work! Marked as done:");
         output("  " + task);
     }
 
@@ -98,7 +120,7 @@ public class Ui {
      * @param task the task that was unmarked.
      */
     public void showTaskUnmarked(Task task) {
-        output("I've marked this task as not done yet:");
+        output("No worries, I've marked this as not done yet:");
         output("  " + task);
     }
 
@@ -108,7 +130,7 @@ public class Ui {
      * @param task the task whose priority was changed.
      */
     public void showPriorityChanged(Task task) {
-        output("Nice! I've updated this task's priority:");
+        output("Got it, priority updated:");
         output("  " + task);
     }
 
@@ -119,7 +141,7 @@ public class Ui {
      * @param count the total number of tasks remaining in the list.
      */
     public void showTaskDeleted(Task task, int count) {
-        output("I have removed this task:");
+        output("I've removed " + task.getDescription() + " from the list");
         output("  " + task);
         output("Now you have " + count + " tasks in the list.");
     }
@@ -131,7 +153,7 @@ public class Ui {
      * @param taskCount the number of active tasks in the array.
      */
     public void showTaskList(Task[] tasks, int taskCount) {
-        output("Here are the tasks in your list:");
+        output("Here's everything on your list:");
         for (int i = 0; i < taskCount; i++) {
             output((i + 1) + "." + tasks[i]);
         }
@@ -143,7 +165,7 @@ public class Ui {
      * @param matches the matching tasks, in list order.
      */
     public void showMatchingTasks(Task[] matches) {
-        output("Here are the matching tasks in your list:");
+        output("Here's what I found for you:");
         for (int i = 0; i < matches.length; i++) {
             output((i + 1) + "." + matches[i]);
         }

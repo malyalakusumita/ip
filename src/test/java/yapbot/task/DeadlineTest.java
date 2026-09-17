@@ -18,6 +18,13 @@ public class DeadlineTest {
     }
 
     @Test
+    public void getFormattedBy_returnsHumanReadableDate() {
+        Deadline deadline = new Deadline("return book", LocalDate.of(2019, 10, 15));
+
+        assertEquals("Oct 15 2019", deadline.getFormattedBy());
+    }
+
+    @Test
     public void toFileFormat_doneTask_statusFieldReflectsDone() {
         Deadline deadline = new Deadline("return book", LocalDate.of(2019, 10, 15));
         deadline.markAsDone();

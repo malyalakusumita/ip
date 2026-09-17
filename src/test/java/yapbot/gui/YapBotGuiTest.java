@@ -33,8 +33,7 @@ public class YapBotGuiTest {
 
         String response = yapBotGui.getResponse("todo read book");
 
-        assertTrue(response.contains("Got it. I've added this task:"));
-        assertTrue(response.contains("read book"));
+        assertTrue(response.contains("Great, I've added read book to the list"));
         assertFalse(yapBotGui.isExit());
     }
 
@@ -76,7 +75,7 @@ public class YapBotGuiTest {
 
         String response = yapBotGui.getResponse("bye");
 
-        assertTrue(response.contains("Bye. Hope to see you again soon!"));
+        assertTrue(response.contains("Nice work today! Catch you next time - bye for now!"));
         assertTrue(yapBotGui.isExit());
     }
 

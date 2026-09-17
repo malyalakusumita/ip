@@ -47,6 +47,15 @@ public class Deadline extends Task {
     }
 
     /**
+     * Returns this deadline's due date formatted for display, e.g. {@code "Oct 15 2019"}.
+     *
+     * @return the human-readable due date.
+     */
+    public String getFormattedBy() {
+        return by.format(DISPLAY_FORMAT);
+    }
+
+    /**
      * Returns this deadline as it should be displayed to the user, e.g.
      * {@code "[D][ ]return book (by: Oct 15 2019)"}.
      *
@@ -54,7 +63,7 @@ public class Deadline extends Task {
      */
     @Override
     public String toString() {
-        return "[D]" + super.toString() + " (by: " + by.format(DISPLAY_FORMAT) + ")";
+        return "[D]" + super.toString() + " (by: " + getFormattedBy() + ")";
     }
 
     /**

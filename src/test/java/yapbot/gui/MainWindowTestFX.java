@@ -71,8 +71,7 @@ public class MainWindowTestFX extends ApplicationTest {
         push(KeyCode.ENTER);
         WaitForAsyncUtils.waitForFxEvents();
 
-        assertTrue(anyLabelContains("Got it. I've added this task:"));
-        assertTrue(anyLabelContains("read book"));
+        assertTrue(anyLabelContains("Great, I've added read book to the list"));
     }
 
     @Test
@@ -82,7 +81,7 @@ public class MainWindowTestFX extends ApplicationTest {
         push(KeyCode.ENTER);
         WaitForAsyncUtils.waitForFxEvents();
 
-        assertTrue(anyLabelContains("Bye. Hope to see you again soon!"));
+        assertTrue(anyLabelContains("Nice work today! Catch you next time - bye for now!"));
         WaitForAsyncUtils.waitFor(3, TimeUnit.SECONDS, () -> !stage.isShowing());
     }
 

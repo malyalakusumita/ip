@@ -48,7 +48,7 @@ public class FindCommandTest {
         command.execute(taskList, new Ui());
 
         assertEquals(2, taskList.size());
-        assertTrue(output().contains("Here are the matching tasks in your list:"));
+        assertTrue(output().contains("Here's what I found for you:"));
         assertTrue(output().contains("1.[T][ ]read book"));
         assertFalse(output().contains("write code"));
     }
@@ -61,7 +61,7 @@ public class FindCommandTest {
 
         command.execute(taskList, new Ui());
 
-        assertTrue(output().contains("Here are the matching tasks in your list:"));
+        assertTrue(output().contains("Here's what I found for you:"));
         assertFalse(output().contains("1."));
     }
 

@@ -16,7 +16,8 @@ import javafx.util.Duration;
  */
 public class MainWindow {
 
-    private static final String GREETING = "Hello! I'm YapBot. What can I do for you?";
+    private static final String GREETING =
+            "Hey there! I'm YapBot, your hype squad for getting things done. What are we tackling today?";
     private static final Duration EXIT_DELAY = Duration.seconds(1);
 
     @FXML
