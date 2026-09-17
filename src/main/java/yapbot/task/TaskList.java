@@ -92,15 +92,35 @@ public class TaskList {
      * Adds a task to the end of the list.
      *
      * @param task the task to add.
-     * @throws YapBotException if the list is already at capacity.
+     * @throws YapBotException if the list is already at capacity, or an
+     *         existing task in the list already has the same details.
      */
     public void add(Task task) throws YapBotException {
         if (isFull()) {
             throw new YapBotException("Sorry, your task list is full (max " + MAX_CAPACITY + " tasks).");
         }
+        Task duplicate = findDuplicate(task);
+        if (duplicate != null) {
+            throw new YapBotException("This task already exists in your list: " + duplicate);
+        }
         assert size < MAX_CAPACITY : "the isFull() guard above must have already ruled out this case";
         tasks[size] = task;
         size++;
+    }
+
+    /**
+     * Finds an existing task in the list with the same details as {@code task}.
+     *
+     * @param task the task to check against the list.
+     * @return the first matching existing task, or {@code null} if there is none.
+     */
+    private Task findDuplicate(Task task) {
+        for (int i = 0; i < size; i++) {
+            if (tasks[i].isDuplicateOf(task)) {
+                return tasks[i];
+            }
+        }
+        return null;
     }
 
     /**

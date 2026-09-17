@@ -7,6 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.time.LocalDate;
+
 import org.junit.jupiter.api.Test;
 
 import yapbot.exception.YapBotException;
@@ -116,6 +118,32 @@ public class TaskListTest {
         TaskList taskList = fillToCapacity();
 
         assertThrows(YapBotException.class, () -> taskList.add(new Todo("one too many")));
+    }
+
+    @Test
+    public void add_duplicateOfExistingTask_exceptionThrown() throws YapBotException {
+        TaskList taskList = new TaskList();
+        taskList.add(new Todo("read book"));
+
+        assertThrows(YapBotException.class, () -> taskList.add(new Todo("read book")));
+    }
+
+    @Test
+    public void add_duplicateDifferingOnlyInCase_exceptionThrown() throws YapBotException {
+        TaskList taskList = new TaskList();
+        taskList.add(new Todo("read book"));
+
+        assertThrows(YapBotException.class, () -> taskList.add(new Todo("Read Book")));
+    }
+
+    @Test
+    public void add_sameDescriptionDifferentTaskType_doesNotThrow() throws YapBotException {
+        TaskList taskList = new TaskList();
+        taskList.add(new Todo("read book"));
+
+        taskList.add(new Deadline("read book", LocalDate.of(2019, 10, 15)));
+
+        assertEquals(2, taskList.size());
     }
 
     @Test

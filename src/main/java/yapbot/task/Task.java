@@ -115,6 +115,23 @@ public class Task {
     }
 
     /**
+     * Returns whether this task has the same user-visible details as
+     * {@code other}, i.e. they would look like duplicate entries in the
+     * list. The base check is the same type and description (matched
+     * case-insensitively, since "Read Book" and "read book" are the same
+     * task to a user); subclasses with extra fields (e.g. {@link Deadline}'s
+     * date, {@link Event}'s from/to) override this to also compare those.
+     *
+     * @param other the task to compare against.
+     * @return {@code true} if the two tasks would look like duplicates.
+     */
+    public boolean isDuplicateOf(Task other) {
+        return other != null
+                && getClass() == other.getClass()
+                && description.equalsIgnoreCase(other.description);
+    }
+
+    /**
      * Returns this task as it should be displayed to the user, e.g.
      * {@code "[X]read book"}, or {@code "[X][HIGH]read book"} once a
      * priority is set. Nothing is shown for the priority when none is set.

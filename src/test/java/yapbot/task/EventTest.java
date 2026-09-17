@@ -1,6 +1,8 @@
 package yapbot.task;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
@@ -50,5 +52,29 @@ public class EventTest {
         event.setPriority(Priority.MEDIUM);
 
         assertEquals("[E][ ][MEDIUM]project meeting (from: Mon 2pm to: 4pm)", event.toString());
+    }
+
+    @Test
+    public void isDuplicateOf_sameDetailsDifferentCase_returnsTrue() {
+        Event event = new Event("project meeting", "Mon 2pm", "4pm");
+        Event other = new Event("Project Meeting", "MON 2PM", "4PM");
+
+        assertTrue(event.isDuplicateOf(other));
+    }
+
+    @Test
+    public void isDuplicateOf_differentToTime_returnsFalse() {
+        Event event = new Event("project meeting", "Mon 2pm", "4pm");
+        Event other = new Event("project meeting", "Mon 2pm", "5pm");
+
+        assertFalse(event.isDuplicateOf(other));
+    }
+
+    @Test
+    public void isDuplicateOf_sameDetailsButTodo_returnsFalse() {
+        Event event = new Event("project meeting", "Mon 2pm", "4pm");
+        Todo other = new Todo("project meeting");
+
+        assertFalse(event.isDuplicateOf(other));
     }
 }

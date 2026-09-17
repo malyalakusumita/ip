@@ -56,4 +56,12 @@ public class Deadline extends Task {
     public String toString() {
         return "[D]" + super.toString() + " (by: " + by.format(DISPLAY_FORMAT) + ")";
     }
+
+    /**
+     * {@inheritDoc} A deadline additionally must share the same due date.
+     */
+    @Override
+    public boolean isDuplicateOf(Task other) {
+        return super.isDuplicateOf(other) && by.equals(((Deadline) other).by);
+    }
 }

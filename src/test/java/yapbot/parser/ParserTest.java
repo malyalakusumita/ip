@@ -225,4 +225,68 @@ public class ParserTest {
     public void parse_unrecognizedCommand_exceptionThrown() {
         assertThrows(YapBotException.class, () -> Parser.parse("frobnicate"));
     }
+
+    @Test
+    public void parse_wordSharingPrefixWithCommandWord_exceptionThrown() {
+        // "markdown" etc. must NOT be misread as the "mark"/"find"/"todo" commands
+        // just because they start with the same letters.
+        assertThrows(YapBotException.class, () -> Parser.parse("markdown"));
+        assertThrows(YapBotException.class, () -> Parser.parse("findable"));
+        assertThrows(YapBotException.class, () -> Parser.parse("todoist read book"));
+    }
+
+    @Test
+    public void parse_leadingAndTrailingWhitespaceAroundCommand_stillRecognized() throws YapBotException {
+        Command bye = Parser.parse("  bye  ");
+        Command list = Parser.parse("  list  ");
+
+        assertInstanceOf(ByeCommand.class, bye);
+        assertInstanceOf(ListCommand.class, list);
+    }
+
+    @Test
+    public void parse_deadlineWithDuplicateByFlag_exceptionThrown() {
+        assertThrows(YapBotException.class,
+                () -> Parser.parse("deadline return book /by 2019-10-15 /by 2019-10-16"));
+    }
+
+    @Test
+    public void parse_eventWithDuplicateFromFlag_exceptionThrown() {
+        // Previously this silently dropped the real "/to" value ("4pm") instead of failing.
+        assertThrows(YapBotException.class,
+                () -> Parser.parse("event trip /from Mon 2pm /from Tue 3pm /to 4pm"));
+    }
+
+    @Test
+    public void parse_eventWithDuplicateToFlag_exceptionThrown() {
+        assertThrows(YapBotException.class,
+                () -> Parser.parse("event trip /from Mon 2pm /to 4pm /to 5pm"));
+    }
+
+    @Test
+    public void parse_eventWithFromDateAfterToDate_exceptionThrown() {
+        assertThrows(YapBotException.class,
+                () -> Parser.parse("event trip /from 2019-10-16 /to 2019-10-15"));
+    }
+
+    @Test
+    public void parse_eventWithFromDateSameAsToDate_exceptionThrown() {
+        assertThrows(YapBotException.class,
+                () -> Parser.parse("event trip /from 2019-10-15 /to 2019-10-15"));
+    }
+
+    @Test
+    public void parse_eventWithFromDateBeforeToDate_taskCreatedSuccessfully() throws YapBotException {
+        Command command = Parser.parse("event trip /from 2019-10-15 /to 2019-10-16");
+
+        assertInstanceOf(AddCommand.class, command);
+    }
+
+    @Test
+    public void parse_eventWithNonDateFromTo_chronologicalCheckSkipped() throws YapBotException {
+        // Free-text times (not valid dates) are left alone: no ordering is enforced on them.
+        Command command = Parser.parse("event project meeting /from Mon 2pm /to 4pm");
+
+        assertInstanceOf(AddCommand.class, command);
+    }
 }

@@ -1,7 +1,9 @@
 package yapbot.task;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
@@ -104,5 +106,44 @@ public class TaskTest {
         task.setPriority(Priority.HIGH);
 
         assertEquals("[ ][HIGH]read book", task.toString());
+    }
+
+    @Test
+    public void isDuplicateOf_sameDescription_returnsTrue() {
+        Task task = new Task("read book");
+        Task other = new Task("read book");
+
+        assertTrue(task.isDuplicateOf(other));
+    }
+
+    @Test
+    public void isDuplicateOf_descriptionDifferentCase_returnsTrue() {
+        Task task = new Task("read book");
+        Task other = new Task("Read Book");
+
+        assertTrue(task.isDuplicateOf(other));
+    }
+
+    @Test
+    public void isDuplicateOf_differentDescription_returnsFalse() {
+        Task task = new Task("read book");
+        Task other = new Task("write code");
+
+        assertFalse(task.isDuplicateOf(other));
+    }
+
+    @Test
+    public void isDuplicateOf_differentTaskType_returnsFalse() {
+        Task task = new Task("read book");
+        Task other = new Todo("read book");
+
+        assertFalse(task.isDuplicateOf(other));
+    }
+
+    @Test
+    public void isDuplicateOf_null_returnsFalse() {
+        Task task = new Task("read book");
+
+        assertFalse(task.isDuplicateOf(null));
     }
 }

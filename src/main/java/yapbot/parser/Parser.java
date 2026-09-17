@@ -47,27 +47,28 @@ public class Parser {
      */
     public static Command parse(String fullCommand) throws YapBotException {
         assert fullCommand != null : "Ui.readCommand() throws instead of ever returning null";
-        if (fullCommand.equals("bye")) {
+        String command = fullCommand.trim();
+        if (command.equals("bye")) {
             return new ByeCommand();
-        } else if (fullCommand.equals("list")) {
+        } else if (command.equals("list")) {
             return new ListCommand();
-        } else if (fullCommand.startsWith("mark")) {
-            return new MarkCommand(fullCommand);
-        } else if (fullCommand.startsWith("unmark")) {
-            return new UnmarkCommand(fullCommand);
-        } else if (fullCommand.startsWith("delete")) {
-            return new DeleteCommand(fullCommand);
-        } else if (fullCommand.startsWith("priority")) {
-            return new PriorityCommand(fullCommand);
-        } else if (fullCommand.startsWith("find")) {
-            return new FindCommand(fullCommand);
-        } else if (fullCommand.startsWith(COMMAND_WORD_TODO)) {
-            return new AddCommand(parseTodo(fullCommand));
-        } else if (fullCommand.startsWith(COMMAND_WORD_DEADLINE)) {
-            return new AddCommand(parseDeadline(fullCommand));
-        } else if (fullCommand.startsWith(COMMAND_WORD_EVENT)) {
-            return new AddCommand(parseEvent(fullCommand));
-        } else if (fullCommand.isBlank()) {
+        } else if (isCommandWord(command, "mark")) {
+            return new MarkCommand(command);
+        } else if (isCommandWord(command, "unmark")) {
+            return new UnmarkCommand(command);
+        } else if (isCommandWord(command, "delete")) {
+            return new DeleteCommand(command);
+        } else if (isCommandWord(command, "priority")) {
+            return new PriorityCommand(command);
+        } else if (isCommandWord(command, "find")) {
+            return new FindCommand(command);
+        } else if (isCommandWord(command, COMMAND_WORD_TODO)) {
+            return new AddCommand(parseTodo(command));
+        } else if (isCommandWord(command, COMMAND_WORD_DEADLINE)) {
+            return new AddCommand(parseDeadline(command));
+        } else if (isCommandWord(command, COMMAND_WORD_EVENT)) {
+            return new AddCommand(parseEvent(command));
+        } else if (command.isEmpty()) {
             throw new YapBotException("You didn't type anything. Try 'todo', 'deadline', "
                     + "'event', 'list', 'find', 'mark', 'unmark', 'delete', 'priority' or 'bye'.");
         } else {
@@ -76,6 +77,23 @@ public class Parser {
                             + "Try 'todo', 'deadline', 'event', 'list', 'find', 'mark', "
                             + "'unmark', 'delete', 'priority' or 'bye'.");
         }
+    }
+
+    /**
+     * Returns whether {@code command} starts with {@code keyword} as a whole
+     * word, i.e. the keyword is either the entire command or is immediately
+     * followed by whitespace. Plain {@code startsWith} would wrongly match
+     * unrelated input that merely happens to share a prefix with a command
+     * word, e.g. "markdown" or "findable" would otherwise be misread as
+     * "mark"/"find" commands.
+     *
+     * @param command the (already-trimmed) full command text.
+     * @param keyword the command keyword to match, e.g. "mark".
+     * @return {@code true} if {@code command} is exactly {@code keyword}, or
+     *         starts with {@code keyword} followed by whitespace.
+     */
+    private static boolean isCommandWord(String command, String keyword) {
+        return command.equals(keyword) || command.startsWith(keyword + " ");
     }
 
     /**
@@ -129,8 +147,9 @@ public class Parser {
      * @param command the full command text.
      * @return the parsed task.
      * @throws YapBotException if the description/date is missing, contains
-     *         '|', the date is not a valid {@code yyyy-mm-dd} date, or the
-     *         optional {@code /priority} flag is invalid.
+     *         '|', the {@code /by} flag is given more than once, the date is
+     *         not a valid {@code yyyy-mm-dd} date, or the optional
+     *         {@code /priority} flag is invalid.
      */
     private static Task parseDeadline(String command) throws YapBotException {
         String rawDetails = command.length() > COMMAND_WORD_DEADLINE.length()
@@ -142,10 +161,15 @@ public class Parser {
             throw new YapBotException("The description of a deadline cannot be empty. "
                     + "Usage: deadline <description> /by <date>");
         }
-        String[] parts = details.split(" /by ", 2);
+        // No limit on split, so a duplicate '/by' yields 3+ parts instead of
+        // silently folding the second occurrence into the date field.
+        String[] parts = details.split(" /by ", -1);
         if (parts.length < 2 || parts[0].trim().isEmpty() || parts[1].trim().isEmpty()) {
             throw new YapBotException("A deadline needs both a description and a '/by' date. "
                     + "Usage: deadline <description> /by <date>");
+        }
+        if (parts.length > 2) {
+            throw new YapBotException("A deadline can only have one '/by' date.");
         }
         String description = checkNoDelimiter(parts[0].trim(), "description of a deadline");
         String byInput = checkNoDelimiter(parts[1].trim(), "'/by' date of a deadline");
@@ -161,7 +185,8 @@ public class Parser {
      * @param command the full command text.
      * @return the parsed task.
      * @throws YapBotException if the description/from/to are missing,
-     *         contain '|', or the optional {@code /priority} flag is invalid.
+     *         either flag is given more than once, a field contains '|', or
+     *         the optional {@code /priority} flag is invalid.
      */
     private static Task parseEvent(String command) throws YapBotException {
         String rawDetails = command.length() > COMMAND_WORD_EVENT.length()
@@ -173,19 +198,64 @@ public class Parser {
             throw new YapBotException("The description of an event cannot be empty. "
                     + "Usage: event <description> /from <start> /to <end>");
         }
-        String[] parts = details.split(" /from | /to ");
+        String[] parts = details.split(" /from | /to ", -1);
         if (parts.length < 3 || parts[0].trim().isEmpty()
                 || parts[1].trim().isEmpty() || parts[2].trim().isEmpty()) {
             throw new YapBotException(
                     "An event needs a description, a '/from' time and a '/to' time. "
                             + "Usage: event <description> /from <start> /to <end>");
         }
+        if (parts.length > 3) {
+            // Without this check, a repeated '/from' or '/to' would silently discard the
+            // real '/to' value instead of failing loudly (e.g. it would previously read
+            // "event x /from A /from B /to C" as from="A", to="B", quietly losing "C").
+            throw new YapBotException("An event can only have one '/from' time and one '/to' time.");
+        }
         String description = checkNoDelimiter(parts[0].trim(), "description of an event");
         String from = checkNoDelimiter(parts[1].trim(), "'/from' time of an event");
         String to = checkNoDelimiter(parts[2].trim(), "'/to' time of an event");
+        checkChronologicalOrder(from, to);
         Task task = new Event(description, from, to);
         task.setPriority(extracted.priority());
         return task;
+    }
+
+    /**
+     * Checks that an event's start is strictly before its end, but only when
+     * both {@code from} and {@code to} are valid {@code yyyy-mm-dd} dates.
+     * An event's from/to are free text (e.g. "Mon 2pm"), so this is a
+     * best-effort check: anything that isn't an unambiguous date on both
+     * sides is left alone rather than rejected.
+     *
+     * @param from the event's start time, already validated as non-blank.
+     * @param to   the event's end time, already validated as non-blank.
+     * @throws YapBotException if both parse as dates and {@code from} is not
+     *         strictly before {@code to}.
+     */
+    private static void checkChronologicalOrder(String from, String to) throws YapBotException {
+        LocalDate fromDate = tryParseDate(from);
+        LocalDate toDate = tryParseDate(to);
+        if (fromDate == null || toDate == null) {
+            return;
+        }
+        if (!fromDate.isBefore(toDate)) {
+            throw new YapBotException(
+                    "An event's '/from' date cannot be later than or the same as its '/to' date.");
+        }
+    }
+
+    /**
+     * Parses {@code value} as a {@code yyyy-mm-dd} date, without throwing.
+     *
+     * @param value the text to attempt to parse.
+     * @return the parsed date, or {@code null} if {@code value} is not a valid date.
+     */
+    private static LocalDate tryParseDate(String value) {
+        try {
+            return LocalDate.parse(value);
+        } catch (DateTimeParseException e) {
+            return null;
+        }
     }
 
     /**
