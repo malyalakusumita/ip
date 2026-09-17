@@ -16,8 +16,6 @@ import javafx.util.Duration;
  */
 public class MainWindow {
 
-    private static final String GREETING =
-            "Hey there! I'm YapBot, your hype squad for getting things done. What are we tackling today?";
     private static final Duration EXIT_DELAY = Duration.seconds(1);
 
     @FXML
@@ -51,7 +49,7 @@ public class MainWindow {
      */
     public void setYapBotGui(YapBotGui yapBotGui) {
         this.yapBotGui = yapBotGui;
-        dialogContainer.getChildren().add(DialogBox.forYapBot(GREETING));
+        dialogContainer.getChildren().add(DialogBox.forYapBot(yapBotGui.getGreeting()));
     }
 
     /**
@@ -67,9 +65,12 @@ public class MainWindow {
         }
 
         String response = yapBotGui.getResponse(input);
+        DialogBox responseDialog = yapBotGui.wasLastResponseAnError()
+                ? DialogBox.forYapBotError(response)
+                : DialogBox.forYapBot(response);
         dialogContainer.getChildren().addAll(
                 DialogBox.forUser(input),
-                DialogBox.forYapBot(response));
+                responseDialog);
         userInput.clear();
 
         if (yapBotGui.isExit()) {

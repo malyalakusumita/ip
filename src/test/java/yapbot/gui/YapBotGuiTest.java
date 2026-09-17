@@ -75,7 +75,7 @@ public class YapBotGuiTest {
 
         String response = yapBotGui.getResponse("bye");
 
-        assertTrue(response.contains("Nice work today! Catch you next time - bye for now!"));
+        assertTrue(response.contains("Nice work today! See you soon!"));
         assertTrue(yapBotGui.isExit());
     }
 
@@ -84,5 +84,15 @@ public class YapBotGuiTest {
         YapBotGui yapBotGui = new YapBotGui();
 
         assertFalse(yapBotGui.isExit());
+    }
+
+    @Test
+    public void getGreeting_matchesConsoleWelcomeWording() {
+        YapBotGui yapBotGui = new YapBotGui();
+
+        String greeting = yapBotGui.getGreeting();
+
+        assertTrue(greeting.contains("Hey! I'm YapBot"));
+        assertTrue(greeting.contains("What are we tackling today?"));
     }
 }

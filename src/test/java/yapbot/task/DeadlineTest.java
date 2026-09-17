@@ -86,4 +86,25 @@ public class DeadlineTest {
 
         assertFalse(deadline.isDuplicateOf(other));
     }
+
+    @Test
+    public void isOverdue_dateInPast_returnsTrue() {
+        Deadline deadline = new Deadline("return book", LocalDate.now().minusDays(1));
+
+        assertTrue(deadline.isOverdue());
+    }
+
+    @Test
+    public void isOverdue_dateIsToday_returnsFalse() {
+        Deadline deadline = new Deadline("return book", LocalDate.now());
+
+        assertFalse(deadline.isOverdue());
+    }
+
+    @Test
+    public void isOverdue_dateInFuture_returnsFalse() {
+        Deadline deadline = new Deadline("return book", LocalDate.now().plusDays(1));
+
+        assertFalse(deadline.isOverdue());
+    }
 }

@@ -41,26 +41,44 @@ public class Ui {
         return scanner.nextLine();
     }
 
+    private static final String BANNER = """
+            __   __  ___   ____  ____   ___ _____
+            \\ \\ / / / _ \\ |  _ \\| __ ) / _ \\_   _|
+             \\ V / | |_| || |_) |  _ \\| |_| || |
+              |_|   \\___/ |____/|___/ \\___/ |_|
+            """;
+
+    private static final String GREETING = "Hey! I'm YapBot, I'll help you grind now so you can yap later"
+            + System.lineSeparator() + "What are we tackling today?";
+
     /**
-     * Prints the startup banner and greeting.
+     * Prints the startup banner and greeting. The banner is ASCII art that
+     * only looks right in a monospace console, so it always goes straight to
+     * standard output rather than through {@link #output}, unlike the
+     * greeting words themselves (see {@link #getGreeting()}).
      */
     public void showWelcome() {
-        String banner = """
-                __   __  ___   ____  ____   ___ _____
-                \\ \\ / / / _ \\ |  _ \\| __ ) / _ \\_   _|
-                 \\ V / | |_| || |_) |  _ \\| |_| || |
-                  |_|   \\___/ |____/|___/ \\___/ |_|
-                """;
-        System.out.print(banner);
-        System.out.println("Hey there! I'm YapBot, your hype squad for getting things done.");
-        System.out.println("What are we tackling today?");
+        System.out.print(BANNER);
+        output(GREETING);
+    }
+
+    /**
+     * Returns YapBot's greeting text, without the ASCII banner. Lets a front
+     * end other than the console (e.g. the GUI) show the same greeting
+     * wording as {@link #showWelcome()}, without also getting the banner,
+     * which doesn't render sensibly outside a monospace console.
+     *
+     * @return the greeting text.
+     */
+    public String getGreeting() {
+        return GREETING;
     }
 
     /**
      * Prints the goodbye message shown when the user exits.
      */
     public void showGoodbye() {
-        output("Nice work today! Catch you next time - bye for now!");
+        output("Nice work today! See you soon!");
     }
 
     /**
@@ -89,17 +107,22 @@ public class Ui {
     }
 
     /**
-     * Builds the type-specific announcement line for {@link #showTaskAdded}.
+     * Builds the type-specific announcement line for {@link #showTaskAdded},
+     * with a trailing warning when a deadline or event's date has already
+     * passed (still added, just flagged, since a backdated task can be
+     * legitimate, e.g. logging something overdue).
      *
      * @param task the task that was added.
      * @return the announcement line, without the trailing task detail/count lines.
      */
     private String describeTaskAdded(Task task) {
         if (task instanceof Deadline deadline) {
-            return "Remember to do " + deadline.getDescription() + " by " + deadline.getFormattedBy();
+            String message = "Remember to do " + deadline.getDescription() + " by " + deadline.getFormattedBy();
+            return deadline.isOverdue() ? message + " (heads up, that date's already passed!)" : message;
         }
         if (task instanceof Event event) {
-            return "Noted! I've pencilled in " + event.getDescription() + " on your schedule";
+            String message = "Noted! I've added " + event.getDescription() + " to your schedule";
+            return event.isOverdue() ? message + " (heads up, that's already over!)" : message;
         }
         return "Great, I've added " + task.getDescription() + " to the list";
     }

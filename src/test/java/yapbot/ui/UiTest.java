@@ -53,15 +53,24 @@ public class UiTest {
     public void showWelcome_printsGreeting() {
         new Ui().showWelcome();
 
-        assertTrue(output().contains("Hey there! I'm YapBot"));
+        assertTrue(output().contains("Hey! I'm YapBot"));
         assertTrue(output().contains("What are we tackling today?"));
+    }
+
+    @Test
+    public void getGreeting_matchesShowWelcomesGreetingWords() {
+        Ui ui = new Ui();
+
+        ui.showWelcome();
+
+        assertTrue(output().contains(ui.getGreeting()));
     }
 
     @Test
     public void showGoodbye_printsGoodbyeMessage() {
         new Ui().showGoodbye();
 
-        assertTrue(output().contains("Nice work today! Catch you next time - bye for now!"));
+        assertTrue(output().contains("Nice work today! See you soon!"));
     }
 
     @Test
@@ -100,12 +109,39 @@ public class UiTest {
     }
 
     @Test
-    public void showTaskAdded_event_usesPencilledInPhrase() {
+    public void showTaskAdded_event_usesAddedToSchedulePhrase() {
         Task task = new Event("project meeting", "Mon 2pm", "4pm");
 
         new Ui().showTaskAdded(task, 1);
 
-        assertTrue(output().contains("Noted! I've pencilled in project meeting on your schedule"));
+        assertTrue(output().contains("Noted! I've added project meeting to your schedule"));
+    }
+
+    @Test
+    public void showTaskAdded_overdueDeadline_includesPassedWarning() {
+        Task task = new Deadline("return book", LocalDate.now().minusDays(1));
+
+        new Ui().showTaskAdded(task, 1);
+
+        assertTrue(output().contains("(heads up, that date's already passed!)"));
+    }
+
+    @Test
+    public void showTaskAdded_futureDeadline_noPassedWarning() {
+        Task task = new Deadline("return book", LocalDate.now().plusDays(1));
+
+        new Ui().showTaskAdded(task, 1);
+
+        assertFalse(output().contains("heads up"));
+    }
+
+    @Test
+    public void showTaskAdded_overdueEvent_includesOverWarning() {
+        Task task = new Event("project meeting", "2019-10-15", LocalDate.now().minusDays(1).toString());
+
+        new Ui().showTaskAdded(task, 1);
+
+        assertTrue(output().contains("(heads up, that's already over!)"));
     }
 
     @Test

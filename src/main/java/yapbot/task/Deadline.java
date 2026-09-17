@@ -56,6 +56,16 @@ public class Deadline extends Task {
     }
 
     /**
+     * Returns whether this deadline's due date has already passed, i.e. is
+     * strictly before today. A deadline due today is not yet overdue.
+     *
+     * @return {@code true} if the due date is before today.
+     */
+    public boolean isOverdue() {
+        return by.isBefore(LocalDate.now());
+    }
+
+    /**
      * Returns this deadline as it should be displayed to the user, e.g.
      * {@code "[D][ ]return book (by: Oct 15 2019)"}.
      *

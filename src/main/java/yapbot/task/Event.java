@@ -1,5 +1,8 @@
 package yapbot.task;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
+
 /**
  * Represents an event task with a start and end time.
  */
@@ -31,6 +34,24 @@ public class Event extends Task {
     @Override
     protected String getTypeIcon() {
         return "E";
+    }
+
+    /**
+     * Returns whether this event's end time has already passed, i.e. is
+     * strictly before today. Since {@link #to} is free text (e.g. "4pm")
+     * rather than a required date, this is a best-effort check: it only
+     * returns {@code true} when {@code to} happens to be a valid
+     * {@code yyyy-mm-dd} date that is before today; any other text (or a
+     * date of today) returns {@code false}.
+     *
+     * @return {@code true} if {@code to} is a valid date before today.
+     */
+    public boolean isOverdue() {
+        try {
+            return LocalDate.parse(to).isBefore(LocalDate.now());
+        } catch (DateTimeParseException e) {
+            return false;
+        }
     }
 
     /**

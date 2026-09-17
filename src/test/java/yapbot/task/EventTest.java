@@ -4,6 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 import org.junit.jupiter.api.Test;
 
 public class EventTest {
@@ -76,5 +79,28 @@ public class EventTest {
         Todo other = new Todo("project meeting");
 
         assertFalse(event.isDuplicateOf(other));
+    }
+
+    @Test
+    public void isOverdue_toIsFreeText_returnsFalse() {
+        Event event = new Event("project meeting", "Mon 2pm", "4pm");
+
+        assertFalse(event.isOverdue());
+    }
+
+    @Test
+    public void isOverdue_toIsDateInPast_returnsTrue() {
+        String pastDate = LocalDate.now().minusDays(1).format(DateTimeFormatter.ISO_LOCAL_DATE);
+        Event event = new Event("project meeting", "2019-10-15", pastDate);
+
+        assertTrue(event.isOverdue());
+    }
+
+    @Test
+    public void isOverdue_toIsDateInFuture_returnsFalse() {
+        String futureDate = LocalDate.now().plusDays(1).format(DateTimeFormatter.ISO_LOCAL_DATE);
+        Event event = new Event("project meeting", "2019-10-15", futureDate);
+
+        assertFalse(event.isOverdue());
     }
 }

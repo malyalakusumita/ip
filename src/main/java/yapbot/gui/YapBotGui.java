@@ -31,6 +31,17 @@ public class YapBotGui {
     }
 
     /**
+     * Returns YapBot's greeting text, for the GUI to show when a session
+     * starts. Delegates to the shared {@link Ui#getGreeting()} so the console
+     * and GUI never fall out of sync with each other.
+     *
+     * @return the greeting text.
+     */
+    public String getGreeting() {
+        return ui.getGreeting();
+    }
+
+    /**
      * Parses and executes one line of user input.
      *
      * @param input the full command text as typed by the user.
@@ -38,6 +49,7 @@ public class YapBotGui {
      *         error message.
      */
     public String getResponse(String input) {
+        ui.startNewResponse();
         try {
             Command command = Parser.parse(input);
             command.execute(taskList, ui);
@@ -49,6 +61,16 @@ public class YapBotGui {
             ui.showMessage("Oops, something went wrong: " + e.getMessage());
         }
         return ui.consumeResponse();
+    }
+
+    /**
+     * Returns whether the response just returned by {@link #getResponse} was
+     * an error/rejection message rather than a success confirmation.
+     *
+     * @return {@code true} if the last command was rejected.
+     */
+    public boolean wasLastResponseAnError() {
+        return ui.wasLastResponseAnError();
     }
 
     /**

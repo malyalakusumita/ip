@@ -2,6 +2,12 @@
 
 The expected output in each case is exact; the runner normalizes only line endings.
 
+Several cases below add a deadline dated in 2019 as a simple, reusable
+example date. Since that's now in the past, YapBot's added-confirmation for
+those lines includes its "already passed" warning (see "Deadlines and
+events with a date that's already passed" below) — this is expected and
+will keep being true for as long as 2019 remains in the past.
+
 ## Test case: Add tasks and list them
 - Aim: Verify that todo adds tasks and that list shows them as incomplete.
 
@@ -19,7 +25,7 @@ __   __  ___   ____  ____   ___ _____
 \ \ / / / _ \ |  _ \| __ ) / _ \_   _|
  \ V / | |_| || |_) |  _ \| |_| || |
   |_|   \___/ |____/|___/ \___/ |_|
-Hey there! I'm YapBot, your hype squad for getting things done.
+Hey! I'm YapBot, I'll help you grind now so you can yap later
 What are we tackling today?
 Great, I've added read book to the list
   [T][ ] read book
@@ -30,7 +36,7 @@ Now you have 2 tasks in the list.
 Here's everything on your list:
 1.[T][ ] read book
 2.[T][ ] return book
-Nice work today! Catch you next time - bye for now!
+Nice work today! See you soon!
 ~~~
 
 ## Test case: Unrecognized command does not corrupt the task list
@@ -50,7 +56,7 @@ __   __  ___   ____  ____   ___ _____
 \ \ / / / _ \ |  _ \| __ ) / _ \_   _|
  \ V / | |_| || |_) |  _ \| |_| || |
   |_|   \___/ |____/|___/ \___/ |_|
-Hey there! I'm YapBot, your hype squad for getting things done.
+Hey! I'm YapBot, I'll help you grind now so you can yap later
 What are we tackling today?
 Great, I've added read book to the list
   [T][ ] read book
@@ -58,7 +64,7 @@ Now you have 1 tasks in the list.
 I'm sorry, but I don't know what that means. Try 'todo', 'deadline', 'event', 'list', 'find', 'mark', 'unmark', 'delete', 'priority' or 'bye'.
 Here's everything on your list:
 1.[T][ ] read book
-Nice work today! Catch you next time - bye for now!
+Nice work today! See you soon!
 ~~~
 
 ## Test case: Mark and unmark a task
@@ -79,7 +85,7 @@ __   __  ___   ____  ____   ___ _____
 \ \ / / / _ \ |  _ \| __ ) / _ \_   _|
  \ V / | |_| || |_) |  _ \| |_| || |
   |_|   \___/ |____/|___/ \___/ |_|
-Hey there! I'm YapBot, your hype squad for getting things done.
+Hey! I'm YapBot, I'll help you grind now so you can yap later
 What are we tackling today?
 Great, I've added read book to the list
   [T][ ] read book
@@ -90,7 +96,7 @@ No worries, I've marked this as not done yet:
   [T][ ] read book
 Here's everything on your list:
 1.[T][ ] read book
-Nice work today! Catch you next time - bye for now!
+Nice work today! See you soon!
 ~~~
 
 ## Test case: mark/unmark with invalid input
@@ -116,7 +122,7 @@ __   __  ___   ____  ____   ___ _____
 \ \ / / / _ \ |  _ \| __ ) / _ \_   _|
  \ V / | |_| || |_) |  _ \| |_| || |
   |_|   \___/ |____/|___/ \___/ |_|
-Hey there! I'm YapBot, your hype squad for getting things done.
+Hey! I'm YapBot, I'll help you grind now so you can yap later
 What are we tackling today?
 Your task list is empty, so there's nothing to mark.
 Your task list is empty, so there's nothing to unmark.
@@ -131,7 +137,7 @@ Woo, nice work! Marked as done:
   [T][X] read book
 Here's everything on your list:
 1.[T][X] read book
-Nice work today! Catch you next time - bye for now!
+Nice work today! See you soon!
 ~~~
 
 ## Test case: Todo, Deadline, and Event tasks
@@ -152,22 +158,22 @@ __   __  ___   ____  ____   ___ _____
 \ \ / / / _ \ |  _ \| __ ) / _ \_   _|
  \ V / | |_| || |_) |  _ \| |_| || |
   |_|   \___/ |____/|___/ \___/ |_|
-Hey there! I'm YapBot, your hype squad for getting things done.
+Hey! I'm YapBot, I'll help you grind now so you can yap later
 What are we tackling today?
 Great, I've added borrow book to the list
   [T][ ] borrow book
 Now you have 1 tasks in the list.
-Remember to do return book by Oct 15 2019
+Remember to do return book by Oct 15 2019 (heads up, that date's already passed!)
   [D][ ] return book (by: Oct 15 2019)
 Now you have 2 tasks in the list.
-Noted! I've pencilled in project meeting on your schedule
+Noted! I've added project meeting to your schedule
   [E][ ] project meeting (from: Mon 2pm to: 4pm)
 Now you have 3 tasks in the list.
 Here's everything on your list:
 1.[T][ ] borrow book
 2.[D][ ] return book (by: Oct 15 2019)
 3.[E][ ] project meeting (from: Mon 2pm to: 4pm)
-Nice work today! Catch you next time - bye for now!
+Nice work today! See you soon!
 ~~~
 
 ## Test case: Empty descriptions for todo/deadline/event
@@ -202,7 +208,7 @@ __   __  ___   ____  ____   ___ _____
 \ \ / / / _ \ |  _ \| __ ) / _ \_   _|
  \ V / | |_| || |_) |  _ \| |_| || |
   |_|   \___/ |____/|___/ \___/ |_|
-Hey there! I'm YapBot, your hype squad for getting things done.
+Hey! I'm YapBot, I'll help you grind now so you can yap later
 What are we tackling today?
 The description of a todo cannot be empty. Usage: todo <description>
 The description of a todo cannot be empty. Usage: todo <description>
@@ -211,7 +217,7 @@ The description of a deadline cannot be empty. Usage: deadline <description> /by
 The description of an event cannot be empty. Usage: event <description> /from <start> /to <end>
 The description of an event cannot be empty. Usage: event <description> /from <start> /to <end>
 Here's everything on your list:
-Nice work today! Catch you next time - bye for now!
+Nice work today! See you soon!
 ~~~
 
 ## Test case: Deadline/event missing required parts
@@ -234,7 +240,7 @@ __   __  ___   ____  ____   ___ _____
 \ \ / / / _ \ |  _ \| __ ) / _ \_   _|
  \ V / | |_| || |_) |  _ \| |_| || |
   |_|   \___/ |____/|___/ \___/ |_|
-Hey there! I'm YapBot, your hype squad for getting things done.
+Hey! I'm YapBot, I'll help you grind now so you can yap later
 What are we tackling today?
 A deadline needs both a description and a '/by' date. Usage: deadline <description> /by <date>
 A deadline needs both a description and a '/by' date. Usage: deadline <description> /by <date>
@@ -242,7 +248,7 @@ An event needs a description, a '/from' time and a '/to' time. Usage: event <des
 An event needs a description, a '/from' time and a '/to' time. Usage: event <description> /from <start> /to <end>
 An event needs a description, a '/from' time and a '/to' time. Usage: event <description> /from <start> /to <end>
 Here's everything on your list:
-Nice work today! Catch you next time - bye for now!
+Nice work today! See you soon!
 ~~~
 
 ## Test case: Blank input line
@@ -262,7 +268,7 @@ __   __  ___   ____  ____   ___ _____
 \ \ / / / _ \ |  _ \| __ ) / _ \_   _|
  \ V / | |_| || |_) |  _ \| |_| || |
   |_|   \___/ |____/|___/ \___/ |_|
-Hey there! I'm YapBot, your hype squad for getting things done.
+Hey! I'm YapBot, I'll help you grind now so you can yap later
 What are we tackling today?
 Great, I've added read book to the list
   [T][ ] read book
@@ -270,7 +276,7 @@ Now you have 1 tasks in the list.
 You didn't type anything. Try 'todo', 'deadline', 'event', 'list', 'find', 'mark', 'unmark', 'delete', 'priority' or 'bye'.
 Here's everything on your list:
 1.[T][ ] read book
-Nice work today! Catch you next time - bye for now!
+Nice work today! See you soon!
 ~~~
 
 ## Test case: Interleaved valid and invalid commands
@@ -297,7 +303,7 @@ __   __  ___   ____  ____   ___ _____
 \ \ / / / _ \ |  _ \| __ ) / _ \_   _|
  \ V / | |_| || |_) |  _ \| |_| || |
   |_|   \___/ |____/|___/ \___/ |_|
-Hey there! I'm YapBot, your hype squad for getting things done.
+Hey! I'm YapBot, I'll help you grind now so you can yap later
 What are we tackling today?
 Great, I've added task A to the list
   [T][ ] task A
@@ -312,14 +318,14 @@ Woo, nice work! Marked as done:
   [T][X] task A
 Task number 3 doesn't exist. You have 2 task(s).
 The description of a todo cannot be empty. Usage: todo <description>
-Noted! I've pencilled in x on your schedule
+Noted! I've added x to your schedule
   [E][ ] x (from: a to: b)
 Now you have 3 tasks in the list.
 Here's everything on your list:
 1.[T][X] task A
 2.[T][ ] task B
 3.[E][ ] x (from: a to: b)
-Nice work today! Catch you next time - bye for now!
+Nice work today! See you soon!
 ~~~
 
 ## Test case: Delete a task
@@ -347,19 +353,19 @@ __   __  ___   ____  ____   ___ _____
 \ \ / / / _ \ |  _ \| __ ) / _ \_   _|
  \ V / | |_| || |_) |  _ \| |_| || |
   |_|   \___/ |____/|___/ \___/ |_|
-Hey there! I'm YapBot, your hype squad for getting things done.
+Hey! I'm YapBot, I'll help you grind now so you can yap later
 What are we tackling today?
 Great, I've added read book to the list
   [T][ ] read book
 Now you have 1 tasks in the list.
 Woo, nice work! Marked as done:
   [T][X] read book
-Remember to do return book by Jun 06 2019
+Remember to do return book by Jun 06 2019 (heads up, that date's already passed!)
   [D][ ] return book (by: Jun 06 2019)
 Now you have 2 tasks in the list.
 Woo, nice work! Marked as done:
   [D][X] return book (by: Jun 06 2019)
-Noted! I've pencilled in project meeting on your schedule
+Noted! I've added project meeting to your schedule
   [E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
 Now you have 3 tasks in the list.
 Great, I've added join sports club to the list
@@ -384,7 +390,7 @@ Here's everything on your list:
 2.[D][X] return book (by: Jun 06 2019)
 3.[T][X] join sports club
 4.[T][ ] borrow book
-Nice work today! Catch you next time - bye for now!
+Nice work today! See you soon!
 ~~~
 
 ## Test case: Tasks are saved to disk after each change
@@ -420,15 +426,15 @@ __   __  ___   ____  ____   ___ _____
 \ \ / / / _ \ |  _ \| __ ) / _ \_   _|
  \ V / | |_| || |_) |  _ \| |_| || |
   |_|   \___/ |____/|___/ \___/ |_|
-Hey there! I'm YapBot, your hype squad for getting things done.
+Hey! I'm YapBot, I'll help you grind now so you can yap later
 What are we tackling today?
 Great, I've added read book to the list
   [T][ ] read book
 Now you have 1 tasks in the list.
-Remember to do return book by Jun 06 2019
+Remember to do return book by Jun 06 2019 (heads up, that date's already passed!)
   [D][ ] return book (by: Jun 06 2019)
 Now you have 2 tasks in the list.
-Noted! I've pencilled in project meeting on your schedule
+Noted! I've added project meeting to your schedule
   [E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
 Now you have 3 tasks in the list.
 Woo, nice work! Marked as done:
@@ -436,7 +442,7 @@ Woo, nice work! Marked as done:
 I've removed return book from the list
   [D][ ] return book (by: Jun 06 2019)
 Now you have 2 tasks in the list.
-Nice work today! Catch you next time - bye for now!
+Nice work today! See you soon!
 ~~~
 
 ### Expected contents of `./data/yapBot.txt` after the run
@@ -477,13 +483,13 @@ __   __  ___   ____  ____   ___ _____
 \ \ / / / _ \ |  _ \| __ ) / _ \_   _|
  \ V / | |_| || |_) |  _ \| |_| || |
   |_|   \___/ |____/|___/ \___/ |_|
-Hey there! I'm YapBot, your hype squad for getting things done.
+Hey! I'm YapBot, I'll help you grind now so you can yap later
 What are we tackling today?
 Here's everything on your list:
 1.[T][X] read book
 2.[D][ ] return book (by: Jun 06 2019)
 3.[E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
-Nice work today! Catch you next time - bye for now!
+Nice work today! See you soon!
 ~~~
 
 ### Manual verification steps
@@ -517,10 +523,10 @@ __   __  ___   ____  ____   ___ _____
 \ \ / / / _ \ |  _ \| __ ) / _ \_   _|
  \ V / | |_| || |_) |  _ \| |_| || |
   |_|   \___/ |____/|___/ \___/ |_|
-Hey there! I'm YapBot, your hype squad for getting things done.
+Hey! I'm YapBot, I'll help you grind now so you can yap later
 What are we tackling today?
 Here's everything on your list:
-Nice work today! Catch you next time - bye for now!
+Nice work today! See you soon!
 ~~~
 
 ## Test case: Task fields cannot contain '|'
@@ -543,13 +549,13 @@ __   __  ___   ____  ____   ___ _____
 \ \ / / / _ \ |  _ \| __ ) / _ \_   _|
  \ V / | |_| || |_) |  _ \| |_| || |
   |_|   \___/ |____/|___/ \___/ |_|
-Hey there! I'm YapBot, your hype squad for getting things done.
+Hey! I'm YapBot, I'll help you grind now so you can yap later
 What are we tackling today?
 The description of a todo cannot contain the '|' character, as it is reserved for the save file format.
 The '/by' date of a deadline cannot contain the '|' character, as it is reserved for the save file format.
 The '/from' time of an event cannot contain the '|' character, as it is reserved for the save file format.
 Here's everything on your list:
-Nice work today! Catch you next time - bye for now!
+Nice work today! See you soon!
 ~~~
 
 ## Test case: Corrupted save-file lines are skipped, not crashed on
@@ -580,12 +586,12 @@ __   __  ___   ____  ____   ___ _____
 \ \ / / / _ \ |  _ \| __ ) / _ \_   _|
  \ V / | |_| || |_) |  _ \| |_| || |
   |_|   \___/ |____/|___/ \___/ |_|
-Hey there! I'm YapBot, your hype squad for getting things done.
+Hey! I'm YapBot, I'll help you grind now so you can yap later
 What are we tackling today?
 Here's everything on your list:
 1.[T][X] read book
 2.[E][ ] ok event (from: Aug 6th 2pm to: 4pm)
-Nice work today! Catch you next time - bye for now!
+Nice work today! See you soon!
 ~~~
 - Note: the exact wording of the "Warning: skipping..." lines that also get
   printed during load is not asserted here, since it is diagnostic text
@@ -625,7 +631,7 @@ __   __  ___   ____  ____   ___ _____
 \ \ / / / _ \ |  _ \| __ ) / _ \_   _|
  \ V / | |_| || |_) |  _ \| |_| || |
   |_|   \___/ |____/|___/ \___/ |_|
-Hey there! I'm YapBot, your hype squad for getting things done.
+Hey! I'm YapBot, I'll help you grind now so you can yap later
 What are we tackling today?
 Please specify a task number, e.g. 'delete 2'.
 'abc' is not a valid task number.
@@ -637,7 +643,7 @@ I've removed x from the list
   [T][ ] x
 Now you have 0 tasks in the list.
 Here's everything on your list:
-Nice work today! Catch you next time - bye for now!
+Nice work today! See you soon!
 ~~~
 
 ## Test case: Deadline date is parsed and reformatted for display
@@ -658,14 +664,14 @@ __   __  ___   ____  ____   ___ _____
 \ \ / / / _ \ |  _ \| __ ) / _ \_   _|
  \ V / | |_| || |_) |  _ \| |_| || |
   |_|   \___/ |____/|___/ \___/ |_|
-Hey there! I'm YapBot, your hype squad for getting things done.
+Hey! I'm YapBot, I'll help you grind now so you can yap later
 What are we tackling today?
-Remember to do pay bills by Jan 05 2019
+Remember to do pay bills by Jan 05 2019 (heads up, that date's already passed!)
   [D][ ] pay bills (by: Jan 05 2019)
 Now you have 1 tasks in the list.
 Here's everything on your list:
 1.[D][ ] pay bills (by: Jan 05 2019)
-Nice work today! Catch you next time - bye for now!
+Nice work today! See you soon!
 ~~~
 
 ## Test case: Invalid deadline date format is rejected
@@ -687,16 +693,62 @@ __   __  ___   ____  ____   ___ _____
 \ \ / / / _ \ |  _ \| __ ) / _ \_   _|
  \ V / | |_| || |_) |  _ \| |_| || |
   |_|   \___/ |____/|___/ \___/ |_|
-Hey there! I'm YapBot, your hype squad for getting things done.
+Hey! I'm YapBot, I'll help you grind now so you can yap later
 What are we tackling today?
 Please enter the deadline date in yyyy-mm-dd format, e.g. 2019-10-15.
 Please enter the deadline date in yyyy-mm-dd format, e.g. 2019-10-15.
 Please enter the deadline date in yyyy-mm-dd format, e.g. 2019-10-15.
 Here's everything on your list:
-Nice work today! Catch you next time - bye for now!
+Nice work today! See you soon!
 ~~~
 - Note: 2019-13-01 has a valid yyyy-mm-dd shape but an invalid month (13),
   so LocalDate.parse() rejects it the same way as a malformed string.
+
+## Test case: Deadlines and events with a date that's already passed
+- Aim: Verify that a deadline or event dated before today is still added
+  (backdating a task is a legitimate use case, e.g. logging something
+  overdue) but its added-confirmation includes an "already passed" warning;
+  a date of today or later gets no such warning.
+- Note: this case uses dates relative to today rather than fixed ones, since
+  a fixed past date only demonstrates this once before it's stale, and a
+  fixed future date would eventually become past and start demonstrating
+  the wrong thing. Substitute yesterday's/tomorrow's actual date (both in
+  `yyyy-mm-dd` format) when running this by hand.
+
+### Input
+~~~text
+deadline pay bill /by <yesterday's date>
+deadline renew license /by <tomorrow's date>
+event past thing /from 2019-10-01 /to <yesterday's date>
+list
+bye
+~~~
+
+### Expected output
+~~~text
+__   __  ___   ____  ____   ___ _____
+\ \ / / / _ \ |  _ \| __ ) / _ \_   _|
+ \ V / | |_| || |_) |  _ \| |_| || |
+  |_|   \___/ |____/|___/ \___/ |_|
+Hey! I'm YapBot, I'll help you grind now so you can yap later
+What are we tackling today?
+Remember to do pay bill by <yesterday, formatted as "MMM dd yyyy"> (heads up, that date's already passed!)
+  [D][ ] pay bill (by: <yesterday, formatted as "MMM dd yyyy">)
+Now you have 1 tasks in the list.
+Remember to do renew license by <tomorrow, formatted as "MMM dd yyyy">
+  [D][ ] renew license (by: <tomorrow, formatted as "MMM dd yyyy">)
+Now you have 2 tasks in the list.
+Noted! I've added past thing to your schedule (heads up, that's already over!)
+  [E][ ] past thing (from: 2019-10-01 to: <yesterday's date>)
+Now you have 3 tasks in the list.
+Here's everything on your list:
+1.[D][ ] pay bill (by: <yesterday, formatted as "MMM dd yyyy">)
+2.[D][ ] renew license (by: <tomorrow, formatted as "MMM dd yyyy">)
+3.[E][ ] past thing (from: 2019-10-01 to: <yesterday's date>)
+Nice work today! See you soon!
+~~~
+- Note: a deadline due exactly today (not before it) also gets no warning —
+  "already passed" only means strictly before today.
 
 ## Test case: Find tasks by keyword
 - Aim: Verify that find lists only the tasks whose description contains
@@ -717,7 +769,7 @@ __   __  ___   ____  ____   ___ _____
 \ \ / / / _ \ |  _ \| __ ) / _ \_   _|
  \ V / | |_| || |_) |  _ \| |_| || |
   |_|   \___/ |____/|___/ \___/ |_|
-Hey there! I'm YapBot, your hype squad for getting things done.
+Hey! I'm YapBot, I'll help you grind now so you can yap later
 What are we tackling today?
 Great, I've added read book to the list
   [T][ ]read book
@@ -731,7 +783,7 @@ Now you have 3 tasks in the list.
 Here's what I found for you:
 1.[T][ ]read book
 2.[T][ ]return book
-Nice work today! Catch you next time - bye for now!
+Nice work today! See you soon!
 ~~~
 
 ## Test case: find with no matches and with no keyword
@@ -753,14 +805,14 @@ __   __  ___   ____  ____   ___ _____
 \ \ / / / _ \ |  _ \| __ ) / _ \_   _|
  \ V / | |_| || |_) |  _ \| |_| || |
   |_|   \___/ |____/|___/ \___/ |_|
-Hey there! I'm YapBot, your hype squad for getting things done.
+Hey! I'm YapBot, I'll help you grind now so you can yap later
 What are we tackling today?
 Great, I've added read book to the list
   [T][ ]read book
 Now you have 1 tasks in the list.
 Here's what I found for you:
 Please specify a keyword to search for, e.g. 'find book'.
-Nice work today! Catch you next time - bye for now!
+Nice work today! See you soon!
 ~~~
 
 ## Test case: Setting a priority at creation
@@ -783,22 +835,22 @@ __   __  ___   ____  ____   ___ _____
 \ \ / / / _ \ |  _ \| __ ) / _ \_   _|
  \ V / | |_| || |_) |  _ \| |_| || |
   |_|   \___/ |____/|___/ \___/ |_|
-Hey there! I'm YapBot, your hype squad for getting things done.
+Hey! I'm YapBot, I'll help you grind now so you can yap later
 What are we tackling today?
 Great, I've added read book to the list
   [T][ ][HIGH]read book
 Now you have 1 tasks in the list.
-Remember to do return book by Oct 15 2019
+Remember to do return book by Oct 15 2019 (heads up, that date's already passed!)
   [D][ ][MEDIUM]return book (by: Oct 15 2019)
 Now you have 2 tasks in the list.
-Noted! I've pencilled in meeting on your schedule
+Noted! I've added meeting to your schedule
   [E][ ][LOW]meeting (from: Mon 2pm to: 4pm)
 Now you have 3 tasks in the list.
 Here's everything on your list:
 1.[T][ ][HIGH]read book
 2.[D][ ][MEDIUM]return book (by: Oct 15 2019)
 3.[E][ ][LOW]meeting (from: Mon 2pm to: 4pm)
-Nice work today! Catch you next time - bye for now!
+Nice work today! See you soon!
 ~~~
 
 ## Test case: Changing a task's priority
@@ -820,7 +872,7 @@ __   __  ___   ____  ____   ___ _____
 \ \ / / / _ \ |  _ \| __ ) / _ \_   _|
  \ V / | |_| || |_) |  _ \| |_| || |
   |_|   \___/ |____/|___/ \___/ |_|
-Hey there! I'm YapBot, your hype squad for getting things done.
+Hey! I'm YapBot, I'll help you grind now so you can yap later
 What are we tackling today?
 Great, I've added read book to the list
   [T][ ]read book
@@ -831,7 +883,7 @@ Got it, priority updated:
   [T][ ][LOW]read book
 Here's everything on your list:
 1.[T][ ][LOW]read book
-Nice work today! Catch you next time - bye for now!
+Nice work today! See you soon!
 ~~~
 
 ## Test case: Priority commands with invalid input
@@ -857,7 +909,7 @@ __   __  ___   ____  ____   ___ _____
 \ \ / / / _ \ |  _ \| __ ) / _ \_   _|
  \ V / | |_| || |_) |  _ \| |_| || |
   |_|   \___/ |____/|___/ \___/ |_|
-Hey there! I'm YapBot, your hype squad for getting things done.
+Hey! I'm YapBot, I'll help you grind now so you can yap later
 What are we tackling today?
 Great, I've added read book to the list
   [T][ ]read book
@@ -869,7 +921,7 @@ Task number 99 doesn't exist. You have 1 task(s).
 'urgent' is not a valid priority. Use high, medium or low.
 Here's everything on your list:
 1.[T][ ]read book
-Nice work today! Catch you next time - bye for now!
+Nice work today! See you soon!
 ~~~
 
 ## Test case: Loading a save file from before this feature existed
@@ -897,13 +949,13 @@ __   __  ___   ____  ____   ___ _____
 \ \ / / / _ \ |  _ \| __ ) / _ \_   _|
  \ V / | |_| || |_) |  _ \| |_| || |
   |_|   \___/ |____/|___/ \___/ |_|
-Hey there! I'm YapBot, your hype squad for getting things done.
+Hey! I'm YapBot, I'll help you grind now so you can yap later
 What are we tackling today?
 Here's everything on your list:
 1.[T][X]read book
 2.[D][ ]return book (by: Jun 06 2019)
 3.[E][ ]project meeting (from: Aug 6th 2pm to: 4pm)
-Nice work today! Catch you next time - bye for now!
+Nice work today! See you soon!
 ~~~
 - Note: none of the loaded tasks show a priority tag, and saving again
   (e.g. via any mutating command) reproduces the exact same field counts

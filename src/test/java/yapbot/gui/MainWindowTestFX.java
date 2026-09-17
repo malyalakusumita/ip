@@ -17,6 +17,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
@@ -65,6 +67,14 @@ public class MainWindowTestFX extends ApplicationTest {
     }
 
     @Test
+    public void windowOpens_showsUisGreetingWording() {
+        // Regression test: the GUI used to show its own hardcoded greeting
+        // string instead of Ui's, so editing Ui's greeting had no visible
+        // effect in the GUI. This checks the window actually displays it.
+        assertTrue(anyLabelContains("Hey! I'm YapBot"));
+    }
+
+    @Test
     public void typingTodoCommand_showsConfirmationInConversation() {
         clickOn("#userInput");
         write("todo read book");
@@ -81,8 +91,56 @@ public class MainWindowTestFX extends ApplicationTest {
         push(KeyCode.ENTER);
         WaitForAsyncUtils.waitForFxEvents();
 
-        assertTrue(anyLabelContains("Nice work today! Catch you next time - bye for now!"));
+        assertTrue(anyLabelContains("Nice work today! See you soon!"));
         WaitForAsyncUtils.waitFor(3, TimeUnit.SECONDS, () -> !stage.isShowing());
+    }
+
+    @Test
+    public void typingUnrecognizedCommand_showsConfusedIcon() {
+        clickOn("#userInput");
+        write("gibberish");
+        push(KeyCode.ENTER);
+        WaitForAsyncUtils.waitForFxEvents();
+
+        assertTrue(anyImageViewShows(DialogBox.CONFUSED_ICON));
+    }
+
+    @Test
+    public void typingDuplicateTodo_showsConfusedIcon() {
+        clickOn("#userInput");
+        write("todo read book");
+        push(KeyCode.ENTER);
+        WaitForAsyncUtils.waitForFxEvents();
+        write("todo read book");
+        push(KeyCode.ENTER);
+        WaitForAsyncUtils.waitForFxEvents();
+
+        assertTrue(anyImageViewShows(DialogBox.CONFUSED_ICON));
+    }
+
+    @Test
+    public void typingInvalidTaskNumber_showsConfusedIcon() {
+        // Any rejected/invalid input should get the confused icon, not just
+        // the two cases (duplicate task, unrecognized command) it originally
+        // shipped with — "mark 99" on an empty list is a validation error
+        // from a different code path (TaskList#validateIndex), covered here
+        // to prove the icon choice generalizes rather than special-casing.
+        clickOn("#userInput");
+        write("mark 99");
+        push(KeyCode.ENTER);
+        WaitForAsyncUtils.waitForFxEvents();
+
+        assertTrue(anyImageViewShows(DialogBox.CONFUSED_ICON));
+    }
+
+    @Test
+    public void typingTodoCommand_showsDefaultIcon() {
+        clickOn("#userInput");
+        write("todo read book");
+        push(KeyCode.ENTER);
+        WaitForAsyncUtils.waitForFxEvents();
+
+        assertTrue(anyImageViewShows(DialogBox.DEFAULT_ICON));
     }
 
     private boolean anyLabelContains(String text) {
@@ -90,5 +148,12 @@ public class MainWindowTestFX extends ApplicationTest {
         return labels.stream()
                 .map(node -> (Label) node)
                 .anyMatch(label -> label.getText().contains(text));
+    }
+
+    private boolean anyImageViewShows(Image icon) {
+        Set<Node> imageViews = lookup(".image-view").queryAll();
+        return imageViews.stream()
+                .map(node -> (ImageView) node)
+                .anyMatch(imageView -> imageView.getImage() == icon);
     }
 }
