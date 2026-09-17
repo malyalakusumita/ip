@@ -1,6 +1,8 @@
 package yapbot.task;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
 
@@ -52,5 +54,29 @@ public class DeadlineTest {
         deadline.setPriority(Priority.LOW);
 
         assertEquals("[D][ ][LOW]return book (by: Oct 15 2019)", deadline.toString());
+    }
+
+    @Test
+    public void isDuplicateOf_sameDescriptionAndDate_returnsTrue() {
+        Deadline deadline = new Deadline("return book", LocalDate.of(2019, 10, 15));
+        Deadline other = new Deadline("return book", LocalDate.of(2019, 10, 15));
+
+        assertTrue(deadline.isDuplicateOf(other));
+    }
+
+    @Test
+    public void isDuplicateOf_sameDescriptionDifferentDate_returnsFalse() {
+        Deadline deadline = new Deadline("return book", LocalDate.of(2019, 10, 15));
+        Deadline other = new Deadline("return book", LocalDate.of(2019, 10, 16));
+
+        assertFalse(deadline.isDuplicateOf(other));
+    }
+
+    @Test
+    public void isDuplicateOf_sameDetailsButTodo_returnsFalse() {
+        Deadline deadline = new Deadline("return book", LocalDate.of(2019, 10, 15));
+        Todo other = new Todo("return book");
+
+        assertFalse(deadline.isDuplicateOf(other));
     }
 }

@@ -53,4 +53,15 @@ public class Event extends Task {
     public String toString() {
         return "[E]" + super.toString() + " (from: " + from + " to: " + to + ")";
     }
+
+    /**
+     * {@inheritDoc} An event additionally must share the same from/to times,
+     * matched case-insensitively since they are free-text (e.g. "Mon 2pm").
+     */
+    @Override
+    public boolean isDuplicateOf(Task other) {
+        return super.isDuplicateOf(other)
+                && from.equalsIgnoreCase(((Event) other).from)
+                && to.equalsIgnoreCase(((Event) other).to);
+    }
 }
